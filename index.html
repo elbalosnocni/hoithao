@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký Hội thao Liwayway 2026</title>
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+        .form-container { max-width: 800px; margin: 30px auto; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .brand-header { text-align: center; margin-bottom: 25px; border-bottom: 3px solid #ffc107; padding-bottom: 15px; }
+        .section-title { background: #e9ecef; padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-top: 20px; margin-bottom: 15px; }
+        .btn-submit { background-color: #0d6efd; color: white; width: 100%; padding: 12px; font-weight: bold; border-radius: 8px; border: none; }
+        .btn-submit:hover { background-color: #0b5ed7; }
+        .hidden { display: none; }
+        .loading-overlay { background: rgba(255,255,255,0.9); position: fixed; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; z-index:9999; font-weight:bold; }
+        .rule-badge { font-size: 0.85rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+        .search-item-detail { font-size: 0.8rem; color: #6c757d; display: block; }
+    </style>
+</head>
+<body>
+
+<div id="loadingOverlay" class="loading-overlay text-primary">
+    <div class="text-center">
+        <div class="spinner-border mb-2" role="status"></div>
+        <div>Đang đồng bộ dữ liệu nhân viên từ hệ thống... <br> Loading staff directory...</div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-container">
+        <div class="brand-header">
+            <h3 class="text-primary fw-bold">LIWAYWAY SPORTS FESTIVAL 2026</h3>
+            <p class="text-muted mb-0 fw-semibold">CỔNG ĐĂNG KÝ THAM GIA HỘI THAO ĐIỆN TỬ</p>
+        </div>
+
+        <form id="registrationForm">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Hình thức đăng ký / Registration Type <span class="text-danger">*</span></label>
+                <div class="d-flex gap-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="loaiDangKy" value="Cá nhân" id="typeIndividual" checked>
+                        <label class="form-check-label fw-semibold" for="typeIndividual">Cá nhân (Marathon)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="loaiDangKy" value="Đội nhóm" id="typeGroup">
+                        <label class="form-check-label fw-semibold" for="typeGroup">Đội nhóm (Đồng đội)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title text-secondary">THÔNG TIN CHUNG / GENERAL INFORMATION</div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Khối lớn đăng ký / Department / Factory Block <span class="text-danger">*</span></label>
+                <select class="form-select" id="congTy" required>
+                    <option value="" disabled selected>-- Chọn khối của đội đăng ký --</option>
+                    <option value="Finance">Finance (Tài chính / Kế toán)</option>
+                    <option value="HR and Admin">HR and Admin (Nhân sự / Hành chính)</option>
+                    <option value="Purchasing">Purchasing (Thu mua)</option>
+                    <option value="MIS">MIS (Hệ thống thông tin)</option>
+                    <option value="Plant Manager">Plant Manager (Khối sản xuất / Nhà máy)</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Bộ phận cụ thể / Sub-department <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="boPhan" placeholder="VD: Cashier, IT, Accounting, Xưởng 1..." required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold" id="labelName">Họ và Tên người đăng ký / Full Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="tenFormTenDoi" placeholder="Nhập họ và tên" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Môn thi đấu đăng ký / Sports Event <span class="text-danger">*</span></label>
+                <select class="form-select" id="monDangKy" required>
+                    <option value="" disabled selected>-- Chọn môn thi đấu --</option>
+                    <option value="Chạy Marathon" id="optMarathon">Chạy Marathon Nam/Nữ (Môn Cá nhân)</option>
+                    <option value="Kéo co" id="optKeoCo" class="hidden">Kéo co (Tug of War)</option>
+                    <option value="Nhảy bao jumbo" id="optJumbo" class="hidden">Nhảy bao Jumbo 1 tấn (Sack Race)</option>
+                    <option value="Trò chơi liên hoàn" id="optLienHoan" class="hidden">Trò chơi liên hoàn (Multi-stage Game)</option>
+                </select>
+                <div id="ruleMessage" class="mt-2 fw-semibold text-danger"></div>
+            </div>
+
+            <!-- KHU VỰC THÊM THÀNH VIÊN VÀ TÌM KIẾM THEO CCCD / CHỨC VỤ -->
+            <div id="groupSection" class="hidden">
+                <div class="section-title text-secondary d-flex justify-content-between align-items-center">
+                    <span>DANH SÁCH THÀNH VIÊN ĐỘI / TEAM MEMBERS (<span id="memberCount">0</span> người)</span>
+                    <button type="button" class="btn btn-sm btn-success" id="addMemberBtn">+ Thêm người ngoài danh mục</button>
+                </div>
+                
+                <div class="mb-3 p-3 border border-warning rounded bg-light">
+                    <label class="form-label fw-bold text-warning-emphasis">🔍 TÌM KIẾM NHÂN VIÊN CHÍNH XÁC (Gõ Tên, Mã số NV hoặc Số CCCD)</label>
+                    <input type="text" class="form-control" id="searchStaffInput" placeholder="Nhập từ khóa tìm kiếm để phân biệt người trùng tên...">
+                    <div id="searchResultsList" class="list-group mt-1 shadow-sm" style="max-height: 250px; overflow-y: auto; z-index: 999; position: relative;"></div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle" id="membersTable">
+                        <thead class="table-light text-center small fw-bold">
+                            <tr>
+                                <th style="width: 25%">Họ và Tên</th>
+                                <th style="width: 15%">Mã số NV</th>
+                                <th style="width: 15%">4 Số cuối CCCD</th>
+                                <th style="width: 20%">Bộ phận</th>
+                                <th style="width: 15%">Chức vụ</th>
+                                <th style="width: 10%">Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memberListBody" class="small">
+                            <!-- JS tự nạp dòng vào đây -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-submit mt-4" id="submitBtn">GỬI ĐĂNG KÝ / SUBMIT</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 🛠️ ĐIỀN LINK WEB APP GOOGLE APPS SCRIPT ĐỘC LẬP CỦA BẠN VÀO ĐÂY
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";
+
+    let dbEmployees = []; 
+
+    const GAME_LIMITS = {
+        "Kéo co": { min: 6, max: 10, msg: "Yêu cầu từ 6 đến 10 người (Gồm 3-5 Nam và 3-5 Nữ)" },
+        "Nhảy bao jumbo": { min: 10, max: 10, msg: "Yêu cầu cố định đúng 10 người (Gồm 5 Nam và 5 Nữ)" },
+        "Trò chơi liên hoàn": { min: 4, max: 4, msg: "Yêu cầu cố định đúng 4 người (Gồm 2 Nam và 2 Nữ)" }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch(WEB_APP_URL)
+        .then(response => response.json())
+        .then(res => {
+            if(res.result === "success") {
+                dbEmployees = res.data;
+                document.getElementById('loadingOverlay').classList.add('hidden'); 
+            } else {
+                alert("Lỗi tải danh mục nhân viên: " + res.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Không thể kết nối API danh sách nhân viên!");
+        });
+    });
+
+    const typeIndividual = document.getElementById('typeIndividual');
+    const typeGroup = document.getElementById('typeGroup');
+    const labelName = document.getElementById('labelName');
+    const tenFormTenDoi = document.getElementById('tenFormTenDoi');
+    const monDangKy = document.getElementById('monDangKy');
+    const groupSection = document.getElementById('groupSection');
+    const memberListBody = document.getElementById('memberListBody');
+    const searchStaffInput = document.getElementById('searchStaffInput');
+    const searchResultsList = document.getElementById('searchResultsList');
+    const ruleMessage = document.getElementById('ruleMessage');
+    const memberCount = document.getElementById('memberCount');
+
+    function updateMemberCount() {
+        memberCount.innerText = memberListBody.querySelectorAll('tr').length;
+    }
+
+    monDangKy.addEventListener('change', function() {
+        if (GAME_LIMITS[this.value]) {
+            ruleMessage.innerHTML = `<span class="bg-danger-subtle text-danger rule-badge">⚠️ QUY ĐỊNH: ${GAME_LIMITS[this.value].msg}</span>`;
+        } else { ruleMessage.innerHTML = ""; }
+    });
+
+    function handleFormTypeChange() {
+        memberListBody.innerHTML = ""; monDangKy.value = ""; searchStaffInput.value = ""; searchResultsList.innerHTML = ""; ruleMessage.innerHTML = "";
+updateMemberCount(); 
+if (typeIndividual.checked) {
+labelName.innerHTML = 'Họ và Tên người đăng ký / Full Name ';
+tenFormTenDoi.placeholder = "VD: Nguyễn Văn A";
+groupSection.classList.add('hidden');
+document.getElementById('optMarathon').classList.remove('hidden');
+document.getElementById('optKeoCo').classList.add('hidden');
+document.getElementById('optJumbo').classList.add('hidden');
+document.getElementById('optLienHoan').classList.add('hidden');
+} else {
+labelName.innerHTML = 'Tên Đội thi đấu / Team Name ';
+tenFormTenDoi.placeholder = "VD: Đội Cơ Khí Liwayway, Đội Kho Vận...";
+groupSection.classList.remove('hidden');
+document.getElementById('optMarathon').classList.add('hidden');
+document.getElementById('optKeoCo').classList.remove('hidden');
+document.getElementById('optJumbo').classList.remove('hidden');
+document.getElementById('optLienHoan').classList.remove('hidden');
+}
+} 
+typeIndividual.addEventListener('change', handleFormTypeChange);
+typeGroup.addEventListener('change', handleFormTypeChange); 
+// THUẬT TOÁN TÌM KIẾM ĐA NĂNG PHÂN BIỆT TRÙNG TÊN LÀM THEO YÊU CẦU
+searchStaffInput.addEventListener('input', function() {
+const keyword = this.value.trim().toLowerCase();
+searchResultsList.innerHTML = "";
+if(keyword === "") return; 
+// Lọc thông tin theo Tên, Mã số NV hoặc số CCCD
+const matched = dbEmployees.filter(emp =>
+emp.hoTen.toLowerCase().includes(keyword) ||
+emp.maNV.toLowerCase().includes(keyword) ||
+emp.cccd.includes(keyword)
+).slice(0, 6); // Lấy tối đa 6 kết quả khớp nhất để hiển thị vừa vặn 
+matched.forEach(emp => {
+const btn = document.createElement('button');
+btn.type = "button";
+btn.className = "list-group-item list-group-item-action text-start p-2"; 
+// Mã hóa hiển thị ẩn bớt CCCD để bảo mật thông tin cá nhân (chỉ lộ 4 số cuối)
+let maskedCCCD = emp.cccd.length > 4 ? "****" + emp.cccd.slice(-4) : "Chưa có"; 
+btn.innerHTML = <div class="d-flex justify-content-between align-items-center"> <span class="fw-bold text-primary">${emp.hoTen} (${emp.maNV})</span> <span class="badge bg-secondary">${emp.chucVu}</span> </div> <span class="search-item-detail">CCCD: ${maskedCCCD} | Khối: ${emp.khoiLon} - Bộ phận: ${emp.boPhan}</span>; 
+btn.addEventListener('click', () => {
+addMemberToTable(emp.hoTen, emp.maNV, emp.cccd, emp.boPhan, emp.chucVu);
+searchStaffInput.value = "";
+searchResultsList.innerHTML = "";
+});
+searchResultsList.appendChild(btn);
+});
+}); 
+function addMemberToTable(name="", id="", cccd="", dept="", pos="") {
+const existingIds = Array.from(document.querySelectorAll('.member-id')).map(input => input.value);
+if(id && existingIds.includes(id)) {
+alert("Nhân viên này đã được thêm vào đội trước đó rồi!"); return;
+} 
+const currentCount = memberListBody.querySelectorAll('tr').length;
+if (monDangKy.value && GAME_LIMITS[monDangKy.value] && currentCount >= GAME_LIMITS[monDangKy.value].max) {
+alert(Môn thi đấu này giới hạn tối đa ${GAME_LIMITS[monDangKy.value].max} người!); return;
+} 
+let endCCCD = cccd.length > 4 ? cccd.slice(-4) : cccd; 
+const tr = document.createElement('tr');
+tr.innerHTML = ` 
+<input type="text" class="form-control form-control-sm member-name" value="
+ 𝑛𝑎𝑚𝑒
+ "
+ 
+{id ? 'readonly' : ''} required> 
+<input type="text" class="form-control form-control-sm member-dept" value="
+ 𝑑𝑒𝑝𝑡
+ "
+ 
+{id ? 'readonly' : ''} required> 
+<input type="text" class="form-control form-control-sm member-pos" value="pos" {id ? 'readonly' : ''} required> 
+X 
+`;
+tr.querySelector('.remove-btn').addEventListener('click', () => { tr.remove(); updateMemberCount(); });
+memberListBody.appendChild(tr);
+updateMemberCount();
+} 
+// Nút bổ sung người thủ công bên ngoài danh mục
+document.getElementById('addMemberBtn').addEventListener('click', () => {
+addMemberToTable("", "", "", "", "");
+}); 
+document.getElementById('registrationForm').addEventListener('submit', function(e) {
+e.preventDefault();
+const submitBtn = document.getElementById('submitBtn');
+const selectedGame = monDangKy.value; 
+if (typeGroup.checked) {
+const currentCount = memberListBody.querySelectorAll('tr').length;
+const limits = GAME_LIMITS[selectedGame];
+if (limits) {
+if (limits.min === limits.max && currentCount !== limits.min) {
+alert(❌ LỖI SỐ LƯỢNG:\nMôn [${selectedGame}] bắt buộc phải điền đủ chính xác ${limits.min} thành viên.\nHiện có ${currentCount} người.); return;
+}
+if (currentCount < limits.min || currentCount > limits.max) {
+alert(❌ LỖI SỐ LƯỢNG:\nMôn [${selectedGame}] quy định số lượng từ ${limits.min} đến ${limits.max} người.\nHịên có ${currentCount} người.); return;
+}
+}
+} 
+submitBtn.disabled = true;
+submitBtn.innerText = "Đang truyền tải..."; 
+let danhSachThanhVienStr = "";
+if (typeGroup.checked) {
+const names = document.querySelectorAll('.member-name');
+const ids = document.querySelectorAll('.member-id');
+const cccds = document.querySelectorAll('.member-cccd');
+const depts = document.querySelectorAll('.member-dept');
+const poses = document.querySelectorAll('.member-pos');
+const rows = []; 
+names.forEach((node, index) => {
+let idText = ids[index].value ? - MNV: ${ids[index].value} : '';
+let cccdText = cccds[index].value ? - CCCD 4 số cuối: ${cccds[index].value} : '';
+rows.push(${index + 1}. ${node.value.trim()}${idText}${cccdText} [Bộ phận: ${depts[index].value.trim()} - Chức vụ: ${poses[index].value.trim()}]);
+});
+danhSachThanhVienStr = rows.join(" | ");
+} 
+const formData = {
+loaiDangKy: document.querySelector('input[name="loaiDangKy"]:checked').value,
+congTy: document.getElementById('congTy').value,
+boPhan: document.getElementById('boPhan').value,
+tenFormTenDoi: tenFormTenDoi.value,
+monDangKy: selectedGame,
+danhSachThanhVien: danhSachThanhVienStr
+}; 
+fetch(WEB_APP_URL, {
+method: 'POST',
+mode: 'no-cors',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(formData)
+})
+.then(() => {
+alert("Đăng ký thành công! Dữ liệu đã lưu kèm theo Mã NV, Số CCCD, Chức vụ hợp lệ. 🎉");
+document.getElementById('registrationForm').reset();
+memberListBody.innerHTML = "";
+handleFormTypeChange();
+})
+.catch(error => {
+console.error(error);
+alert("Lỗi đồng bộ dữ liệu mạng!");
+})
+.finally(() => {
+submitBtn.disabled = false;
+submitBtn.innerText = "GỬI ĐĂNG KÝ / SUBMIT";
+});
+});
+
