@@ -64,24 +64,29 @@ function doGet(e) {
       return ContentService.createTextOutput(JSON.stringify({ "result": "error", "message": "Không tìm thấy tên Tab '" + TEN_TAB_NHAN_VIEN + "'!" })).setMimeType(ContentService.MimeType.JSON);
     }
     
+        // === TÌM ĐẾN ĐOẠN VÒNG LẶP TRONG HÀM doGet VÀ THAY BẰNG ĐOẠN NÀY ===
     var dataNhanVien = sheetNhanVien.getDataRange().getValues();
     var employees = [];
     
     for (var j = 1; j < dataNhanVien.length; j++) {
-      if (!dataNhanVien[j][1]) continue; // Bỏ qua dòng trống nếu không có Mã số NV
+      // 🛠️ CẢI TIẾN: Nếu gặp dòng không có Họ tên (Cột A) HOẶC không có Mã NV (Cột B), 
+      // lập tức dừng vòng lặp (break) để giải phóng bộ nhớ, không quét các dòng trống phía dưới.
+      if (!dataNhanVien[j][0] || !dataNhanVien[j][1]) {
+        break; 
+      }
       
-      // Chuyển đổi số CCCD sang dạng chuỗi tránh bị mất số 0 ở đầu
       var cccdStr = dataNhanVien[j][5] ? dataNhanVien[j][5].toString().trim() : "";
       
       employees.push({
-        hoTen: dataNhanVien[j][0].toString().trim(),     // Cột A: Hoten
-        maNV: dataNhanVien[j][1].toString().trim(),      // Cột B: MaNV
-        cccd: cccdStr,                                   // Cột F: SoCanCuoc
-        khoiLon: dataNhanVien[j][6].toString().trim(),   // Cột G: Phongban (Khối lớn)
-        boPhan: dataNhanVien[j][7].toString().trim(),    // Cột H: Bophan (Chi tiết)
-        chucVu: dataNhanVien[j][8].toString().trim()     // Cột I: Chucvu
+        hoTen: dataNhanVien[j][0].toString().trim(),   
+        maNV: dataNhanVien[j][1].toString().trim(),    
+        cccd: cccdStr,                                 
+        khoiLon: dataNhanVien[j][6].toString().trim(), 
+        boPhan: dataNhanVien[j][7].toString().trim(),  
+        chucVu: dataNhanVien[j][8].toString().trim()   
       });
     }
+    // =================================================================
     
     return ContentService.createTextOutput(JSON.stringify({ "result": "success", "data": employees })).setMimeType(ContentService.MimeType.JSON);
           
@@ -106,7 +111,6 @@ function doPost(e) {
 }
 
 function doOptions(e) {
-  return ContentService.createTextOutput("").setMimeType(ContentService.MimeType.TEXT).setHeaders({
-      'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type'
-  });
+  return ContentService.createTextOutput("")
+    .setMimeType(ContentService.MimeType.TEXT);
 }
