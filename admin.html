@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Hội Thao Liwayway 2026</title>
+    <!-- CSS Bootstrap 5 -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <!-- Chart.js để vẽ biểu đồ tự động -->
+    <script src="https://jsdelivr.net"></script>
+    <!-- Thư viện SheetJS để xuất file Excel (.xlsx) chuẩn -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+        .sidebar { background: #212529; color: white; min-height: 100vh; padding: 20px; }
+        .card-stat { border: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .card-stat:hover { transform: translateY(-3px); }
+        .chart-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; min-height: 340px; }
+        .table-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .hidden { display: none !important; }
+        .login-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:#212529; display:flex; justify-content:center; align-items:center; z-index:99999; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 400px; width: 100%; text-align: center; }
+    </style>
+</head>
+<body>
+
+<!-- MÀN HÌNH ĐĂNG NHẬP BẢO MẬT -->
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+        <h4 class="text-primary fw-bold mb-2">LIWAYWAY SPORTS 2026</h4>
+        <p class="text-muted small mb-4">Vui lòng nhập mật khẩu Ban tổ chức để truy cập</p>
+        <div class="mb-3">
+            <input type="password" class="form-control text-center" id="passwordInput" placeholder="Nhập mật khẩu tại đây..." onkeypress="handleKeyPress(event)">
+        </div>
+        <div id="loginErrorMsg" class="text-danger small mb-3 hidden">❌ Mật khẩu chưa chính xác!</div>
+        <button class="btn btn-primary w-100 fw-bold" onclick="checkAdminPassword()">ĐĂNG NHẬP / LOGIN</button>
+    </div>
+</div>
+
+<!-- NỘI DUNG CHÍNH CỦA DASHBOARD -->
+<div id="mainDashboard" class="container-fluid hidden">
+    <div class="row">
+        <!-- Cột Bên Trái: Menu -->
+        <div class="col-md-2 sidebar d-flex flex-column gap-3">
+            <h4 class="text-warning fw-bold text-center mb-4">LWW SPORTS 2026</h4>
+            <div class="nav flex-column nav-pills gap-2">
+                <button class="nav-link active text-start text-white fw-semibold btn btn-dark">📊 Báo Cáo Tổng Quan</button>
+            </div>
+            <button class="btn btn-outline-danger btn-sm mt-4 fw-bold" onclick="logoutAdmin()">🔒 Đăng xuất</button>
+            <div class="mt-auto text-muted text-center" style="font-size: 0.8rem;">Cập nhật tự động từ Sheets</div>
+        </div>
+
+        <!-- Cột Bên Phải: Nội dung Dashboard -->
+        <div class="col-md-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold text-dark">HỆ THỐNG QUẢN LÝ & TRÍCH XUẤT BÁO CÁO</h2>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-success fw-semibold px-3" onclick="exportToExcel()">📥 Xuất File Excel (.xlsx)</button>
+                    <button class="btn btn-primary fw-semibold px-3" id="refreshBtn" onclick="loadDashboardData()">🔄 Làm mới dữ liệu</button>
+                </div>
+            </div>
+
+            <!-- THẺ THỐNG KÊ NHANH (CARDS) -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card card-stat bg-primary text-white p-3">
+                        <div class="text-uppercase fw-bold" style="font-size: 0.8rem; opacity: 0.8;">Tổng số lượt gửi Form</div>
+                        <h2 class="fw-bold mt-1" id="statTotalSubmits">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat bg-success text-white p-3">
+                        <div class="text-uppercase fw-bold" style="font-size: 0.8rem; opacity: 0.8;">Đăng ký Cá nhân (VĐV)</div>
+                        <h2 class="fw-bold mt-1" id="statIndividual">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat bg-warning text-dark p-3">
+                        <div class="text-uppercase fw-bold" style="font-size: 0.8rem; opacity: 0.8;">Tổng số Đội tập thể</div>
+                        <h2 class="fw-bold mt-1" id="statTeams">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat bg-info text-white p-3">
+                        <div class="text-uppercase fw-bold" style="font-size: 0.8rem; opacity: 0.8;">Tổng số VĐV thực tế</div>
+                        <h2 class="fw-bold mt-1" id="statEstAthletes">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HÀNG BIỂU ĐỒ 1: MÔN THI ĐÁU & KHỐI -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5 class="fw-bold text-secondary mb-3">Tỷ lệ Đăng ký theo Môn thi đấu</h5>
+                        <canvas id="chartGames"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5 class="fw-bold text-secondary mb-3">Thống kê Đăng ký theo Khối lớn</h5>
+                        <canvas id="chartCompany"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HÀNG BIỂU ĐỒ MỚI 2: THỐNG KÊ CHI TIẾT THEO CHỨC VỤ -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="chart-container" style="min-height: 380px;">
+                        <h5 class="fw-bold text-secondary mb-3">📋 Thống kê số lượng VĐV tham gia theo Chức Vụ (Chức danh)</h5>
+                        <canvas id="chartPositions"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KHU VỰC BẢNG CHI TIẾT DANH SÁCH ĐĂNG KÝ -->
+            <div class="table-container mt-2">
+                <h5 class="fw-bold text-secondary mb-3">Chi tiết Danh sách các Đội / Cá nhân đăng ký hợp lệ</h5>
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-hover align-middle border" id="reportTable">
+                        <thead class="table-dark sticky-top">
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Khối Lớn</th>
+                                <th>Bộ phận chi tiết</th>
+                                <th>Tên Đội / Cá nhân</th>
+                                <th>Môn thi đấu</th>
+                                <th>Danh sách thành viên chi tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody">
+                            <!-- JS tự nạp dữ liệu -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // 🛠️ THAY THẾ CHÍNH XÁC ĐƯỜNG LINK WEB APP GOOGLE APPS SCRIPT ĐỘC LẬP CỦA BẠN VÀO ĐÂY
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";
+    
+        // =========================================================================
+    // 🔑 BẢO MẬT TUYỆT ĐỐI: CHỈ LƯU CHUỖI MÃ HÓA CỦA MẬT KHẨU MỚI
+    // Mật khẩu thực tế bạn gõ để đăng nhập hệ thống là: Hoadaquy
+    // =========================================================================
+    const HASHED_ADMIN_PASSWORD = "dfbff6cfcb36fb052a25a07c12239f6004945a6c3848b8964d4b12574ffef577"; 
+
+    // Thuật toán mã hóa một chiều SHA-256 chạy trực tiếp trên trình duyệt
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);                    
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+    }
+
+    // Hàm xác thực đăng nhập bảo mật
+    async function checkAdminPassword() {
+        const passwordInput = document.getElementById('passwordInput').value;
+        const errorMsg = document.getElementById('loginErrorMsg');
+        
+        // Tiến hành băm mật khẩu do người dùng gõ vào
+        const inputHash = await sha256(passwordInput);
+        
+        // Đối chiếu hai chuỗi mã hóa băm với nhau
+        if (inputHash === HASHED_ADMIN_PASSWORD) {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+            loadDashboardData(); // Gọi hàm đồng bộ nạp dữ liệu từ Google Sheets
+        } else {
+            errorMsg.classList.remove('hidden');
+        }
+    }
+
+
+    function handleKeyPress(e) { if (e.key === 'Enter') checkAdminPassword(); }
+    function logoutAdmin() {
+        document.getElementById('passwordInput').value = "";
+        document.getElementById('loginErrorMsg').classList.add('hidden');
+        document.getElementById('loginOverlay').classList.remove('hidden');
+        document.getElementById('mainDashboard').classList.add('hidden');
+    }
+
+    function loadDashboardData() {
+        const refreshBtn = document.getElementById('refreshBtn');
+        refreshBtn.disabled = true; refreshBtn.innerText = "🔄 Đang đồng bộ...";
+
+        fetch(`${WEB_APP_URL}?action=getReport`)
+        .then(response => response.json())
+        .then(res => {
+            if(res.result === "success") {
+                globalReportData = res.data;
+                processAndRenderDashboard(res.data);
+            } else { alert("Lỗi trích xuất báo cáo: " + res.message); }
+        })
+        .catch(err => { console.error(err); alert("Lỗi kết nối API Google Sheets!"); })
+        .finally(() => { refreshBtn.disabled = false; refreshBtn.innerText = "🔄 Làm mới dữ liệu"; });
+    }
+
+    function processAndRenderDashboard(rawData) {
+        let totalSubmits = rawData.length;
+        let individualCount = 0;
+        let groupCount = 0;
+        let totalAthletes = 0;
+let gameCounts = { "Chạy Marathon": 0, "Kéo co": 0, "Nhảy bao jumbo": 0, "Trò chơi liên hoàn": 0 };
+let companyCounts = { "Finance": 0, "HR and Admin": 0, "Purchasing": 0, "MIS": 0, "Plant Manager": 0 };
+// Khởi tạo bộ đếm chức vụ trống động
+let positionCounts = {};
+const tableBody = document.getElementById('reportTableBody');
+tableBody.innerHTML = "";
+if(totalSubmits === 0) {
+tableBody.innerHTML = <tr><td colspan="6" class="text-center py-4 text-muted">Chưa có dữ liệu đăng ký nào.</td></tr>;
+return;
+}
+rawData.forEach(row => {
+if(row.loaiDangKy === "Cá nhân") {
+individualCount++;
+totalAthletes += 1;
+// Vì đăng ký cá nhân không có chuỗi thành viên nhóm, hệ thống lấy luôn Chức vụ/Bộ phận chính của Form để đếm
+let pos = row.boPhan || "Chưa phân loại"; // Dự phòng
+positionCounts[pos] = (positionCounts[pos] || 0) + 1;
+} else {
+groupCount++;
+if(row.danhSachThanhVien) {
+let memberArray = row.danhSachThanhVien.split(" | ");
+totalAthletes += memberArray.length;
+// ⚙️ THUẬT TOÁN BIỂU THỨC CHÍNH QUY (REGEX): Trích xuất bóc tách chữ Chức vụ trong chuỗi đóng gói
+memberArray.forEach(memberStr => {
+let match = memberStr.match(/Chức vụ:\s*([^]]+)/i);
+if (match && match[1]) {
+let posName = match[1].trim();
+positionCounts[posName] = (positionCounts[posName] || 0) + 1;
+} else {
+positionCounts["Công nhân / Khác"] = (positionCounts["Công nhân / Khác"] || 0) + 1;
+}
+});
+}
+}
+if(gameCounts[row.monDangKy] !== undefined) gameCounts[row.monDangKy]++;
+if(companyCounts[row.congTy] !== undefined) companyCounts[row.congTy]++;
+let dateObj = new Date(row.timestamp);
+let formattedDate = ${dateObj.getDate()}/${dateObj.getMonth()+1} ${dateObj.getHours()}:${String(dateObj.getMinutes()).padStart(2, '0')};
+const tr = document.createElement('tr');
+tr.innerHTML = `
+${formattedDate}
+${row.congTy}
+${row.boPhan}
+${row.tenFormTenDoi}
+${row.monDangKy}
+<div style="font-size:0.85rem; max-width:420px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${row.danhSachThanhVien || 'Không có'}">${row.danhSachThanhVien || 'N/A (Đăng ký cá nhân)'}
+`;
+tableBody.appendChild(tr);
+});
+document.getElementById('statTotalSubmits').innerText = totalSubmits;
+document.getElementById('statIndividual').innerText = individualCount;
+document.getElementById('statTeams').innerText = groupCount;
+document.getElementById('statEstAthletes').innerText = totalAthletes;
+// Biểu đồ 1: Môn thi đấu
+if(chartGamesInstance) chartGamesInstance.destroy();
+chartGamesInstance = new Chart(document.getElementById('chartGames').getContext('2d'), {
+type: 'pie',
+data: {
+labels: Object.keys(gameCounts),
+datasets: [{ data: Object.values(gameCounts), backgroundColor: ['#0d6efd', '#dc3545', '#ffc107', '#17a2b8'] }]
+},
+options: { responsive: true, maintainAspectRatio: false }
+});
+// Biểu đồ 2: Phân loại theo Khối lớn
+if(chartCompanyInstance) chartCompanyInstance.destroy();
+chartCompanyInstance = new Chart(document.getElementById('chartCompany').getContext('2d'), {
+type: 'bar',
+data: {
+labels: Object.keys(companyCounts),
+datasets: [{ label: 'Số lượt gửi đơn theo khối', data: Object.values(companyCounts), backgroundColor: '#4285F4' }]
+},
+options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+// 📈 ĐOẠN MÃ MỚI: VẼ BIỂU ĐỒ THỐNG KÊ CHI TIẾT SỐ LƯỢNG VĐV THEO CHỨC VỤ (Dạng cột ngang)
+if(chartPositionsInstance) chartPositionsInstance.destroy();
+// Sắp xếp thứ tự chức vụ có nhiều người đăng ký nhất lên trên đầu
+let sortedPositions = Object.entries(positionCounts).sort((a, b) => b[1] - a[1]);
+let posLabels = sortedPositions.map(el => el[0]);
+let posData = sortedPositions.map(el => el[1]);
+chartPositionsInstance = new Chart(document.getElementById('chartPositions').getContext('2d'), {
+type: 'bar',
+data: {
+labels: posLabels,
+datasets: [{
+label: 'Số lượng VĐV tham gia thực tế',
+data: posData,
+backgroundColor: '#34a853', // Màu xanh lá cây thể thao chuyên nghiệp
+borderRadius: 5
+}]
+},
+options: {
+indexAxis: 'y', // Kích hoạt xoay ngang cột sang trục Y giúp dễ đọc chữ chức danh dài
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: { display: true, position: 'bottom' }
+},
+scales: {
+x: { beginAtZero: true, ticks: { stepSize: 1 } }
+}
+}
+});
+}
+function exportToExcel() {
+if(globalReportData.length === 0) { alert("Không có dữ liệu để xuất file!"); return; }
+const excelRows = [["THỜI GIAN ĐĂNG KÝ", "HÌNH THỨC", "KHỐI LỚN", "BỘ PHẬN", "TÊN ĐỘI / VĐV CHÍNH", "MÔN THI ĐẤU", "DANH SÁCH THÀNH VIÊN CHI TIẾT"]];
+globalReportData.forEach(row => {
+let dateObj = new Date(row.timestamp);
+let formattedTime = ${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()} ${dateObj.getHours()}:${String(dateObj.getMinutes()).padStart(2, '0')};
+excelRows.push([formattedTime, row.loaiDangKy, row.congTy, row.boPhan, row.tenFormTenDoi, row.monDangKy, row.danhSachThanhVien || "Đăng ký cá nhân"]);
+});
+const worksheet = XLSX.utils.aoa_to_sheet(excelRows);
+const workbook = XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(workbook, worksheet, "DanhSachHoiThao");
+const max_cols_width = excelRows.map((_, col_idx) => Math.max(...excelRows.map(row => row[col_idx] ? row[col_idx].toString().length : 0)));
+worksheet["!cols"] = max_cols_width.map(w => ({ w: w + 4 }));
+XLSX.writeFile(workbook, Bao_Cao_Hoi_Thao_Liwayway_${new Date().toISOString().slice(0,10)}.xlsx
+);
+}
+
