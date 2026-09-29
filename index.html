@@ -1,335 +1,312 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký Hội thao Liwayway 2026</title>
-    <link href="https://jsdelivr.net" rel="stylesheet">
-    <style>
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
-        .form-container { max-width: 800px; margin: 30px auto; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .brand-header { text-align: center; margin-bottom: 25px; border-bottom: 3px solid #ffc107; padding-bottom: 15px; }
-        .section-title { background: #e9ecef; padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-top: 20px; margin-bottom: 15px; }
-        .btn-submit { background-color: #0d6efd; color: white; width: 100%; padding: 12px; font-weight: bold; border-radius: 8px; border: none; }
-        .btn-submit:hover { background-color: #0b5ed7; }
-        .hidden { display: none; }
-        .loading-overlay { background: rgba(255,255,255,0.9); position: fixed; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; z-index:9999; font-weight:bold; }
-        .rule-badge { font-size: 0.85rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
-        .search-item-detail { font-size: 0.8rem; color: #6c757d; display: block; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đăng ký Hội thao Liwayway 2026</title>
+<style>
+:root{--primary:#0d6efd;--dark:#172033;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:#172033}
+.container{max-width:900px;margin:auto;padding:20px}.card{background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(16,24,40,.08)}
+.form-card{padding:28px}.brand{text-align:center;border-bottom:3px solid #ffc107;padding-bottom:16px;margin-bottom:24px}
+h1{font-size:24px;margin:0;color:var(--primary)}.subtitle{color:var(--muted);margin:7px 0 0;font-weight:600}
+.section{background:#eef2f6;padding:10px 13px;border-radius:8px;font-weight:700;margin:22px 0 15px}
+.field{margin-bottom:16px}.label{display:block;font-weight:700;margin-bottom:7px}.required{color:#dc3545}
+input,select{width:100%;border:1px solid #ced4da;border-radius:8px;padding:11px 12px;font-size:15px;background:#fff}
+input:focus,select:focus{outline:0;border-color:#86b7fe;box-shadow:0 0 0 3px rgba(13,110,253,.12)}
+.radio-row{display:flex;gap:24px;flex-wrap:wrap}.radio{display:flex;align-items:center;gap:8px;font-weight:600}
+.radio input{width:auto}.btn{border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer}.btn-primary{background:var(--primary);color:#fff}
+.btn-secondary{background:#198754;color:#fff}.btn-danger{background:#dc3545;color:#fff}.btn:disabled{opacity:.6;cursor:not-allowed}
+.submit{width:100%;font-size:16px;padding:14px;margin-top:10px}.hidden{display:none!important}
+.search-box{background:#fff9e6;border:1px solid #ffda6a;padding:14px;border-radius:10px}.results{margin-top:6px;max-height:260px;overflow:auto}
+.result{width:100%;text-align:left;background:#fff;border:1px solid var(--line);padding:10px;border-radius:7px;cursor:pointer;margin-bottom:5px}
+.result:hover{background:#f2f7ff}.result-main{font-weight:700;color:var(--primary)}.detail{font-size:12px;color:var(--muted);margin-top:3px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:9px}.members{width:100%;border-collapse:collapse;min-width:720px}
+.members th,.members td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:middle}.members th{background:#f8f9fa;font-size:13px}
+.members input{padding:8px;font-size:13px}.small{font-size:13px}.rule{margin-top:8px;padding:8px 10px;border-radius:8px;background:#fff0f0;color:#b42318;font-weight:700}
+.loading{position:fixed;inset:0;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;z-index:1000;text-align:center}
+.spinner{width:32px;height:32px;border:4px solid #d0d5dd;border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}
+.status{padding:10px;border-radius:8px;margin-bottom:14px}.status.error{background:#fff0f0;color:#b42318}.status.ok{background:#ecfdf3;color:#027a48}
+@media(max-width:600px){.container{padding:8px}.form-card{padding:18px}.radio-row{gap:12px}h1{font-size:20px}}
+</style>
 </head>
 <body>
-
-<div id="loadingOverlay" class="loading-overlay text-primary">
-    <div class="text-center">
-        <div class="spinner-border mb-2" role="status"></div>
-        <div>Đang đồng bộ dữ liệu nhân viên từ hệ thống... <br> Loading staff directory...</div>
-    </div>
+<div id="loadingOverlay" class="loading">
+  <div><div class="spinner"></div><strong>Đang tải danh sách nhân viên...</strong><br><span class="small">Please wait...</span></div>
 </div>
 
-<div class="container">
-    <div class="form-container">
-        <div class="brand-header">
-            <h3 class="text-primary fw-bold">LIWAYWAY SPORTS FESTIVAL 2026</h3>
-            <p class="text-muted mb-0 fw-semibold">CỔNG ĐĂNG KÝ THAM GIA HỘI THAO ĐIỆN TỬ</p>
-        </div>
+<main class="container">
+<section class="card form-card">
+<header class="brand">
+  <h1>LIWAYWAY SPORTS FESTIVAL 2026</h1>
+  <div class="subtitle">CỔNG ĐĂNG KÝ THAM GIA HỘI THAO</div>
+</header>
 
-        <form id="registrationForm">
-            <div class="mb-3">
-                <label class="form-label fw-bold">Hình thức đăng ký / Registration Type <span class="text-danger">*</span></label>
-                <div class="d-flex gap-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="loaiDangKy" value="Cá nhân" id="typeIndividual" checked>
-                        <label class="form-check-label fw-semibold" for="typeIndividual">Cá nhân (Marathon)</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="loaiDangKy" value="Đội nhóm" id="typeGroup">
-                        <label class="form-check-label fw-semibold" for="typeGroup">Đội nhóm (Đồng đội)</label>
-                    </div>
-                </div>
-            </div>
+<div id="status" class="status hidden"></div>
 
-            <div class="section-title text-secondary">THÔNG TIN CHUNG / GENERAL INFORMATION</div>
-
-            <div class="mb-3">
-                <label class="form-label fw-bold">Khối lớn đăng ký / Department / Factory Block <span class="text-danger">*</span></label>
-                <select class="form-select" id="congTy" required>
-                    <option value="" disabled selected>-- Chọn khối của đội đăng ký --</option>
-                    <option value="Finance">Finance (Tài chính / Kế toán)</option>
-                    <option value="HR and Admin">HR and Admin (Nhân sự / Hành chính)</option>
-                    <option value="Purchasing">Purchasing (Thu mua)</option>
-                    <option value="MIS">MIS (Hệ thống thông tin)</option>
-                    <option value="Plant Manager">Plant Manager (Khối sản xuất / Nhà máy)</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-bold">Bộ phận cụ thể / Sub-department <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="boPhan" placeholder="VD: Cashier, IT, Accounting, Xưởng 1..." required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-bold" id="labelName">Họ và Tên người đăng ký / Full Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="tenFormTenDoi" placeholder="Nhập họ và tên" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-bold">Môn thi đấu đăng ký / Sports Event <span class="text-danger">*</span></label>
-                <select class="form-select" id="monDangKy" required>
-                    <option value="" disabled selected>-- Chọn môn thi đấu --</option>
-                    <option value="Chạy Marathon" id="optMarathon">Chạy Marathon Nam/Nữ (Môn Cá nhân)</option>
-                    <option value="Kéo co" id="optKeoCo" class="hidden">Kéo co (Tug of War)</option>
-                    <option value="Nhảy bao jumbo" id="optJumbo" class="hidden">Nhảy bao Jumbo 1 tấn (Sack Race)</option>
-                    <option value="Trò chơi liên hoàn" id="optLienHoan" class="hidden">Trò chơi liên hoàn (Multi-stage Game)</option>
-                </select>
-                <div id="ruleMessage" class="mt-2 fw-semibold text-danger"></div>
-            </div>
-
-            <!-- KHU VỰC THÊM THÀNH VIÊN VÀ TÌM KIẾM THEO CCCD / CHỨC VỤ -->
-            <div id="groupSection" class="hidden">
-                <div class="section-title text-secondary d-flex justify-content-between align-items-center">
-                    <span>DANH SÁCH THÀNH VIÊN ĐỘI / TEAM MEMBERS (<span id="memberCount">0</span> người)</span>
-                    <button type="button" class="btn btn-sm btn-success" id="addMemberBtn">+ Thêm người ngoài danh mục</button>
-                </div>
-                
-                <div class="mb-3 p-3 border border-warning rounded bg-light">
-                    <label class="form-label fw-bold text-warning-emphasis">🔍 TÌM KIẾM NHÂN VIÊN CHÍNH XÁC (Gõ Tên, Mã số NV hoặc Số CCCD)</label>
-                    <input type="text" class="form-control" id="searchStaffInput" placeholder="Nhập từ khóa tìm kiếm để phân biệt người trùng tên...">
-                    <div id="searchResultsList" class="list-group mt-1 shadow-sm" style="max-height: 250px; overflow-y: auto; z-index: 999; position: relative;"></div>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle" id="membersTable">
-                        <thead class="table-light text-center small fw-bold">
-                            <tr>
-                                <th style="width: 25%">Họ và Tên</th>
-                                <th style="width: 15%">Mã số NV</th>
-                                <th style="width: 15%">4 Số cuối CCCD</th>
-                                <th style="width: 20%">Bộ phận</th>
-                                <th style="width: 15%">Chức vụ</th>
-                                <th style="width: 10%">Xóa</th>
-                            </tr>
-                        </thead>
-                        <tbody id="memberListBody" class="small">
-                            <!-- JS tự nạp dòng vào đây -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-submit mt-4" id="submitBtn">GỬI ĐĂNG KÝ / SUBMIT</button>
-        </form>
+<form id="registrationForm" novalidate>
+  <div class="field">
+    <span class="label">Hình thức đăng ký / Registration Type <span class="required">*</span></span>
+    <div class="radio-row">
+      <label class="radio"><input type="radio" name="loaiDangKy" value="Cá nhân" id="typeIndividual" checked> Cá nhân (Marathon)</label>
+      <label class="radio"><input type="radio" name="loaiDangKy" value="Đội nhóm" id="typeGroup"> Đội nhóm</label>
     </div>
-</div>
+  </div>
+
+  <div class="section">THÔNG TIN CHUNG / GENERAL INFORMATION</div>
+
+  <div class="field">
+    <label class="label" for="congTy">Khối lớn đăng ký <span class="required">*</span></label>
+    <select id="congTy" required>
+      <option value="">-- Chọn khối --</option>
+      <option value="Finance">Finance (Tài chính / Kế toán)</option>
+      <option value="HR and Admin">HR and Admin (Nhân sự / Hành chính)</option>
+      <option value="Purchasing">Purchasing (Thu mua)</option>
+      <option value="MIS">MIS (Hệ thống thông tin)</option>
+      <option value="Plant Manager">Plant Manager (Khối sản xuất / Nhà máy)</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label class="label" for="boPhan">Bộ phận cụ thể <span class="required">*</span></label>
+    <input id="boPhan" required placeholder="VD: Cashier, IT, Accounting, Xưởng 1...">
+  </div>
+
+  <div class="field">
+    <label class="label" id="labelName" for="tenFormTenDoi">Họ và tên người đăng ký <span class="required">*</span></label>
+    <input id="tenFormTenDoi" required placeholder="Nhập họ và tên">
+  </div>
+
+  <div class="field">
+    <label class="label" for="monDangKy">Môn thi đấu <span class="required">*</span></label>
+    <select id="monDangKy" required>
+      <option value="">-- Chọn môn thi đấu --</option>
+      <option value="Chạy Marathon" id="optMarathon">Chạy Marathon Nam/Nữ (Cá nhân)</option>
+      <option value="Kéo co" id="optKeoCo" class="hidden">Kéo co (Tug of War)</option>
+      <option value="Nhảy bao jumbo" id="optJumbo" class="hidden">Nhảy bao Jumbo 1 tấn (Sack Race)</option>
+      <option value="Trò chơi liên hoàn" id="optLienHoan" class="hidden">Trò chơi liên hoàn (Multi-stage Game)</option>
+    </select>
+    <div id="ruleMessage" class="rule hidden"></div>
+  </div>
+
+  <section id="groupSection" class="hidden">
+    <div class="section">
+      DANH SÁCH THÀNH VIÊN ĐỘI (<span id="memberCount">0</span> người)
+      <button type="button" class="btn btn-secondary" id="addMemberBtn" style="float:right;padding:6px 10px">+ Người ngoài danh mục</button>
+      <div style="clear:both"></div>
+    </div>
+
+    <div class="search-box">
+      <label class="label" for="searchStaffInput">🔍 Tìm nhân viên bằng Tên, Mã NV hoặc CCCD</label>
+      <input id="searchStaffInput" autocomplete="off" placeholder="Nhập từ khóa...">
+      <div id="searchResultsList" class="results"></div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:14px">
+      <table class="members">
+        <thead><tr><th>Họ và tên</th><th>Mã NV</th><th>4 số cuối CCCD</th><th>Bộ phận</th><th>Chức vụ</th><th>Xóa</th></tr></thead>
+        <tbody id="memberListBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <button class="btn btn-primary submit" type="submit" id="submitBtn">GỬI ĐĂNG KÝ / SUBMIT</button>
+</form>
+</section>
+</main>
 
 <script>
-    // 🛠️ ĐIỀN LINK WEB APP GOOGLE APPS SCRIPT ĐỘC LẬP CỦA BẠN VÀO ĐÂY
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";
 
-    let dbEmployees = []; 
+const GAME_LIMITS = {
+  "Kéo co": {min:6,max:10,msg:"Yêu cầu từ 6 đến 10 người"},
+  "Nhảy bao jumbo": {min:10,max:10,msg:"Yêu cầu đúng 10 người"},
+  "Trò chơi liên hoàn": {min:4,max:4,msg:"Yêu cầu đúng 4 người"}
+};
 
-    const GAME_LIMITS = {
-        "Kéo co": { min: 6, max: 10, msg: "Yêu cầu từ 6 đến 10 người (Gồm 3-5 Nam và 3-5 Nữ)" },
-        "Nhảy bao jumbo": { min: 10, max: 10, msg: "Yêu cầu cố định đúng 10 người (Gồm 5 Nam và 5 Nữ)" },
-        "Trò chơi liên hoàn": { min: 4, max: 4, msg: "Yêu cầu cố định đúng 4 người (Gồm 2 Nam và 2 Nữ)" }
-    };
+let dbEmployees = [];
+const $ = id => document.getElementById(id);
 
-        // =========================================================================
-    // 🛠️ ĐOẠN CODE CẢI TIẾN: BẮT BUỘC THÊM CẤU HÌNH REDIRECT ĐỂ TRÁNH BỊ TREO WEB
-    // =========================================================================
-    window.addEventListener('DOMContentLoaded', () => {
-        // Thêm cấu hình redirect: "follow" là bắt buộc khi làm việc với Google Web App API
-        fetch(WEB_APP_URL, {
-            method: "GET",
-            redirect: "follow" 
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Mạng phản hồi không ổn định / Network response was not ok");
-            }
-            return response.json();
-        })
-        .then(res => {
-            if(res.result === "success") {
-                dbEmployees = res.data;
-                // Giải phóng màn hình chờ, hiển thị Form đăng ký ngay lập tức
-                document.getElementById('loadingOverlay').classList.add('hidden'); 
-            } else {
-                alert("Hệ thống Google Sheets báo lỗi: " + res.message);
-            }
-        })
-        .catch(err => {
-            console.error("Chi tiết lỗi kết nối API:", err);
-            alert("Không thể kết nối lấy dữ liệu nhân viên! Vui lòng tải lại trang (F5) hoặc kiểm tra lại link WEB_APP_URL.");
-        });
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+function showStatus(message, type="error") {
+  const el=$("status"); el.textContent=message; el.className="status "+type;
+}
+function hideStatus(){ $("status").className="status hidden"; }
+function updateMemberCount(){ $("memberCount").textContent=$("memberListBody").querySelectorAll("tr").length; }
+
+function setGroupMode() {
+  const group=$("typeGroup").checked;
+  $("groupSection").classList.toggle("hidden", !group);
+  $("labelName").innerHTML = group
+    ? 'Tên Đội thi đấu <span class="required">*</span>'
+    : 'Họ và tên người đăng ký <span class="required">*</span>';
+  $("tenFormTenDoi").placeholder = group ? "VD: Đội Cơ Khí Liwayway" : "VD: Nguyễn Văn A";
+
+  ["optMarathon","optKeoCo","optJumbo","optLienHoan"].forEach(id => $(id).classList.add("hidden"));
+  $(group ? "optKeoCo" : "optMarathon").classList.remove("hidden");
+  if (group) {
+    $("optJumbo").classList.remove("hidden");
+    $("optLienHoan").classList.remove("hidden");
+  }
+
+  $("monDangKy").value="";
+  $("ruleMessage").classList.add("hidden");
+  $("ruleMessage").textContent="";
+  $("searchStaffInput").value="";
+  $("searchResultsList").innerHTML="";
+  $("memberListBody").innerHTML="";
+  updateMemberCount();
+}
+
+function renderSearchResults(keyword) {
+  const box=$("searchResultsList"); box.innerHTML="";
+  if (!keyword) return;
+
+  const q=keyword.toLowerCase();
+  const matched=dbEmployees.filter(emp =>
+    emp.hoTen.toLowerCase().includes(q) ||
+    emp.maNV.toLowerCase().includes(q) ||
+    emp.cccd.includes(q)
+  ).slice(0,8);
+
+  if (!matched.length) {
+    box.innerHTML='<div class="detail" style="padding:8px">Không tìm thấy nhân viên phù hợp.</div>';
+    return;
+  }
+
+  matched.forEach(emp=>{
+    const btn=document.createElement("button");
+    btn.type="button"; btn.className="result";
+    const masked=emp.cccd ? "****"+emp.cccd.slice(-4) : "Chưa có";
+    btn.innerHTML =
+      '<div class="result-main">'+escapeHtml(emp.hoTen)+' ('+escapeHtml(emp.maNV)+')</div>'+
+      '<div class="detail">CCCD: '+escapeHtml(masked)+' | '+escapeHtml(emp.khoiLon)+' - '+escapeHtml(emp.boPhan)+' | '+escapeHtml(emp.chucVu)+'</div>';
+    btn.addEventListener("click",()=>addMemberToTable(emp));
+    box.appendChild(btn);
+  });
+}
+
+function addMemberToTable(emp={}) {
+  const id=String(emp.maNV||"").trim();
+  const existing=[...document.querySelectorAll(".member-id")].map(x=>x.value.trim());
+  if(id && existing.includes(id)){ showStatus("Nhân viên này đã có trong đội.","error"); return; }
+
+  const game=$("monDangKy").value, limit=GAME_LIMITS[game];
+  const count=$("memberListBody").querySelectorAll("tr").length;
+  if(limit && count>=limit.max){ showStatus("Môn "+game+" đã đủ số lượng tối đa.","error"); return; }
+
+  const tr=document.createElement("tr");
+  const name=String(emp.hoTen||"");
+  const cccd=String(emp.cccd||"");
+  const readonly=id ? "readonly" : "";
+  tr.innerHTML=
+    '<td><input class="member-name" required value="'+escapeHtml(name)+'" '+readonly+'></td>'+
+    '<td><input class="member-id" value="'+escapeHtml(id)+'" '+readonly+'></td>'+
+    '<td><input class="member-cccd" value="'+escapeHtml(cccd ? cccd.slice(-4) : "")+'" '+readonly+' maxlength="4" inputmode="numeric"></td>'+
+    '<td><input class="member-dept" required value="'+escapeHtml(emp.boPhan||"")+'" '+readonly+'></td>'+
+    '<td><input class="member-pos" required value="'+escapeHtml(emp.chucVu||"")+'" '+readonly+'></td>'+
+    '<td><button type="button" class="btn btn-danger remove-btn" style="padding:6px 9px">X</button></td>';
+  tr.querySelector(".remove-btn").addEventListener("click",()=>{tr.remove();updateMemberCount();});
+  $("memberListBody").appendChild(tr);
+  updateMemberCount();
+  hideStatus();
+  $("searchStaffInput").value="";
+  $("searchResultsList").innerHTML="";
+}
+
+function validateForm() {
+  if (!$("registrationForm").checkValidity()) {
+    $("registrationForm").reportValidity(); return false;
+  }
+  const group=$("typeGroup").checked, game=$("monDangKy").value;
+  if (!group) return game==="Chạy Marathon";
+  const rows=[...$("memberListBody").querySelectorAll("tr")], limit=GAME_LIMITS[game];
+  if (!limit) { showStatus("Vui lòng chọn môn thi đấu."); return false; }
+  if (rows.length<limit.min || rows.length>limit.max) {
+    showStatus('Môn "'+game+'" yêu cầu '+(limit.min===limit.max ? "đúng "+limit.min : "từ "+limit.min+" đến "+limit.max)+" người. Hiện có "+rows.length+".");
+    return false;
+  }
+  const ids=rows.map(r=>r.querySelector(".member-id").value.trim()).filter(Boolean);
+  if (new Set(ids).size!==ids.length) { showStatus("Mã nhân viên trong đội không được trùng."); return false; }
+  return true;
+}
+
+async function loadEmployees() {
+  try {
+    const response=await fetch(WEB_APP_URL+"?action=getEmployees",{redirect:"follow",cache:"no-store"});
+    if(!response.ok) throw new Error("HTTP "+response.status);
+    const res=await response.json();
+    if(res.result!=="success") throw new Error(res.message||"API error");
+    dbEmployees=Array.isArray(res.data)?res.data:[];
+    $("loadingOverlay").classList.add("hidden");
+  } catch(err) {
+    console.error(err);
+    $("loadingOverlay").classList.add("hidden");
+    showStatus("Không thể tải danh sách nhân viên. Vui lòng tải lại trang hoặc kiểm tra Web App URL.");
+  }
+}
+
+$("typeIndividual").addEventListener("change",setGroupMode);
+$("typeGroup").addEventListener("change",setGroupMode);
+$("monDangKy").addEventListener("change",()=>{
+  const rule=GAME_LIMITS[$("monDangKy").value];
+  $("ruleMessage").textContent=rule ? "⚠️ "+rule.msg : "";
+  $("ruleMessage").classList.toggle("hidden",!rule);
+});
+$("searchStaffInput").addEventListener("input",e=>renderSearchResults(e.target.value.trim()));
+$("addMemberBtn").addEventListener("click",()=>addMemberToTable());
+
+$("registrationForm").addEventListener("submit",async e=>{
+  e.preventDefault(); hideStatus();
+  if(!validateForm()) return;
+
+  const btn=$("submitBtn"); btn.disabled=true; btn.textContent="Đang lưu đăng ký...";
+  const group=$("typeGroup").checked;
+  let memberString="";
+  if(group){
+    memberString=[...$("memberListBody").querySelectorAll("tr")].map((tr,i)=>{
+      const v=s=>tr.querySelector(s).value.trim();
+      const id=v(".member-id"), cccd=v(".member-cccd");
+      return (i+1)+". "+v(".member-name")+
+        (id?" - MNV: "+id:"")+
+        (cccd?" - CCCD 4 số cuối: "+cccd:"")+
+        " [Bộ phận: "+v(".member-dept")+" - Chức vụ: "+v(".member-pos")+"]";
+    }).join(" | ");
+  }
+
+  const payload={
+    loaiDangKy:document.querySelector('input[name="loaiDangKy"]:checked').value,
+    congTy:$("congTy").value,
+    boPhan:$("boPhan").value.trim(),
+    tenFormTenDoi:$("tenFormTenDoi").value.trim(),
+    monDangKy:$("monDangKy").value,
+    danhSachThanhVien:memberString
+  };
+
+  try{
+    // text/plain avoids a CORS preflight with Apps Script Web Apps.
+    const response=await fetch(WEB_APP_URL,{
+      method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(payload),redirect:"follow"
     });
-    // =========================================================================
-
-
-    const typeIndividual = document.getElementById('typeIndividual');
-    const typeGroup = document.getElementById('typeGroup');
-    const labelName = document.getElementById('labelName');
-    const tenFormTenDoi = document.getElementById('tenFormTenDoi');
-    const monDangKy = document.getElementById('monDangKy');
-    const groupSection = document.getElementById('groupSection');
-    const memberListBody = document.getElementById('memberListBody');
-    const searchStaffInput = document.getElementById('searchStaffInput');
-    const searchResultsList = document.getElementById('searchResultsList');
-    const ruleMessage = document.getElementById('ruleMessage');
-    const memberCount = document.getElementById('memberCount');
-
-    function updateMemberCount() {
-        memberCount.innerText = memberListBody.querySelectorAll('tr').length;
-    }
-
-    monDangKy.addEventListener('change', function() {
-        if (GAME_LIMITS[this.value]) {
-            ruleMessage.innerHTML = `<span class="bg-danger-subtle text-danger rule-badge">⚠️ QUY ĐỊNH: ${GAME_LIMITS[this.value].msg}</span>`;
-        } else { ruleMessage.innerHTML = ""; }
-    });
-
-    function handleFormTypeChange() {
-        memberListBody.innerHTML = ""; monDangKy.value = ""; searchStaffInput.value = ""; searchResultsList.innerHTML = ""; ruleMessage.innerHTML = "";
-updateMemberCount(); 
-if (typeIndividual.checked) {
-labelName.innerHTML = 'Họ và Tên người đăng ký / Full Name ';
-tenFormTenDoi.placeholder = "VD: Nguyễn Văn A";
-groupSection.classList.add('hidden');
-document.getElementById('optMarathon').classList.remove('hidden');
-document.getElementById('optKeoCo').classList.add('hidden');
-document.getElementById('optJumbo').classList.add('hidden');
-document.getElementById('optLienHoan').classList.add('hidden');
-} else {
-labelName.innerHTML = 'Tên Đội thi đấu / Team Name ';
-tenFormTenDoi.placeholder = "VD: Đội Cơ Khí Liwayway, Đội Kho Vận...";
-groupSection.classList.remove('hidden');
-document.getElementById('optMarathon').classList.add('hidden');
-document.getElementById('optKeoCo').classList.remove('hidden');
-document.getElementById('optJumbo').classList.remove('hidden');
-document.getElementById('optLienHoan').classList.remove('hidden');
-}
-} 
-typeIndividual.addEventListener('change', handleFormTypeChange);
-typeGroup.addEventListener('change', handleFormTypeChange); 
-// THUẬT TOÁN TÌM KIẾM ĐA NĂNG PHÂN BIỆT TRÙNG TÊN LÀM THEO YÊU CẦU
-searchStaffInput.addEventListener('input', function() {
-const keyword = this.value.trim().toLowerCase();
-searchResultsList.innerHTML = "";
-if(keyword === "") return; 
-// Lọc thông tin theo Tên, Mã số NV hoặc số CCCD
-const matched = dbEmployees.filter(emp =>
-emp.hoTen.toLowerCase().includes(keyword) ||
-emp.maNV.toLowerCase().includes(keyword) ||
-emp.cccd.includes(keyword)
-).slice(0, 6); // Lấy tối đa 6 kết quả khớp nhất để hiển thị vừa vặn 
-matched.forEach(emp => {
-const btn = document.createElement('button');
-btn.type = "button";
-btn.className = "list-group-item list-group-item-action text-start p-2"; 
-// Mã hóa hiển thị ẩn bớt CCCD để bảo mật thông tin cá nhân (chỉ lộ 4 số cuối)
-let maskedCCCD = emp.cccd.length > 4 ? "****" + emp.cccd.slice(-4) : "Chưa có"; 
-btn.innerHTML = <div class="d-flex justify-content-between align-items-center"> <span class="fw-bold text-primary">${emp.hoTen} (${emp.maNV})</span> <span class="badge bg-secondary">${emp.chucVu}</span> </div> <span class="search-item-detail">CCCD: ${maskedCCCD} | Khối: ${emp.khoiLon} - Bộ phận: ${emp.boPhan}</span>; 
-btn.addEventListener('click', () => {
-addMemberToTable(emp.hoTen, emp.maNV, emp.cccd, emp.boPhan, emp.chucVu);
-searchStaffInput.value = "";
-searchResultsList.innerHTML = "";
-});
-searchResultsList.appendChild(btn);
-});
-}); 
-function addMemberToTable(name="", id="", cccd="", dept="", pos="") {
-const existingIds = Array.from(document.querySelectorAll('.member-id')).map(input => input.value);
-if(id && existingIds.includes(id)) {
-alert("Nhân viên này đã được thêm vào đội trước đó rồi!"); return;
-} 
-const currentCount = memberListBody.querySelectorAll('tr').length;
-if (monDangKy.value && GAME_LIMITS[monDangKy.value] && currentCount >= GAME_LIMITS[monDangKy.value].max) {
-alert(Môn thi đấu này giới hạn tối đa ${GAME_LIMITS[monDangKy.value].max} người!); return;
-} 
-let endCCCD = cccd.length > 4 ? cccd.slice(-4) : cccd; 
-const tr = document.createElement('tr');
-tr.innerHTML = ` 
-<input type="text" class="form-control form-control-sm member-name" value="
- 𝑛𝑎𝑚𝑒
- "
- 
-{id ? 'readonly' : ''} required> 
-<input type="text" class="form-control form-control-sm member-dept" value="
- 𝑑𝑒𝑝𝑡
- "
- 
-{id ? 'readonly' : ''} required> 
-<input type="text" class="form-control form-control-sm member-pos" value="pos" {id ? 'readonly' : ''} required> 
-X 
-`;
-tr.querySelector('.remove-btn').addEventListener('click', () => { tr.remove(); updateMemberCount(); });
-memberListBody.appendChild(tr);
-updateMemberCount();
-} 
-// Nút bổ sung người thủ công bên ngoài danh mục
-document.getElementById('addMemberBtn').addEventListener('click', () => {
-addMemberToTable("", "", "", "", "");
-}); 
-document.getElementById('registrationForm').addEventListener('submit', function(e) {
-e.preventDefault();
-const submitBtn = document.getElementById('submitBtn');
-const selectedGame = monDangKy.value; 
-if (typeGroup.checked) {
-const currentCount = memberListBody.querySelectorAll('tr').length;
-const limits = GAME_LIMITS[selectedGame];
-if (limits) {
-if (limits.min === limits.max && currentCount !== limits.min) {
-alert(❌ LỖI SỐ LƯỢNG:\nMôn [${selectedGame}] bắt buộc phải điền đủ chính xác ${limits.min} thành viên.\nHiện có ${currentCount} người.); return;
-}
-if (currentCount < limits.min || currentCount > limits.max) {
-alert(❌ LỖI SỐ LƯỢNG:\nMôn [${selectedGame}] quy định số lượng từ ${limits.min} đến ${limits.max} người.\nHịên có ${currentCount} người.); return;
-}
-}
-} 
-submitBtn.disabled = true;
-submitBtn.innerText = "Đang truyền tải..."; 
-let danhSachThanhVienStr = "";
-if (typeGroup.checked) {
-const names = document.querySelectorAll('.member-name');
-const ids = document.querySelectorAll('.member-id');
-const cccds = document.querySelectorAll('.member-cccd');
-const depts = document.querySelectorAll('.member-dept');
-const poses = document.querySelectorAll('.member-pos');
-const rows = []; 
-names.forEach((node, index) => {
-let idText = ids[index].value ? - MNV: ${ids[index].value} : '';
-let cccdText = cccds[index].value ? - CCCD 4 số cuối: ${cccds[index].value} : '';
-rows.push(${index + 1}. ${node.value.trim()}${idText}${cccdText} [Bộ phận: ${depts[index].value.trim()} - Chức vụ: ${poses[index].value.trim()}]);
-});
-danhSachThanhVienStr = rows.join(" | ");
-} 
-const formData = {
-loaiDangKy: document.querySelector('input[name="loaiDangKy"]:checked').value,
-congTy: document.getElementById('congTy').value,
-boPhan: document.getElementById('boPhan').value,
-tenFormTenDoi: tenFormTenDoi.value,
-monDangKy: selectedGame,
-danhSachThanhVien: danhSachThanhVienStr
-}; 
-fetch(WEB_APP_URL, {
-method: 'POST',
-mode: 'no-cors',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(formData)
-})
-.then(() => {
-alert("Đăng ký thành công! Dữ liệu đã lưu kèm theo Mã NV, Số CCCD, Chức vụ hợp lệ. 🎉");
-document.getElementById('registrationForm').reset();
-memberListBody.innerHTML = "";
-handleFormTypeChange();
-})
-.catch(error => {
-console.error(error);
-alert("Lỗi đồng bộ dữ liệu mạng!");
-})
-.finally(() => {
-submitBtn.disabled = false;
-submitBtn.innerText = "GỬI ĐĂNG KÝ / SUBMIT";
-});
+    const res=await response.json();
+    if(res.result!=="success") throw new Error(res.message||"Không thể lưu đăng ký.");
+    $("registrationForm").reset(); setGroupMode(); hideStatus();
+    showStatus("Đăng ký thành công! Dữ liệu đã được lưu.","ok");
+    window.scrollTo({top:0,behavior:"smooth"});
+  }catch(err){
+    console.error(err); showStatus(err.message||"Lỗi kết nối. Vui lòng thử lại.");
+  }finally{
+    btn.disabled=false; btn.textContent="GỬI ĐĂNG KÝ / SUBMIT";
+  }
 });
 
+setGroupMode();
+loadEmployees();
+</script>
+</body>
+</html>
