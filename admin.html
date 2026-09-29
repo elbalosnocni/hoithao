@@ -69,7 +69,7 @@ input{width:100%;padding:12px;border:1px solid #ced4da;border-radius:8px;margin:
       <h3>Chi tiết danh sách đăng ký</h3>
       <div class="table-wrap">
         <table class="table">
-          <thead><tr><th>Thời gian</th><th>Hình thức</th><th>Công ty</th><th>Bộ phận</th><th>Tên đội / VĐV</th><th>Môn</th><th>Thành viên</th></tr></thead>
+          <thead><tr><th>Thời gian</th><th>Hình thức</th><th>Công ty</th><th>Phòng ban</th><th>Bộ phận</th><th>Tên đội / VĐV</th><th>Môn</th><th>Thành viên</th></tr></thead>
           <tbody id="reportTableBody"></tbody>
         </table>
       </div>
@@ -128,7 +128,7 @@ function renderDashboard(data){
   const body=$("reportTableBody");body.innerHTML="";
 
   if(!data.length){
-    body.innerHTML='<tr><td colspan="7" style="text-align:center;padding:25px">Chưa có dữ liệu đăng ký.</td></tr>';
+    body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:25px">Chưa có dữ liệu đăng ký.</td></tr>';
   }
 
   data.forEach(row=>{
@@ -142,7 +142,8 @@ function renderDashboard(data){
     tr.innerHTML="<td>"+escapeHtml(row.timestamp)+"</td>"+
       "<td>"+escapeHtml(row.loaiDangKy)+"</td>"+
       "<td>"+escapeHtml(row.congTy)+"</td>"+
-      "<td>"+escapeHtml(row.boPhan)+"</td>"+
+      "<td>"+escapeHtml(row.phongBan||"")+"</td>"+
+      "<td>"+escapeHtml(row.boPhan||"")+"</td>"+
       "<td>"+escapeHtml(row.tenFormTenDoi)+"</td>"+
       "<td>"+escapeHtml(row.monDangKy)+"</td>"+
       '<td><div class="members-text" title="'+escapeHtml(row.danhSachThanhVien||"Đăng ký cá nhân")+'">'+escapeHtml(row.danhSachThanhVien||"Đăng ký cá nhân")+"</div></td>";
@@ -166,8 +167,8 @@ function renderDashboard(data){
 }
 function exportToExcel(){
   if(!globalReportData.length){setStatus("Không có dữ liệu để xuất Excel.");return;}
-    const rows=[["THỜI GIAN","HÌNH THỨC","CÔNG TY","BỘ PHẬN","TÊN ĐỘI / VĐV","MÔN THI","THÀNH VIÊN"]];
-  globalReportData.forEach(r=>rows.push([r.timestamp,r.loaiDangKy,r.congTy,r.boPhan,r.tenFormTenDoi,r.monDangKy,r.danhSachThanhVien||"Đăng ký cá nhân"]));
+    const rows=[["THỜI GIAN","HÌNH THỨC","CÔNG TY","PHÒNG BAN","BỘ PHẬN","TÊN ĐỘI / VĐV","MÔN THI","THÀNH VIÊN"]];
+  globalReportData.forEach(r=>rows.push([r.timestamp,r.loaiDangKy,r.congTy,r.phongBan||"",r.boPhan||"",r.tenFormTenDoi,r.monDangKy,r.danhSachThanhVien||"Đăng ký cá nhân"]));
   const ws=XLSX.utils.aoa_to_sheet(rows);ws["!cols"]=rows[0].map((_,i)=>({wch:Math.min(60,Math.max(12,...rows.map(r=>String(r[i]||"").length))+2)}));
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DanhSachHoiThao");
   XLSX.writeFile(wb,"Bao_Cao_Hoi_Thao_Liwayway_"+new Date().toISOString().slice(0,10)+".xlsx");
