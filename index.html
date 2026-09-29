@@ -134,22 +134,37 @@
         "Trò chơi liên hoàn": { min: 4, max: 4, msg: "Yêu cầu cố định đúng 4 người (Gồm 2 Nam và 2 Nữ)" }
     };
 
+        // =========================================================================
+    // 🛠️ ĐOẠN CODE CẢI TIẾN: BẮT BUỘC THÊM CẤU HÌNH REDIRECT ĐỂ TRÁNH BỊ TREO WEB
+    // =========================================================================
     window.addEventListener('DOMContentLoaded', () => {
-        fetch(WEB_APP_URL)
-        .then(response => response.json())
+        // Thêm cấu hình redirect: "follow" là bắt buộc khi làm việc với Google Web App API
+        fetch(WEB_APP_URL, {
+            method: "GET",
+            redirect: "follow" 
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Mạng phản hồi không ổn định / Network response was not ok");
+            }
+            return response.json();
+        })
         .then(res => {
             if(res.result === "success") {
                 dbEmployees = res.data;
+                // Giải phóng màn hình chờ, hiển thị Form đăng ký ngay lập tức
                 document.getElementById('loadingOverlay').classList.add('hidden'); 
             } else {
-                alert("Lỗi tải danh mục nhân viên: " + res.message);
+                alert("Hệ thống Google Sheets báo lỗi: " + res.message);
             }
         })
         .catch(err => {
-            console.error(err);
-            alert("Không thể kết nối API danh sách nhân viên!");
+            console.error("Chi tiết lỗi kết nối API:", err);
+            alert("Không thể kết nối lấy dữ liệu nhân viên! Vui lòng tải lại trang (F5) hoặc kiểm tra lại link WEB_APP_URL.");
         });
     });
+    // =========================================================================
+
 
     const typeIndividual = document.getElementById('typeIndividual');
     const typeGroup = document.getElementById('typeGroup');
