@@ -207,12 +207,15 @@ function doPost(e){
     if(action==='register'){
       assertRegistrationOpen_();validateRegistration_(p);checkDuplicateRegistration_(p);const sh=getRegistrationSheet_(),code=confirmationCode_(),deadline=getRegistrationDeadlineMs_();
       sh.appendRow([now_(),normalize_(p.loaiDangKy),'','',normalize_(p.tenFormTenDoi),normalize_(p.monDangKy),normalize_(p.danhSachThanhVien),normalize_(p.phongBan),normalize_(p.boPhan),normalize_(p.memberKeys||p.maNVDangKy||p.cccdDangKy),code,deadline?new Date(deadline):'']);
-      // Tạo dữ liệu đội/VĐV ngay sau khi đăng ký thành công.
-      syncRegistrationData_();
-      return json_({result:'success',message:'Đăng ký đã được lưu và cập nhật danh sách thi đấu.',confirmationCode:code,registrationStatus:registrationStatus_(),data:{loaiDangKy:p.loaiDangKy,tenFormTenDoi:p.tenFormTenDoi,monDangKy:p.monDangKy,danhSachThanhVien:p.danhSachThanhVien,phongBan:p.phongBan,boPhan:p.boPhan}});
+      // Chi luu dang ky trong request nay. Dong bo doi/VDV la tac vu nang,
+      // khong chay dong bo trong request cong nhan de tranh timeout / Failed to fetch.
+      return json_({result:'success',message:'Đăng ký đã được lưu. Ban tổ chức có thể đồng bộ danh sách thi đấu từ Admin.',confirmationCode:code,registrationStatus:registrationStatus_(),data:{loaiDangKy:p.loaiDangKy,tenFormTenDoi:p.tenFormTenDoi,monDangKy:p.monDangKy,danhSachThanhVien:p.danhSachThanhVien,phongBan:p.phongBan,boPhan:p.boPhan}});
     }
     return json_({result:'error',message:'Action POST không hợp lệ: '+action});
   }catch(err){console.error(err);return json_({result:'error',message:err.message||String(err)});}finally{lock.releaseLock();}
+}
+function doOptions(e){
+  return ContentService.createTextOutput('').setMimeType(ContentService.MimeType.TEXT);
 }
 function requireAdmin_(p){if(!isValidSession_(p.token))throw new Error('Phiên Admin không hợp lệ hoặc đã hết hạn.');}
 function saveGame_(p){

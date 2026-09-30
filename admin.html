@@ -14,9 +14,62 @@
 <div id="gameModal" class="modal hidden"><div class="modal-card"><h2 id="gameModalTitle">Thêm môn</h2><input type="hidden" id="oldCode"><div class="formgrid"><div><label>Mã môn *</label><input id="gCode"></div><div><label>Tên môn *</label><input id="gName"></div><div><label>Hình thức</label><select id="gType"><option>Đội nhóm</option><option>Cá nhân</option></select></div><div><label>Trạng thái</label><select id="gStatus"><option>Mở</option><option>Tạm khóa</option><option>Khóa</option></select></div><div><label>Min người</label><input id="gMin" type="number" min="1"></div><div><label>Max người</label><input id="gMax" type="number" min="1"></div><div><label>Số bảng</label><input id="gGroups" type="number" min="1" value="1"></div><div><label>Đội/bảng</label><input id="gTeamsPerGroup" type="number" min="0" value="0"></div><div><label>Vào vòng sau</label><input id="gAdvance" type="number" min="0" value="0"></div><div><label>Thứ tự</label><input id="gOrder" type="number" value="99"></div><div class="full"><label>Thể thức</label><input id="gFormat" placeholder="VD: Vòng bảng → bán kết → chung kết"></div><div class="full"><label>Nội dung / mô tả</label><textarea id="gDesc" style="width:100%;min-height:90px;border:1px solid #ced4da;border-radius:8px;padding:10px"></textarea></div></div><div style="margin-top:15px;text-align:right"><button class="light" onclick="closeGame()">Hủy</button> <button class="primary" onclick="saveGame()">Lưu</button></div></div></div>
 <div id="passModal" class="modal hidden"><div class="modal-card" style="max-width:450px"><h2>Đổi mật khẩu</h2><input id="oldPass" type="password" placeholder="Mật khẩu hiện tại"><br><br><input id="newPass" type="password" placeholder="Mật khẩu mới (≥8 ký tự)"><br><br><input id="newPass2" type="password" placeholder="Nhập lại"><div style="margin-top:15px;text-align:right"><button class="light" onclick="closePass()">Hủy</button> <button class="primary" onclick="changePass()">Lưu</button></div></div></div>
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";let token=sessionStorage.getItem('sportsAdminToken')||'',games=[],report=[],charts={};const $=id=>document.getElementById(id);function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}function stat(m,t='error'){const e=$('status');e.textContent=m;e.className='status '+t;}async function apiGet(action,extra=''){const r=await fetch(WEB_APP_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+extra+'&v=4',{cache:'no-store'});const x=await r.json();if(x.result==='unauthorized'){logout();throw Error('Phiên Admin đã hết hạn.');}if(x.result!=='success')throw Error(x.message||'API lỗi');return x.data;}async function apiPost(p){const r=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(p),redirect:'follow'});const x=await r.json();if(x.result==='unauthorized'){logout();throw Error('Phiên Admin đã hết hạn.');}if(x.result!=='success')throw Error(x.message||'API lỗi');return x;}
-async function login(){try{const r=await apiPost({action:'adminLogin',password:$('password').value});token=r.token;sessionStorage.setItem('sportsAdminToken',token);showApp();await loadAll();}catch(e){$('loginErr').textContent=e.message;$('loginErr').className='status error';}}function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden');}function logout(){sessionStorage.removeItem('sportsAdminToken');token='';$('app').classList.add('hidden');$('login').classList.remove('hidden');}
-async function loadAll(){try{games=await apiGet('getGamesAdmin');report=await apiGet('getReport');renderDashboard();renderGames();fillGameSelects();await loadTeams();await loadAthletes();await loadMatches();await loadResults();await loadSettings();}catch(e){stat(e.message);}}
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";let token=sessionStorage.getItem('sportsAdminToken')||'',games=[],report=[],charts={};const $=id=>document.getElementById(id);function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}function stat(m,t='error'){const e=$('status');e.textContent=m;e.className='status '+t;}async function apiRequest(url,opts={},label='Kết nối máy chủ'){
+  const maxTry=3, timeoutMs=20000; let lastErr;
+  for(let attempt=1;attempt<=maxTry;attempt++){
+    const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeoutMs);
+    try{
+      const r=await fetch(url,{...opts,signal:ctl.signal,cache:opts.cache||'no-store',redirect:'follow'});
+      const text=await r.text();
+      if(!r.ok)throw new Error('Máy chủ trả về HTTP '+r.status+'.');
+      let x;try{x=JSON.parse(text);}catch(e){throw new Error('API không trả về JSON hợp lệ. Hãy kiểm tra deployment Web App.');}
+      return x;
+    }catch(e){
+      lastErr=e.name==='AbortError'?new Error(label+' quá thời gian chờ.'):e;
+      if(attempt<maxTry)await new Promise(r=>setTimeout(r,700*attempt));
+    }finally{clearTimeout(timer);}
+  }
+  if(lastErr && /fetch/i.test(lastErr.message))throw new Error('Failed to fetch: không kết nối được Web App. Kiểm tra URL /exec, quyền Anyone và mạng Internet.');
+  throw lastErr||new Error('Không thể kết nối máy chủ.');
+}
+async function apiGet(action,extra=''){
+  const x=await apiRequest(WEB_APP_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+extra+'&v=5',{},'Tải '+action);
+  if(x.result==='unauthorized'){logout();throw Error('Phiên Admin đã hết hạn. Vui lòng đăng nhập lại.');}
+  if(x.result!=='success')throw Error(x.message||'API lỗi');
+  return x.data;
+}
+async function apiPost(p,label='Thực hiện thao tác'){
+  const x=await apiRequest(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(p)},label);
+  if(x.result==='unauthorized'){logout();throw Error('Phiên Admin đã hết hạn. Vui lòng đăng nhập lại.');}
+  if(x.result!=='success')throw Error(x.message||'API lỗi');
+  return x;
+}
+async function login(){try{const r=await apiPost({action:'adminLogin',password:$('password').value},'Đăng nhập Admin');token=r.token;sessionStorage.setItem('sportsAdminToken',token);showApp();await loadAll();}catch(e){$('loginErr').textContent=e.message;$('loginErr').className='status error';}}function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden');}function logout(){sessionStorage.removeItem('sportsAdminToken');token='';$('app').classList.add('hidden');$('login').classList.remove('hidden');}
+async function loadAll(){
+  const refresh=$('refresh');
+  if(refresh){refresh.disabled=true;refresh.dataset.old=refresh.textContent;refresh.textContent='⏳ Đang tải...';}
+  try{
+    // Tai cac du lieu doc lap song song, giam thoi gian cho Admin.
+    const [g,r,settings]=await Promise.all([
+      apiGet('getGamesAdmin'),
+      apiGet('getReport'),
+      apiGet('getAdminSettings')
+    ]);
+    games=Array.isArray(g)?g:[];report=Array.isArray(r)?r:[];
+    renderDashboard();renderGames();fillGameSelects();
+    // Cac bang chi tai khi nguoi dung mo tab/chon mon, tranh request thua.
+    renderSettingsLocal(settings);
+    stat('Đã tải dữ liệu mới nhất.','ok');
+  }catch(e){console.error(e);stat(e.message);}
+  finally{
+    if(refresh){refresh.disabled=false;refresh.textContent=refresh.dataset.old||'🔄 Làm mới';}
+  }
+}
+function renderSettingsLocal(d){
+  if(d.deadlineMs){const x=new Date(Number(d.deadlineMs)),p=n=>String(n).padStart(2,'0');$('deadline').value=x.getFullYear()+'-'+p(x.getMonth()+1)+'-'+p(x.getDate())+'T'+p(x.getHours())+':'+p(x.getMinutes());$('deadlineText').textContent=d.registrationOpen?'🟢 Đang mở':'🔴 Đã hết hạn';}
+  else{$('deadline').value='';$('deadlineText').textContent='♾️ Không giới hạn';}
+}
+
 function renderDashboard(){const ind=report.filter(x=>x.loaiDangKy==='Cá nhân').length;const teams=report.filter(x=>x.loaiDangKy==='Đội nhóm').length;$('sReg').textContent=report.length;$('sInd').textContent=ind;$('sTeam').textContent=teams;$('sAth').textContent=report.reduce((n,x)=>n+(x.loaiDangKy==='Đội nhóm'?(x.danhSachThanhVien?x.danhSachThanhVien.split(' | ').length:0):1),0);$('reportBody').innerHTML=report.slice().reverse().map(r=>'<tr><td>'+esc(r.timestamp)+'</td><td>'+esc(r.loaiDangKy)+'</td><td>'+esc(r.tenFormTenDoi)+'</td><td>'+esc(r.monDangKy)+'</td><td>'+esc(r.danhSachThanhVien||'Cá nhân')+'</td><td><b>'+esc(r.confirmationCode)+'</b></td></tr>').join('')||'<tr><td colspan="6">Chưa có dữ liệu.</td></tr>';const counts=games.map(g=>report.filter(r=>r.monDangKy===g.name).length);if(charts.g)charts.g.destroy();charts.g=new Chart($('gameChart'),{type:'bar',data:{labels:games.map(g=>g.name),datasets:[{label:'Đăng ký',data:counts}]},options:{responsive:true,maintainAspectRatio:false}});if(charts.t)charts.t.destroy();charts.t=new Chart($('typeChart'),{type:'doughnut',data:{labels:['Cá nhân','Đội nhóm'],datasets:[{data:[ind,teams]}]},options:{responsive:true,maintainAspectRatio:false}});}
 function renderGames(){$('gamesBody').innerHTML=games.map(g=>'<tr><td><b>'+esc(g.code)+'</b></td><td>'+esc(g.name)+'</td><td>'+esc(g.type)+'</td><td>'+g.min+(g.min===g.max?'':' – '+g.max)+'</td><td>'+esc(g.format)+'</td><td><span class="pill">'+esc(g.status)+'</span></td><td><button class="light" onclick="openGame(\''+esc(g.code)+'\')">✏️</button> <button class="danger" onclick="deleteGame(\''+esc(g.code)+'\')">🗑️</button></td></tr>').join('');}
 function openGame(code){const g=games.find(x=>x.code===code);$('gameModalTitle').textContent=g?'Sửa môn':'Thêm môn';$('oldCode').value=g?.code||'';$('gCode').value=g?.code||'';$('gName').value=g?.name||'';$('gType').value=g?.type||'Đội nhóm';$('gStatus').value=g?.status||'Mở';$('gMin').value=g?.min||1;$('gMax').value=g?.max||1;$('gGroups').value=g?.groups||1;$('gTeamsPerGroup').value=g?.teamsPerGroup||0;$('gAdvance').value=g?.advance||0;$('gOrder').value=g?.order||99;$('gFormat').value=g?.format||'';$('gDesc').value=g?.description||'';$('gameModal').classList.remove('hidden');}function closeGame(){$('gameModal').classList.add('hidden');}async function saveGame(){try{const r=await apiPost({action:'saveGame',token,oldCode:$('oldCode').value,code:$('gCode').value,name:$('gName').value,type:$('gType').value,status:$('gStatus').value,min:$('gMin').value,max:$('gMax').value,groups:$('gGroups').value,teamsPerGroup:$('gTeamsPerGroup').value,advance:$('gAdvance').value,order:$('gOrder').value,format:$('gFormat').value,description:$('gDesc').value});games=await apiGet('getGamesAdmin');renderGames();fillGameSelects();closeGame();stat(r.message||'Đã lưu môn.','ok');}catch(e){stat(e.message);}}async function deleteGame(code){if(!confirm('Xóa/khóa môn này? Nếu đã có đăng ký, hệ thống chỉ khóa để bảo toàn dữ liệu.'))return;try{const r=await apiPost({action:'deleteGame',token,code});games=await apiGet('getGamesAdmin');renderGames();fillGameSelects();stat(r.data.message,'ok');}catch(e){stat(e.message);}}

@@ -13,8 +13,50 @@
 <script>
 const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";const $=id=>document.getElementById(id);let employees=[],games=[],selected=null,open=true,lastCode='',lastQR='';
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}function marks(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/gi,'d').toLowerCase();}function status(m,t='error'){const e=$('status');e.textContent=m;e.className='status '+t;}function hideStatus(){$('status').className='status hidden';}
-async function getJSON(url,opts){const r=await fetch(url,opts);return r.json();}
-async function loadAll(force){try{if(force)localStorage.removeItem('HOITHAO_EMPLOYEES_V4');const [er,gr,sr]=await Promise.all([getJSON(WEB_APP_URL+'?action=getEmployees&v=4'),getJSON(WEB_APP_URL+'?action=getGames&v=4'),getJSON(WEB_APP_URL+'?action=getRegistrationStatus&v=4')]);if(er.result!=='success')throw Error(er.message||'Không tải được nhân viên.');employees=er.data||[];games=gr.result==='success'?gr.data||[]:[];renderGames();if(sr.result==='success')renderStatus(sr.data);$('loading').classList.add('hidden');}catch(e){console.error(e);$('loading').classList.add('hidden');status(e.message||'Không thể tải dữ liệu.');}}
+async function getJSON(url,opts={},label='Kết nối máy chủ'){
+  const maxTry=3, timeoutMs=18000;
+  let lastErr;
+  for(let attempt=1;attempt<=maxTry;attempt++){
+    const ctl=new AbortController(), timer=setTimeout(()=>ctl.abort(),timeoutMs);
+    try{
+      const r=await fetch(url,{...opts,signal:ctl.signal,cache:opts.cache||'no-store',redirect:'follow'});
+      const text=await r.text();
+      if(!r.ok) throw new Error('Máy chủ trả về HTTP '+r.status+'.');
+      let data; try{data=JSON.parse(text);}catch(e){throw new Error('API không trả về JSON hợp lệ. Có thể Web App chưa deploy đúng phiên bản.');}
+      return data;
+    }catch(e){
+      lastErr=e.name==='AbortError'?new Error(label+' quá thời gian chờ.'):e;
+      if(attempt<maxTry) await new Promise(r=>setTimeout(r,700*attempt));
+    }finally{clearTimeout(timer);}
+  }
+  if(lastErr && (lastErr.message==='Failed to fetch'||/fetch/i.test(lastErr.message)))
+    throw new Error('Không kết nối được máy chủ. Hãy kiểm tra URL Web App /exec, quyền Anyone và mạng Internet rồi thử lại.');
+  throw lastErr||new Error('Không thể kết nối máy chủ.');
+}
+async function loadAll(force){
+  const box=$('loading');
+  box.classList.remove('hidden');
+  try{
+    if(force)localStorage.removeItem('HOITHAO_EMPLOYEES_V4');
+    const [er,gr,sr]=await Promise.all([
+      getJSON(WEB_APP_URL+'?action=getEmployees&v=5',{},'Tải danh sách nhân viên'),
+      getJSON(WEB_APP_URL+'?action=getGames&v=5',{},'Tải danh sách môn'),
+      getJSON(WEB_APP_URL+'?action=getRegistrationStatus&v=5',{},'Tải trạng thái đăng ký')
+    ]);
+    if(er.result!=='success')throw Error(er.message||'Không tải được nhân viên.');
+    employees=Array.isArray(er.data)?er.data:[];
+    games=gr.result==='success'?(gr.data||[]):[];
+    renderGames();
+    if(sr.result==='success')renderStatus(sr.data);
+    hideStatus();
+  }catch(e){
+    console.error(e);
+    status(e.message||'Không thể tải dữ liệu.','error');
+  }finally{
+    box.classList.add('hidden');
+  }
+}
+
 function renderStatus(s){open=!!s.open;$('submit').disabled=!open;if(s.deadlineMs){const d=new Date(Number(s.deadlineMs));$('deadline').textContent=open?'🟢 Đăng ký mở đến '+d.toLocaleString('vi-VN'):'🔴 Đã hết hạn đăng ký';$('deadline').className='deadline-box';}else $('deadline').className='deadline-box hidden';if(!open)status('Thời hạn đăng ký đã kết thúc.','error');}
 function renderGames(){const type=document.querySelector('input[name=type]:checked').value;const list=games.filter(g=>g.type===type);$('game').innerHTML='<option value="">-- Chọn môn thi đấu --</option>'+list.map(g=>'<option value="'+esc(g.code)+'">'+esc(g.name)+'</option>').join('');updateRule();}
 function currentGame(){return games.find(g=>g.code===$('game').value)||null;}
@@ -28,7 +70,7 @@ $('addManual').onclick=()=>status('Vui lòng tìm và chọn nhân viên từ da
 $('game').onchange=updateRule;document.querySelectorAll('input[name=type]').forEach(x=>x.onchange=setMode);
 function validate(){if(!open)return false;const g=currentGame(),group=document.querySelector('input[name=type]:checked').value==='Đội nhóm';if(!g){status('Vui lòng chọn môn thi đấu.');return false;}if(group){if(!$('teamName').value.trim()){status('Vui lòng nhập tên đội.');return false;}const n=$('members').querySelectorAll('tr').length;if(n<g.min||n>g.max){status('Môn '+g.name+' yêu cầu '+(g.min===g.max?'đúng '+g.min:'từ '+g.min+' đến '+g.max)+' người. Hiện có '+n+'.');return false;}}else if(!selected){status('Vui lòng chọn người đăng ký.');return false;}return true;}
 function memberPayload(){return [...$('members').querySelectorAll('tr')].map((tr,i)=>{const v=s=>tr.querySelector(s)?.value.trim()||'';return {name:v('.member-name'),id:v('.member-id'),cccd:v('.member-full-cccd'),dept:tr.cells[3].querySelector('input').value,section:tr.cells[4].querySelector('input').value,pos:tr.cells[5].querySelector('input').value};});}
-$('form').onsubmit=async e=>{e.preventDefault();hideStatus();if(!validate())return;const group=document.querySelector('input[name=type]:checked').value==='Đội nhóm',g=currentGame(),ms=group?memberPayload():[];const memberString=ms.map((m,i)=>(i+1)+'. '+m.name+' - MNV: '+m.id+' - CCCD 4 số cuối: '+m.cccd.slice(-4)+' [Phòng ban: '+m.dept+' - Bộ phận: '+m.section+' - Chức vụ: '+m.pos+']').join(' | ');const payload={action:'register',loaiDangKy:group?'Đội nhóm':'Cá nhân',tenFormTenDoi:group?$('teamName').value.trim():selected.hoTen,monDangKy:g.name,danhSachThanhVien:memberString,memberKeys:group?ms.map(m=>m.id||m.cccd).join('|'):'',maNVDangKy:group?'':selected.maNV,cccdDangKy:group?'':selected.cccd,phongBan:group?'':selected.phongBan,boPhan:group?'':selected.boPhan};$('submit').disabled=true;$('submit').textContent='Đang lưu...';try{const r=await getJSON(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),redirect:'follow'});if(r.result!=='success')throw Error(r.message||'Không thể lưu đăng ký.');openConfirm(r);$('form').reset();setMode();}catch(err){console.error(err);status(err.message||'Lỗi kết nối.');}finally{$('submit').disabled=!open;$('submit').textContent='GỬI ĐĂNG KÝ / SUBMIT';}};
+$('form').onsubmit=async e=>{e.preventDefault();hideStatus();if(!validate())return;const group=document.querySelector('input[name=type]:checked').value==='Đội nhóm',g=currentGame(),ms=group?memberPayload():[];const memberString=ms.map((m,i)=>(i+1)+'. '+m.name+' - MNV: '+m.id+' - CCCD 4 số cuối: '+m.cccd.slice(-4)+' [Phòng ban: '+m.dept+' - Bộ phận: '+m.section+' - Chức vụ: '+m.pos+']').join(' | ');const payload={action:'register',loaiDangKy:group?'Đội nhóm':'Cá nhân',tenFormTenDoi:group?$('teamName').value.trim():selected.hoTen,monDangKy:g.name,danhSachThanhVien:memberString,memberKeys:group?ms.map(m=>m.id||m.cccd).join('|'):'',maNVDangKy:group?'':selected.maNV,cccdDangKy:group?'':selected.cccd,phongBan:group?'':selected.phongBan,boPhan:group?'':selected.boPhan};$('submit').disabled=true;$('submit').textContent='Đang lưu...';try{const r=await getJSON(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)},'Gửi đăng ký');if(r.result!=='success')throw Error(r.message||'Không thể lưu đăng ký.');openConfirm(r);$('form').reset();setMode();}catch(err){console.error(err);status(err.message||'Lỗi kết nối.');}finally{$('submit').disabled=!open;$('submit').textContent='GỬI ĐĂNG KÝ / SUBMIT';}};
 function openConfirm(r){lastCode=r.confirmationCode||'';const d=r.data||{};$('code').textContent=lastCode;$('confirmDetail').innerHTML='<b>'+esc(d.tenFormTenDoi)+'</b><br>Môn: '+esc(d.monDangKy)+'<br>Hình thức: '+esc(d.loaiDangKy)+(d.danhSachThanhVien?'<hr>'+d.danhSachThanhVien.split(' | ').map(x=>esc(x.replace(/\s+-\s*MNV:.*/,'').trim())).join('<br>'):'');$('qrcode').innerHTML='';lastQR=location.href.split('?')[0]+'?code='+encodeURIComponent(lastCode);new QRCode($('qrcode'),{text:lastQR,width:190,height:190});$('confirm').classList.remove('hidden');}function closeConfirm(){$('confirm').classList.add('hidden');}function downloadQR(){const c=$('qrcode').querySelector('canvas'),a=document.createElement('a');if(!c)return;a.href=c.toDataURL('image/png');a.download='Xac_Nhan_Hoi_Thao_'+lastCode+'.png';a.click();}
 loadAll(false);
 </script></body></html>

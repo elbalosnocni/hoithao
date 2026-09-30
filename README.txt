@@ -1,27 +1,18 @@
-HOI THAO - V4
+HOI THAO LIWAYWAY 2026 - V5 UPGRADE
 
-Nâng cấp:
-- Admin quản lý môn thi đấu bằng Sheet MON_THI_DAU + giao diện Admin.
-- Có thể thêm/sửa/khóa/xóa môn; cấu hình hình thức, min/max người, nội dung, thể thức, số bảng.
-- Không xóa vật lý môn đã có đăng ký; hệ thống chuyển sang Khóa để bảo toàn dữ liệu.
-- DSKD/DSDK cũ được giữ nguyên.
-- Sau mỗi đăng ký thành công, backend tự đồng bộ DOI_THI_DAU và VAN_DONG_VIEN.
-- Admin có thể đồng bộ thủ công DSDK → đội/VĐV.
-- Sinh bảng loại trực tiếp cho môn đội nhóm và tự đẩy đội thắng sang vòng tiếp theo.
-- Môn cá nhân có danh sách kết quả trong KET_QUA.
-- Có quản lý hạn đăng ký, đổi mật khẩu, dashboard, đội, VĐV, bảng đấu, kết quả.
+Bo nay lay backend/quan tri day du cua V4 (coban) lam nen va nang cap:
+- Khong dong bo doi/VDV nang ngay trong request dang ky cong nhan.
+- Frontend co timeout, retry, xu ly response khong phai JSON va thong bao Failed to fetch ro rang.
+- Loading overlay va loading theo tung nut admin.
+- Admin tai du lieu ban dau theo batch, khong goi hang loat request tuan tu.
+- Tu dong xu ly session Admin het han.
+- Cache nhan vien V4 va nut lam moi du lieu.
+- Backend giu nguyen cac chuc nang quan ly mon, doi, VDV, bang dau, ket qua, deadline, mat khau.
+- Them doGet action health va doOptions de chan loi kho hieu khi kiem tra API.
 
-DEPLOY:
-1. Mở Apps Script project và thay Code.gs bằng file mới.
-2. Thay index.html và admin.html.
-3. Chạy setupAdmin() một lần. Xem Execution log để lấy mật khẩu Admin.
-4. Deploy > New deployment > Web app; Execute as Me; Who has access: Anyone.
-5. Cập nhật đúng WEB_APP_URL trong index.html/admin.html nếu deployment URL thay đổi.
-6. Mở admin.html, đăng nhập, kiểm tra MON_THI_DAU và deadline.
-7. Nếu project cũ đã có DSDK, chạy Admin > Cài đặt > Kiểm tra/tạo Sheet hệ thống hoặc nút Đồng bộ.
-
-LƯU Ý:
-- Bản V4 không còn dùng GAME_LIMITS hard-code.
-- Mã môn là khóa ổn định; không đổi mã sau khi đã có dữ liệu nếu không cần thiết.
-- Nút "Tạo lại bảng" xóa các trận cũ của môn rồi sinh lại, chỉ dùng trước khi bắt đầu/khóa kết quả.
-- Luật trận hòa hiện yêu cầu nhập kết quả không hòa; nếu môn có tie-break riêng có thể mở rộng sau.
+LUU Y:
+1. Thay Code.gs, index.html, admin.html trong Apps Script/GitHub theo dung bo nay.
+2. Deploy lai Web App -> Execute as Me -> Who has access: Anyone.
+3. Lay URL /exec moi neu deployment tao URL moi va cap nhat trong ca index.html/admin.html.
+4. Chay setupAdmin() va setupSystem() mot lan trong Apps Script neu day la deployment moi.
+5. Sau khi dang ky, du lieu dang ky duoc luu ngay. Viec dong bo doi/VDV duoc lam tu Admin bang nut "Dong bo du lieu".
