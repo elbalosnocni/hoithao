@@ -1,192 +1,230 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard Admin - Hội Thao Liwayway 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4f7f6;font-family:"Segoe UI",Arial,sans-serif;color:#172033}.hidden{display:none!important}
 .login-overlay{position:fixed;inset:0;background:#172033;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
-.login-box{background:#fff;width:min(400px,100%);padding:34px;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.25);text-align:center}
-input{width:100%;padding:12px;border:1px solid #ced4da;border-radius:8px;margin:10px 0 12px}button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}button:disabled{opacity:.6}
-.btn-primary{background:#0d6efd;color:#fff}.btn-success{background:#198754;color:#fff}.btn-danger{background:#dc3545;color:#fff}.btn-light{background:#eef2f6;color:#172033}
+.login-box{background:#fff;width:min(420px,100%);padding:34px;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.25);text-align:center}
+input{width:100%;padding:12px;border:1px solid #ced4da;border-radius:8px;margin:8px 0 12px}button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}button:disabled{opacity:.6}
+.btn-primary{background:#0d6efd;color:#fff}.btn-success{background:#198754;color:#fff}.btn-danger{background:#dc3545;color:#fff}.btn-light{background:#eef2f6;color:#172033}.btn-warning{background:#ffc107;color:#172033}
 .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}.sidebar{background:#172033;color:#fff;padding:22px;display:flex;flex-direction:column;gap:14px}.sidebar h2{color:#ffc107;text-align:center;font-size:19px}
 .main{padding:24px;overflow:auto}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}.stat{padding:18px;border-radius:12px;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06)}.stat small{font-weight:700;opacity:.85}.stat strong{display:block;font-size:30px;margin-top:6px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{background:#fff;padding:18px;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.05);margin-bottom:18px}.chart-box{height:340px}
 .table-wrap{max-height:520px;overflow:auto}.table{width:100%;border-collapse:collapse;font-size:13px}.table th,.table td{padding:9px;border-bottom:1px solid #e4e7ec;text-align:left;vertical-align:top}.table th{background:#172033;color:#fff;position:sticky;top:0}.members-text{max-width:480px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.error{color:#b42318;background:#fff0f0;padding:9px;border-radius:8px}.ok{color:#027a48;background:#ecfdf3;padding:9px;border-radius:8px}
-@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{min-height:auto}.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+.error{color:#b42318;background:#fff0f0;padding:9px;border-radius:8px}.ok{color:#027a48;background:#ecfdf3;padding:9px;border-radius:8px}.info{color:#175cd3;background:#eef6ff;padding:9px;border-radius:8px}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.setting-box{border:1px solid #e4e7ec;padding:15px;border-radius:10px}.setting-box h4{margin:0 0 8px}
+.modal{position:fixed;inset:0;background:rgba(23,32,51,.65);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;width:min(480px,100%);padding:24px;border-radius:15px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{min-height:auto}.cards{grid-template-columns:repeat(2,1fr)}.grid2,.settings-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.main{padding:12px}.cards{grid-template-columns:1fr}.chart-box{height:300px}}
 </style>
 </head>
 <body>
 <div id="loginOverlay" class="login-overlay">
-  <div class="login-box">
-    <h2 style="color:#0d6efd;margin:0 0 8px">LIWAYWAY SPORTS 2026</h2>
-    <p style="color:#667085">Đăng nhập khu vực Ban tổ chức</p>
-    <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Mật khẩu Admin">
-    <div id="loginError" class="error hidden"></div>
-    <button id="loginBtn" class="btn-primary" style="width:100%">ĐĂNG NHẬP</button>
-  </div>
+<div class="login-box">
+<h2 style="color:#0d6efd;margin:0 0 8px">LIWAYWAY SPORTS 2026</h2>
+<p style="color:#667085">Đăng nhập khu vực Ban tổ chức</p>
+<input id="passwordInput" type="password" autocomplete="current-password" placeholder="Mật khẩu Admin">
+<div id="loginError" class="error hidden"></div>
+<button id="loginBtn" class="btn-primary" style="width:100%">ĐĂNG NHẬP</button>
+<p style="font-size:12px;color:#667085;margin:14px 0 0">Nếu chưa thiết lập Admin, chạy <b>setupAdmin()</b> trong Apps Script.</p>
+</div>
 </div>
 
 <div id="app" class="app hidden">
-  <aside class="sidebar">
-    <h2>LWW SPORTS 2026</h2>
-    <div style="font-weight:700">📊 Báo cáo tổng quan</div>
-    <button id="logoutBtn" class="btn-danger" style="margin-top:auto">🔒 Đăng xuất</button>
-    <small style="color:#98a2b3;text-align:center">Dữ liệu từ Google Sheets</small>
-  </aside>
+<aside class="sidebar">
+<h2>LWW SPORTS 2026</h2>
+<div style="font-weight:700">📊 Báo cáo tổng quan</div>
+<button id="logoutBtn" class="btn-danger" style="margin-top:auto">🔒 Đăng xuất</button>
+<small style="color:#98a2b3;text-align:center">Dữ liệu từ Google Sheets</small>
+</aside>
 
-  <main class="main">
-    <div class="toolbar">
-      <h1 style="margin:0;font-size:24px">QUẢN LÝ & BÁO CÁO HỘI THAO</h1>
-      <div class="toolbar-actions">
-        <button id="refreshBtn" class="btn-primary">🔄 Làm mới</button>
-        <button id="exportBtn" class="btn-success">📥 Xuất Excel</button>
-      </div>
-    </div>
+<main class="main">
+<div class="toolbar">
+<h1 style="margin:0;font-size:24px">QUẢN LÝ & BÁO CÁO HỘI THAO</h1>
+<div class="toolbar-actions">
+<button id="refreshBtn" class="btn-primary">🔄 Làm mới</button>
+<button id="exportBtn" class="btn-success">📥 Xuất Excel</button>
+</div>
+</div>
+<div id="status" class="hidden" style="margin-top:12px"></div>
 
-    <div id="status" class="hidden" style="margin-top:12px"></div>
+<section class="cards">
+<div class="stat" style="background:#0d6efd"><small>TỔNG LƯỢT ĐĂNG KÝ</small><strong id="statTotalSubmits">0</strong></div>
+<div class="stat" style="background:#198754"><small>ĐĂNG KÝ CÁ NHÂN</small><strong id="statIndividual">0</strong></div>
+<div class="stat" style="background:#ffc107;color:#172033"><small>TỔNG SỐ ĐỘI</small><strong id="statTeams">0</strong></div>
+<div class="stat" style="background:#0dcaf0;color:#172033"><small>TỔNG VĐV</small><strong id="statAthletes">0</strong></div>
+</section>
 
-    <section class="cards">
-      <div class="stat" style="background:#0d6efd"><small>TỔNG LƯỢT ĐĂNG KÝ</small><strong id="statTotalSubmits">0</strong></div>
-      <div class="stat" style="background:#198754"><small>ĐĂNG KÝ CÁ NHÂN</small><strong id="statIndividual">0</strong></div>
-      <div class="stat" style="background:#ffc107;color:#172033"><small>TỔNG SỐ ĐỘI</small><strong id="statTeams">0</strong></div>
-      <div class="stat" style="background:#0dcaf0;color:#172033"><small>TỔNG VĐV</small><strong id="statAthletes">0</strong></div>
-    </section>
+<section class="panel">
+<h3 style="margin-top:0">⚙️ Cài đặt hệ thống</h3>
+<div class="settings-grid">
+<div class="setting-box">
+<h4>Thời hạn đăng ký</h4>
+<div id="deadlineStatus" class="info" style="margin-bottom:10px">Đang tải...</div>
+<input id="deadlineInput" type="datetime-local">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button id="saveDeadlineBtn" class="btn-primary">💾 Lưu thời hạn</button>
+<button id="clearDeadlineBtn" class="btn-light">♾️ Không giới hạn</button>
+</div>
+<p style="font-size:12px;color:#667085;margin-bottom:0">Thời hạn được kiểm tra ở backend, không thể bypass bằng trình duyệt.</p>
+</div>
+<div class="setting-box">
+<h4>Đổi mật khẩu Admin</h4>
+<p style="font-size:13px;color:#667085">Mật khẩu được lưu dưới dạng SHA-256 trong Script Properties. Sau khi đổi, phiên đăng nhập hiện tại sẽ hết hiệu lực.</p>
+<button id="changePasswordBtn" class="btn-warning">🔑 Thay đổi mật khẩu</button>
+</div>
+</div>
+</section>
 
-    <div class="grid2">
-      <section class="panel"><h3>Môn thi đấu</h3><div class="chart-box"><canvas id="chartGames"></canvas></div></section>
-      <section class="panel"><h3>Công ty</h3><div class="chart-box"><canvas id="chartCompany"></canvas></div></section>
-    </div>
-    <section class="panel"><h3>VĐV theo Chức vụ</h3><div class="chart-box"><canvas id="chartPositions"></canvas></div></section>
+<div class="grid2">
+<section class="panel"><h3>Môn thi đấu</h3><div class="chart-box"><canvas id="chartGames"></canvas></div></section>
+<section class="panel"><h3>Phân bố Phòng ban</h3><div class="chart-box"><canvas id="chartDepartments"></canvas></div></section>
+</div>
+<section class="panel"><h3>VĐV theo Chức vụ</h3><div class="chart-box"><canvas id="chartPositions"></canvas></div></section>
 
-    <section class="panel">
-      <h3>Chi tiết danh sách đăng ký</h3>
-      <div class="table-wrap">
-        <table class="table">
-          <thead><tr><th>Thời gian</th><th>Hình thức</th><th>Công ty</th><th>Phòng ban</th><th>Bộ phận</th><th>Tên đội / VĐV</th><th>Môn</th><th>Thành viên</th></tr></thead>
-          <tbody id="reportTableBody"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+<section class="panel">
+<h3>Chi tiết danh sách đăng ký</h3>
+<div class="table-wrap">
+<table class="table">
+<thead><tr><th>Thời gian</th><th>Hình thức</th><th>Phòng ban</th><th>Bộ phận</th><th>Tên đội / VĐV</th><th>Môn</th><th>Thành viên</th><th>Mã xác nhận</th></tr></thead>
+<tbody id="reportTableBody"></tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+
+<div id="passwordModal" class="modal hidden">
+<div class="modal-card">
+<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🔑 Thay đổi mật khẩu</h3><button id="closePasswordModal" class="btn-light">✕</button></div>
+<input id="oldPassword" type="password" placeholder="Mật khẩu hiện tại" autocomplete="current-password">
+<input id="newPassword" type="password" placeholder="Mật khẩu mới (ít nhất 8 ký tự)" autocomplete="new-password">
+<input id="newPassword2" type="password" placeholder="Nhập lại mật khẩu mới" autocomplete="new-password">
+<div id="passwordError" class="error hidden"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+<button id="cancelPassword" class="btn-light">Hủy</button><button id="savePassword" class="btn-primary">Lưu mật khẩu</button>
+</div>
+</div>
 </div>
 
 <script>
 const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";
-let sessionToken=sessionStorage.getItem("sportsAdminToken")||"";
-let globalReportData=[];
-let charts={games:null,company:null,positions:null};
+let sessionToken=sessionStorage.getItem("sportsAdminToken")||"",globalReportData=[],charts={games:null,departments:null,positions:null};
 const $=id=>document.getElementById(id);
 
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
 function setStatus(msg,type="error"){const e=$("status");e.textContent=msg;e.className=type;}
 function clearStatus(){$("status").className="hidden";}
+function formatDate(ms){if(!ms)return "";return new Intl.DateTimeFormat("vi-VN",{dateStyle:"full",timeStyle:"short"}).format(new Date(Number(ms)));}
+function toLocalInputValue(ms){if(!ms)return "";const d=new Date(Number(ms)),p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes());}
 
 async function apiPost(payload){
   const r=await fetch(WEB_APP_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
   return r.json();
 }
 async function login(){
-  const btn=$("loginBtn"),err=$("loginError"); err.className="hidden";btn.disabled=true;btn.textContent="Đang xác thực...";
+  const btn=$("loginBtn"),err=$("loginError");err.className="hidden";btn.disabled=true;btn.textContent="Đang xác thực...";
   try{
     const res=await apiPost({action:"adminLogin",password:$("passwordInput").value});
-    if(res.result!=="success") throw new Error(res.message||"Đăng nhập thất bại.");
+    if(res.result!=="success")throw new Error(res.message||"Đăng nhập thất bại.");
     sessionToken=res.token;sessionStorage.setItem("sportsAdminToken",sessionToken);
-    $("loginOverlay").classList.add("hidden");$("app").classList.remove("hidden");
-    await loadDashboard();
+    $("loginOverlay").classList.add("hidden");$("app").classList.remove("hidden");await loadDashboard();await loadSettings();
   }catch(e){err.textContent=e.message;err.className="error";}finally{btn.disabled=false;btn.textContent="ĐĂNG NHẬP";}
 }
 async function loadDashboard(){
   const btn=$("refreshBtn");btn.disabled=true;btn.textContent="🔄 Đang tải...";
   try{
-    const r=await fetch(WEB_APP_URL+"?action=getReport&token="+encodeURIComponent(sessionToken),{cache:"no-store",redirect:"follow"});
-    const res=await r.json();
+    const r=await fetch(WEB_APP_URL+"?action=getReport&token="+encodeURIComponent(sessionToken),{cache:"no-store",redirect:"follow"}),res=await r.json();
     if(res.result==="unauthorized"){logout(false);throw new Error("Phiên Admin đã hết hạn. Vui lòng đăng nhập lại.");}
     if(res.result!=="success")throw new Error(res.message||"Không tải được báo cáo.");
     globalReportData=Array.isArray(res.data)?res.data:[];renderDashboard(globalReportData);clearStatus();
   }catch(e){console.error(e);setStatus(e.message);}
   finally{btn.disabled=false;btn.textContent="🔄 Làm mới";}
 }
-function parseMembers(text){
-  if(!text)return [];
-  return text.split(" | ").map(s=>s.trim()).filter(Boolean);
+async function loadSettings(){
+  try{
+    const r=await fetch(WEB_APP_URL+"?action=getAdminSettings&token="+encodeURIComponent(sessionToken),{cache:"no-store"}),res=await r.json();
+    if(res.result==="unauthorized"){logout(false);throw new Error("Phiên Admin đã hết hạn.");}
+    if(res.result!=="success")throw new Error(res.message||"Không tải được cài đặt.");
+    renderSettings(res.data);
+  }catch(e){setStatus(e.message);}
 }
-function extractPosition(member){
-  const m=member.match(/Chức vụ:\s*([^\]]+)/i);
-  return m?m[1].trim():"Công nhân / Khác";
-}
-function renderDashboard(data){
-  const games={"Chạy Marathon":0,"Kéo co":0,"Nhảy bao jumbo":0,"Trò chơi liên hoàn":0};
-  const companies={"Liwayway Việt Nam":0,"Liwayway Sài Gòn":0};
-  const positions={};let individuals=0,teams=0,athletes=0;
-  const body=$("reportTableBody");body.innerHTML="";
-
-  if(!data.length){
-    body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:25px">Chưa có dữ liệu đăng ký.</td></tr>';
+function renderSettings(data){
+  if(data.deadlineMs){
+    $("deadlineInput").value=toLocalInputValue(data.deadlineMs);
+    $("deadlineStatus").textContent=data.registrationOpen?"🟢 Đang mở đến "+formatDate(data.deadlineMs):"🔴 Đã hết hạn: "+formatDate(data.deadlineMs);
+  }else{
+    $("deadlineInput").value="";$("deadlineStatus").textContent="♾️ Không đặt hạn đăng ký";
   }
-
+}
+async function saveDeadline(ms){
+  try{
+    const res=await apiPost({action:"adminSetDeadline",token:sessionToken,deadlineMs:ms});
+    if(res.result==="unauthorized"){logout(false);throw new Error("Phiên Admin đã hết hạn.");}
+    if(res.result!=="success")throw new Error(res.message||"Không lưu được thời hạn.");
+    renderSettings(res.data);setStatus(res.message,"ok");
+  }catch(e){setStatus(e.message);}
+}
+function parseMembers(text){if(!text)return [];return text.split(" | ").map(s=>s.trim()).filter(Boolean);}
+function extractPosition(member){const m=member.match(/Chức vụ:\s*([^\]]+)/i);return m?m[1].trim():"Công nhân / Khác";}
+function renderDashboard(data){
+  const games={"Chạy Marathon":0,"Kéo co":0,"Nhảy bao jumbo":0,"Trò chơi liên hoàn":0},departments={},positions={};
+  let individuals=0,teams=0,athletes=0;const body=$("reportTableBody");body.innerHTML="";
+  if(!data.length)body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:25px">Chưa có dữ liệu đăng ký.</td></tr>';
   data.forEach(row=>{
     const group=row.loaiDangKy==="Đội nhóm";
-    if(group){teams++;const members=parseMembers(row.danhSachThanhVien);athletes+=members.length;members.forEach(m=>{const p=extractPosition(m);positions[p]=(positions[p]||0)+1;});}
-    else{individuals++;athletes++;const p=row.boPhan||"Chưa phân loại";positions[p]=(positions[p]||0)+1;}
+    if(group){teams++;const members=parseMembers(row.danhSachThanhVien);athletes+=members.length;members.forEach(m=>{const p=extractPosition(m);positions[p]=(positions[p]||0)+1;const d=(m.match(/Phòng ban:\s*([^\-\]]+)/i)||[])[1]?.trim()||"Khác";departments[d]=(departments[d]||0)+1;});}
+    else{individuals++;athletes++;const p=row.boPhan||"Chưa phân loại";positions[p]=(positions[p]||0)+1;const d=row.phongBan||"Chưa phân loại";departments[d]=(departments[d]||0)+1;}
     if(games[row.monDangKy]!==undefined)games[row.monDangKy]++;
-    if(companies[row.congTy]!==undefined)companies[row.congTy]++;
-
     const tr=document.createElement("tr");
-    tr.innerHTML="<td>"+escapeHtml(row.timestamp)+"</td>"+
-      "<td>"+escapeHtml(row.loaiDangKy)+"</td>"+
-      "<td>"+escapeHtml(row.congTy)+"</td>"+
-      "<td>"+escapeHtml(row.phongBan||"")+"</td>"+
-      "<td>"+escapeHtml(row.boPhan||"")+"</td>"+
-      "<td>"+escapeHtml(row.tenFormTenDoi)+"</td>"+
-      "<td>"+escapeHtml(row.monDangKy)+"</td>"+
-      '<td><div class="members-text" title="'+escapeHtml(row.danhSachThanhVien||"Đăng ký cá nhân")+'">'+escapeHtml(row.danhSachThanhVien||"Đăng ký cá nhân")+"</div></td>";
+    tr.innerHTML="<td>"+escapeHtml(row.timestamp)+"</td><td>"+escapeHtml(row.loaiDangKy)+"</td><td>"+escapeHtml(row.phongBan)+"</td><td>"+escapeHtml(row.boPhan)+"</td><td>"+escapeHtml(row.tenFormTenDoi)+"</td><td>"+escapeHtml(row.monDangKy)+"</td>"+
+      '<td><div class="members-text" title="'+escapeHtml(row.danhSachThanhVien||"Đăng ký cá nhân")+'">'+escapeHtml(row.danhSachThanhVien||"Đăng ký cá nhân")+"</div></td><td><b>"+escapeHtml(row.confirmationCode||"")+"</b></td>";
     body.appendChild(tr);
   });
-
-  $("statTotalSubmits").textContent=data.length;
-  $("statIndividual").textContent=individuals;
-  $("statTeams").textContent=teams;
-  $("statAthletes").textContent=athletes;
-
-  if(charts.games)charts.games.destroy();
-  charts.games=new Chart($("chartGames"),{type:"doughnut",data:{labels:Object.keys(games),datasets:[{data:Object.values(games)}]},options:{responsive:true,maintainAspectRatio:false}});
-
-  if(charts.company)charts.company.destroy();
-  charts.company=new Chart($("chartCompany"),{type:"bar",data:{labels:Object.keys(companies),datasets:[{label:"Số lượt đăng ký",data:Object.values(companies)}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
-
-  const sorted=Object.entries(positions).sort((a,b)=>b[1]-a[1]);
-  if(charts.positions)charts.positions.destroy();
+  $("statTotalSubmits").textContent=data.length;$("statIndividual").textContent=individuals;$("statTeams").textContent=teams;$("statAthletes").textContent=athletes;
+  if(charts.games)charts.games.destroy();charts.games=new Chart($("chartGames"),{type:"doughnut",data:{labels:Object.keys(games),datasets:[{data:Object.values(games)}]},options:{responsive:true,maintainAspectRatio:false}});
+  if(charts.departments)charts.departments.destroy();const dep=Object.entries(departments).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  charts.departments=new Chart($("chartDepartments"),{type:"bar",data:{labels:dep.map(x=>x[0]),datasets:[{label:"Số VĐV",data:dep.map(x=>x[1])}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+  if(charts.positions)charts.positions.destroy();const sorted=Object.entries(positions).sort((a,b)=>b[1]-a[1]);
   charts.positions=new Chart($("chartPositions"),{type:"bar",data:{labels:sorted.map(x=>x[0]),datasets:[{label:"Số lượng VĐV",data:sorted.map(x=>x[1])}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,scales:{x:{beginAtZero:true,ticks:{precision:0}}}}});
 }
 function exportToExcel(){
   if(!globalReportData.length){setStatus("Không có dữ liệu để xuất Excel.");return;}
-    const rows=[["THỜI GIAN","HÌNH THỨC","CÔNG TY","PHÒNG BAN","BỘ PHẬN","TÊN ĐỘI / VĐV","MÔN THI","THÀNH VIÊN"]];
-  globalReportData.forEach(r=>rows.push([r.timestamp,r.loaiDangKy,r.congTy,r.phongBan||"",r.boPhan||"",r.tenFormTenDoi,r.monDangKy,r.danhSachThanhVien||"Đăng ký cá nhân"]));
+  const rows=[["THỜI GIAN","HÌNH THỨC","PHÒNG BAN","BỘ PHẬN","TÊN ĐỘI / VĐV","MÔN THI","THÀNH VIÊN","MÃ XÁC NHẬN"]];
+  globalReportData.forEach(r=>rows.push([r.timestamp,r.loaiDangKy,r.phongBan||"",r.boPhan||"",r.tenFormTenDoi,r.monDangKy,r.danhSachThanhVien||"Đăng ký cá nhân",r.confirmationCode||""]));
   const ws=XLSX.utils.aoa_to_sheet(rows);ws["!cols"]=rows[0].map((_,i)=>({wch:Math.min(60,Math.max(12,...rows.map(r=>String(r[i]||"").length))+2)}));
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DanhSachHoiThao");
-  XLSX.writeFile(wb,"Bao_Cao_Hoi_Thao_Liwayway_"+new Date().toISOString().slice(0,10)+".xlsx");
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DanhSachHoiThao");XLSX.writeFile(wb,"Bao_Cao_Hoi_Thao_Liwayway_"+new Date().toISOString().slice(0,10)+".xlsx");
 }
 function logout(reload=true){
-  sessionStorage.removeItem("sportsAdminToken");sessionToken="";globalReportData=[];
-  $("app").classList.add("hidden");$("loginOverlay").classList.remove("hidden");$("passwordInput").value="";
+  sessionStorage.removeItem("sportsAdminToken");sessionToken="";globalReportData=[];$("app").classList.add("hidden");$("loginOverlay").classList.remove("hidden");$("passwordInput").value="";
   if(reload)clearStatus();
 }
-$("loginBtn").addEventListener("click",login);
-$("passwordInput").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
-$("refreshBtn").addEventListener("click",loadDashboard);
-$("exportBtn").addEventListener("click",exportToExcel);
-$("logoutBtn").addEventListener("click",()=>logout());
-
-if(sessionToken){
-  $("loginOverlay").classList.add("hidden");$("app").classList.remove("hidden");loadDashboard();
+function openPasswordModal(){$("passwordModal").classList.remove("hidden");$("passwordError").className="error hidden";}
+function closePasswordModal(){$("passwordModal").classList.add("hidden");["oldPassword","newPassword","newPassword2"].forEach(id=>$(id).value="");}
+async function changePassword(){
+  const oldPassword=$("oldPassword").value,newPassword=$("newPassword").value,newPassword2=$("newPassword2").value,err=$("passwordError");
+  err.className="hidden";
+  if(newPassword.length<8){err.textContent="Mật khẩu mới phải có ít nhất 8 ký tự.";err.className="error";return;}
+  if(newPassword!==newPassword2){err.textContent="Mật khẩu nhập lại không khớp.";err.className="error";return;}
+  try{
+    const res=await apiPost({action:"adminChangePassword",token:sessionToken,oldPassword,newPassword});
+    if(res.result!=="success")throw new Error(res.message||"Không đổi được mật khẩu.");
+    closePasswordModal();alert("Đổi mật khẩu thành công. Vui lòng đăng nhập lại bằng mật khẩu mới.");logout(false);
+  }catch(e){err.textContent=e.message;err.className="error";}
 }
+
+$("loginBtn").addEventListener("click",login);$("passwordInput").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+$("refreshBtn").addEventListener("click",async()=>{await loadDashboard();await loadSettings();});$("exportBtn").addEventListener("click",exportToExcel);$("logoutBtn").addEventListener("click",()=>logout());
+$("changePasswordBtn").addEventListener("click",openPasswordModal);$("closePasswordModal").addEventListener("click",closePasswordModal);$("cancelPassword").addEventListener("click",closePasswordModal);$("savePassword").addEventListener("click",changePassword);
+$("saveDeadlineBtn").addEventListener("click",()=>{const v=$("deadlineInput").value;if(!v){setStatus("Hãy chọn ngày giờ hoặc bấm Không giới hạn.");return;}saveDeadline(new Date(v).getTime());});
+$("clearDeadlineBtn").addEventListener("click",()=>saveDeadline(null));
+
+if(sessionToken){$("loginOverlay").classList.add("hidden");$("app").classList.remove("hidden");loadDashboard().then(loadSettings);}
 </script>
 </body>
 </html>

@@ -1,48 +1,355 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Đăng ký Hội thao Liwayway 2026</title><style>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đăng ký Hội thao Liwayway 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
 :root{--primary:#0d6efd;--dark:#172033;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:#172033}.container{max-width:900px;margin:auto;padding:20px}.card{background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(16,24,40,.08)}.form-card{padding:28px}.brand{position:relative;text-align:center;border-bottom:3px solid #ffc107;padding:10px 70px 16px;margin-bottom:24px}h1{font-size:24px;margin:0;color:var(--primary)}.subtitle{color:var(--muted);margin:7px 0 0;font-weight:600}.admin-link{position:absolute;right:0;top:0;text-decoration:none;background:#172033;color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:700}.section{background:#eef2f6;padding:10px 13px;border-radius:8px;font-weight:700;margin:22px 0 15px}.field{margin-bottom:16px}.label{display:block;font-weight:700;margin-bottom:7px}.required{color:#dc3545}input,select{width:100%;border:1px solid #ced4da;border-radius:8px;padding:11px 12px;font-size:15px;background:#fff}input:focus,select:focus{outline:0;border-color:#86b7fe;box-shadow:0 0 0 3px rgba(13,110,253,.12)}.radio-row{display:flex;gap:24px;flex-wrap:wrap}.radio{display:flex;align-items:center;gap:8px;font-weight:600}.radio input{width:auto}.btn{border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer}.btn-primary{background:var(--primary);color:#fff}.btn-secondary{background:#198754;color:#fff}.btn-danger{background:#dc3545;color:#fff}.btn:disabled{opacity:.6;cursor:not-allowed}.submit{width:100%;font-size:16px;padding:14px;margin-top:10px}.hidden{display:none!important}.search-box{background:#fff9e6;border:1px solid #ffda6a;padding:14px;border-radius:10px}.results{margin-top:6px;max-height:260px;overflow:auto}.result{width:100%;text-align:left;background:#fff;border:1px solid var(--line);padding:10px;border-radius:7px;cursor:pointer;margin-bottom:5px}.result:hover{background:#f2f7ff}.result-main{font-weight:700;color:var(--primary)}.detail{font-size:12px;color:var(--muted);margin-top:3px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:9px}.members{width:100%;border-collapse:collapse;min-width:720px}.members th,.members td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:middle}.members th{background:#f8f9fa;font-size:13px}.members input{padding:8px;font-size:13px}.small{font-size:13px}.rule{margin-top:8px;padding:8px 10px;border-radius:8px;background:#fff0f0;color:#b42318;font-weight:700}.status{padding:11px 13px;border-radius:8px;margin-bottom:14px;font-weight:600}.status.error{background:#fff0f0;color:#b42318}.status.ok{background:#ecfdf3;color:#027a48}.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.94);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center}.spinner{width:32px;height:32px;border:4px solid #d0d5dd;border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.selected-box{padding:10px;border:1px solid #b7d4ff;background:#f2f7ff;border-radius:8px;margin-top:8px}.selected-box strong{color:var(--primary)}
-@media(max-width:600px){.container{padding:8px}.form-card{padding:16px}.radio-row{gap:12px}h1{font-size:20px}.brand{padding-right:55px}.admin-link{font-size:11px;padding:7px 8px}.members{min-width:680px}input,select{font-size:16px}.submit{position:sticky;bottom:8px;z-index:5}}
-</style></head><body>
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:#172033}
+.container{max-width:900px;margin:auto;padding:20px}.card{background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(16,24,40,.08)}
+.form-card{padding:28px}.brand{position:relative;text-align:center;border-bottom:3px solid #ffc107;padding:10px 70px 16px;margin-bottom:24px}
+h1{font-size:24px;margin:0;color:var(--primary)}.subtitle{color:var(--muted);margin:7px 0 0;font-weight:600}
+.admin-link{position:absolute;right:0;top:0;text-decoration:none;background:#172033;color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:700}
+.field{margin-bottom:16px}.label{display:block;font-weight:700;margin-bottom:7px}.required{color:#dc3545}
+input,select{width:100%;border:1px solid #ced4da;border-radius:8px;padding:11px 12px;font-size:15px;background:#fff}
+input:focus,select:focus{outline:0;border-color:#86b7fe;box-shadow:0 0 0 3px rgba(13,110,253,.12)}
+.radio-row{display:flex;gap:24px;flex-wrap:wrap}.radio{display:flex;align-items:center;gap:8px;font-weight:600}.radio input{width:auto}
+.btn{border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer}.btn-primary{background:var(--primary);color:#fff}
+.btn-secondary{background:#198754;color:#fff}.btn-danger{background:#dc3545;color:#fff}.btn-light{background:#eef2f6;color:#172033}
+.btn:disabled{opacity:.6;cursor:not-allowed}.submit{width:100%;font-size:16px;padding:14px;margin-top:10px}
+.hidden{display:none!important}.search-box{background:#fff9e6;border:1px solid #ffda6a;padding:14px;border-radius:10px}
+.results{margin-top:6px;max-height:260px;overflow:auto}.result{width:100%;text-align:left;background:#fff;border:1px solid var(--line);padding:10px;border-radius:7px;cursor:pointer;margin-bottom:5px}
+.result:hover{background:#f2f7ff}.result-main{font-weight:700;color:var(--primary)}.detail{font-size:12px;color:var(--muted);margin-top:3px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:9px}.members{width:100%;border-collapse:collapse;min-width:620px}
+.members th,.members td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:middle}.members th{background:#f8f9fa;font-size:13px}
+.members input{padding:8px;font-size:13px}.small{font-size:13px}.rule{margin-top:8px;padding:8px 10px;border-radius:8px;background:#fff0f0;color:#b42318;font-weight:700}
+.status{padding:11px 13px;border-radius:8px;margin-bottom:14px;font-weight:600}.status.error{background:#fff0f0;color:#b42318}.status.ok{background:#ecfdf3;color:#027a48}
+.status.info{background:#eef6ff;color:#175cd3}.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.94);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center}
+.spinner{width:32px;height:32px;border:4px solid #d0d5dd;border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}.selected-box{padding:10px;border:1px solid #b7d4ff;background:#f2f7ff;border-radius:8px;margin-top:8px}
+.selected-box strong{color:var(--primary)}.deadline-box{padding:10px 12px;border-radius:9px;background:#eef6ff;color:#175cd3;margin-bottom:18px;font-weight:600}
+.confirm-overlay{position:fixed;inset:0;background:rgba(23,32,51,.65);z-index:50;display:flex;align-items:center;justify-content:center;padding:14px}
+.confirm-card{background:#fff;width:min(620px,100%);max-height:92vh;overflow:auto;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.confirm-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.confirm-code{font-size:24px;font-weight:800;color:var(--primary);letter-spacing:2px}
+.confirm-detail{background:#f8f9fa;padding:13px;border-radius:10px;line-height:1.6}.qr-wrap{text-align:center;padding:14px}.qr-wrap canvas,.qr-wrap img{margin:auto}
+.confirm-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.verify-page{max-width:700px;margin:30px auto;padding:20px}.verify-card{background:#fff;padding:25px;border-radius:16px;box-shadow:0 8px 30px rgba(16,24,40,.08)}
+@media(max-width:600px){.container{padding:8px}.form-card{padding:16px}.radio-row{gap:12px}h1{font-size:20px}.brand{padding-right:55px}.admin-link{font-size:11px;padding:7px 8px}.members{min-width:600px}input,select{font-size:16px}.submit{position:sticky;bottom:8px;z-index:5}}
+</style>
+</head>
+<body>
 <div id="loadingOverlay" class="loading-overlay"><div><div class="spinner"></div><strong>Đang tải danh sách nhân viên...</strong><br><span class="small">Please wait...</span></div></div>
-<main class="container"><section class="card form-card"><header class="brand"><a class="admin-link" href="admin.html">🔐 ADMIN</a><h1>LIWAYWAY SPORTS FESTIVAL 2026</h1><div class="subtitle">CỔNG ĐĂNG KÝ THAM GIA HỘI THAO</div></header>
+
+<main id="registrationPage" class="container">
+<section class="card form-card">
+<header class="brand">
+<a class="admin-link" href="admin.html">🔐 ADMIN</a>
+<h1>LIWAYWAY SPORTS FESTIVAL 2026</h1>
+<div class="subtitle">CỔNG ĐĂNG KÝ THAM GIA HỘI THAO</div>
+</header>
+<div id="deadlineBox" class="deadline-box hidden"></div>
 <div id="status" class="status hidden"></div>
+
 <form id="registrationForm" novalidate>
-<div class="field"><span class="label">Hình thức đăng ký / Registration Type <span class="required">*</span></span><div class="radio-row"><label class="radio"><input type="radio" name="loaiDangKy" value="Cá nhân" id="typeIndividual" checked> Cá nhân (Marathon)</label><label class="radio"><input type="radio" name="loaiDangKy" value="Đội nhóm" id="typeGroup"> Đội nhóm</label></div></div>
-<div class="section">THÔNG TIN CHUNG / GENERAL INFORMATION</div>
-<div class="field"><label class="label" for="congTy">Công ty <span class="required">*</span></label><select id="congTy" required><option value="">-- Chọn Công ty --</option><option value="K1">Liwayway Việt Nam</option><option value="K2">Liwayway Sài Gòn</option></select></div>
-<div class="field"><label class="label" for="phongBan">Phòng ban <span class="required">*</span></label><select id="phongBan" required><option value="">-- Chọn Phòng ban --</option></select></div>
-<div class="field"><label class="label" for="boPhan">Bộ phận <span class="required">*</span></label><select id="boPhan" required disabled><option value="">-- Chọn Bộ phận --</option></select></div>
-<div id="individualSearchSection"><div class="field"><label class="label" for="individualSearch">Họ và tên người đăng ký <span class="required">*</span></label><div class="search-box"><input id="individualSearch" autocomplete="off" placeholder="🔍 Dò theo Họ tên, Mã NV hoặc số căn cước"><div id="individualResults" class="results"></div><div id="selectedIndividual" class="selected-box hidden"></div></div></div></div>
-<div id="groupNameSection" class="field hidden"><label class="label" for="tenFormTenDoi">Tên Đội thi đấu <span class="required">*</span></label><input id="tenFormTenDoi" placeholder="VD: Đội Cơ Khí Liwayway"></div>
-<div class="field"><label class="label" for="monDangKy">Môn thi đấu <span class="required">*</span></label><select id="monDangKy" required><option value="">-- Chọn môn thi đấu --</option></select><div id="ruleMessage" class="rule hidden"></div></div>
-<section id="groupSection" class="hidden"><div class="section">DANH SÁCH THÀNH VIÊN ĐỘI (<span id="memberCount">0</span> người) <button type="button" class="btn btn-secondary" id="addMemberBtn" style="float:right;padding:6px 10px">+ Thêm thủ công</button><div style="clear:both"></div></div>
-<div class="search-box"><label class="label" for="searchStaffInput">🔍 Dò nhân viên bằng Tên, Mã NV hoặc CCCD</label><input id="searchStaffInput" autocomplete="off" placeholder="Nhập từ khóa..."><div id="searchResultsList" class="results"></div></div>
-<div class="table-wrap" style="margin-top:14px"><table class="members"><thead><tr><th>Họ và tên</th><th>Mã NV</th><th>4 số cuối CCCD</th><th>Phòng ban</th><th>Bộ phận</th><th>Chức vụ</th><th>Xóa</th></tr></thead><tbody id="memberListBody"></tbody></table></div></section>
-<button class="btn btn-primary submit" type="submit" id="submitBtn">GỬI ĐĂNG KÝ / SUBMIT</button></form></section></main>
+<div class="field">
+<span class="label">Hình thức đăng ký / Registration Type <span class="required">*</span></span>
+<div class="radio-row">
+<label class="radio"><input type="radio" name="loaiDangKy" value="Cá nhân" id="typeIndividual" checked> Cá nhân (Marathon)</label>
+<label class="radio"><input type="radio" name="loaiDangKy" value="Đội nhóm" id="typeGroup"> Đội nhóm</label>
+</div>
+</div>
+
+<div id="individualSearchSection">
+<div class="field">
+<label class="label" for="individualSearch">Họ và tên người đăng ký <span class="required">*</span></label>
+<div class="search-box">
+<input id="individualSearch" autocomplete="off" placeholder="🔍 Gõ Họ tên (có dấu/không dấu), Mã NV hoặc CCCD">
+<div id="individualResults" class="results"></div>
+<div id="selectedIndividual" class="selected-box hidden"></div>
+</div>
+</div>
+</div>
+
+<div id="groupNameSection" class="field hidden">
+<label class="label" for="tenFormTenDoi">Tên Đội thi đấu <span class="required">*</span></label>
+<input id="tenFormTenDoi" placeholder="VD: Đội Cơ Khí Liwayway">
+</div>
+
+<div class="field">
+<label class="label" for="monDangKy">Môn thi đấu <span class="required">*</span></label>
+<select id="monDangKy" required><option value="">-- Chọn môn thi đấu --</option></select>
+<div id="ruleMessage" class="rule hidden"></div>
+</div>
+
+<section id="groupSection" class="hidden">
+<div class="section" style="background:#eef2f6;padding:10px 13px;border-radius:8px;font-weight:700;margin:22px 0 15px">
+DANH SÁCH THÀNH VIÊN ĐỘI (<span id="memberCount">0</span> người)
+<button type="button" class="btn btn-secondary" id="addMemberBtn" style="float:right;padding:6px 10px">+ Thêm thủ công</button>
+<div style="clear:both"></div>
+</div>
+<div class="search-box">
+<label class="label" for="searchStaffInput">🔍 Dò nhân viên bằng Tên, Mã NV hoặc CCCD</label>
+<input id="searchStaffInput" autocomplete="off" placeholder="Nhập tên có dấu hoặc không dấu...">
+<div id="searchResultsList" class="results"></div>
+</div>
+<div class="table-wrap" style="margin-top:14px">
+<table class="members">
+<thead><tr><th>Họ và tên</th><th>Mã NV</th><th>4 số cuối CCCD</th><th>Phòng ban</th><th>Bộ phận</th><th>Chức vụ</th><th>Xóa</th></tr></thead>
+<tbody id="memberListBody"></tbody>
+</table>
+</div>
+</section>
+
+<button class="btn btn-primary submit" type="submit" id="submitBtn">GỬI ĐĂNG KÝ / SUBMIT</button>
+</form>
+</section>
+</main>
+
+<div id="confirmOverlay" class="confirm-overlay hidden">
+<div class="confirm-card" id="confirmationCard">
+<div class="confirm-head">
+<div><h2 style="margin:0 0 5px">✅ ĐĂNG KÝ THÀNH CÔNG</h2><div class="small">Lưu ảnh màn hình/QR này để làm xác nhận.</div></div>
+<button type="button" class="btn btn-light" id="closeConfirmBtn">✕</button>
+</div>
+<hr>
+<div id="confirmDetail" class="confirm-detail"></div>
+<div class="qr-wrap"><div id="qrcode"></div><div class="small" style="margin-top:7px">Mã xác nhận: <strong id="confirmCode"></strong></div></div>
+<div class="confirm-actions">
+<button type="button" class="btn btn-primary" id="downloadQrBtn">📲 Lưu QR về điện thoại</button>
+<button type="button" class="btn btn-light" id="closeConfirmBtn2">Đóng</button>
+</div>
+</div>
+</div>
+
 <script>
 const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";
 const GAME_LIMITS={"Kéo co":{min:6,max:10,msg:"Yêu cầu từ 6 đến 10 người"},"Nhảy bao jumbo":{min:10,max:10,msg:"Yêu cầu đúng 10 người"},"Trò chơi liên hoàn":{min:4,max:4,msg:"Yêu cầu đúng 4 người"}};
-const $=id=>document.getElementById(id); let dbEmployees=[]; let selectedIndividual=null;
+const $=id=>document.getElementById(id);
+let dbEmployees=[],selectedIndividual=null,registrationOpen=true,lastQrPayload="",lastQrCode="";
+
 function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function removeMarks(v){return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/Đ/g,"D").toLowerCase();}
 function showStatus(m,t="error"){const e=$("status");e.textContent=m;e.className="status "+t;}
 function hideStatus(){$("status").className="status hidden";}
 function updateMemberCount(){$("memberCount").textContent=$("memberListBody").querySelectorAll("tr").length;}
-function uniqueValues(field){return [...new Set(dbEmployees.map(e=>String(e[field]||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));}
-function populateDepartments(){const s=$("phongBan"),old=s.value;s.innerHTML='<option value="">-- Chọn Phòng ban --</option>';uniqueValues('phongBan').forEach(v=>s.insertAdjacentHTML('beforeend','<option value="'+escapeHtml(v)+'">'+escapeHtml(v)+'</option>'));if([...s.options].some(o=>o.value===old))s.value=old;populateSections();}
-function populateSections(){const dept=$("phongBan").value,s=$("boPhan"),old=s.value;const vals=[...new Set(dbEmployees.filter(e=>!dept||e.phongBan===dept).map(e=>String(e.boPhan||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));s.innerHTML='<option value="">-- Chọn Bộ phận --</option>';vals.forEach(v=>s.insertAdjacentHTML('beforeend','<option value="'+escapeHtml(v)+'">'+escapeHtml(v)+'</option>'));s.disabled=!dept;if(vals.includes(old))s.value=old;}
-function setGameOptions(){const group=$("typeGroup").checked,s=$("monDangKy"),old=s.value;const options=group?Object.keys(GAME_LIMITS):['Chạy Marathon'];s.innerHTML='<option value="">-- Chọn môn thi đấu --</option>';options.forEach(v=>s.insertAdjacentHTML('beforeend','<option value="'+escapeHtml(v)+'">'+escapeHtml(v)+(v==='Nhảy bao jumbo'?' 1 tấn (Sack Race)':v==='Trò chơi liên hoàn'?' (Multi-stage Game)':v==='Kéo co'?' (Tug of War)':v==='Chạy Marathon'?' Nam/Nữ (Cá nhân)':'')+'</option>'));if(options.includes(old))s.value=old;else s.value="";const rule=GAME_LIMITS[s.value];$("ruleMessage").textContent=rule?'⚠️ '+rule.msg:'';$("ruleMessage").classList.toggle('hidden',!rule);}
-function setGroupMode(){const group=$("typeGroup").checked;$("groupSection").classList.toggle('hidden',!group);$("individualSearchSection").classList.toggle('hidden',group);$("groupNameSection").classList.toggle('hidden',!group);$("tenFormTenDoi").required=group;$("individualSearch").required=!group;setGameOptions();$("memberListBody").innerHTML="";$("searchStaffInput").value="";$("searchResultsList").innerHTML="";selectedIndividual=null;$("selectedIndividual").classList.add('hidden');$("individualSearch").value="";updateMemberCount();hideStatus();}
-function employeeMatches(keyword,extraFilter){const q=String(keyword||"").toLowerCase().trim();if(!q)return [];return dbEmployees.filter(emp=>(!extraFilter||extraFilter(emp))&&(emp.hoTen.toLowerCase().includes(q)||emp.maNV.toLowerCase().includes(q)||emp.cccd.includes(q))).slice(0,10);}
-function employeeButton(emp,onSelect){const b=document.createElement('button');b.type='button';b.className='result';const masked=emp.cccd?'****'+emp.cccd.slice(-4):'Chưa có';b.innerHTML='<div class="result-main">'+escapeHtml(emp.hoTen)+' ('+escapeHtml(emp.maNV)+')</div><div class="detail">CCCD: '+escapeHtml(masked)+' | '+escapeHtml(emp.phongBan)+' - '+escapeHtml(emp.boPhan)+' | '+escapeHtml(emp.chucVu)+'</div>';b.addEventListener('click',()=>onSelect(emp));return b;}
-function renderIndividualResults(q){const box=$("individualResults");box.innerHTML="";employeeMatches(q).forEach(e=>box.appendChild(employeeButton(e,selectIndividual)));if(q&&!box.children.length)box.innerHTML='<div class="detail" style="padding:8px">Không tìm thấy nhân viên phù hợp.</div>';}
-function selectIndividual(emp){selectedIndividual=emp;$("individualSearch").value=emp.hoTen;$("individualResults").innerHTML="";const e=$("selectedIndividual");e.innerHTML='<strong>✓ '+escapeHtml(emp.hoTen)+'</strong> — Mã NV: '+escapeHtml(emp.maNV)+' — CCCD: '+escapeHtml(emp.cccd)+'<br><span class="detail">Phòng ban: '+escapeHtml(emp.phongBan)+' | Bộ phận: '+escapeHtml(emp.boPhan)+' | Chức vụ: '+escapeHtml(emp.chucVu)+'</span>';e.classList.remove('hidden');if([...$("phongBan").options].some(o=>o.value===emp.phongBan))$("phongBan").value=emp.phongBan;populateSections();if([...$("boPhan").options].some(o=>o.value===emp.boPhan))$("boPhan").value=emp.boPhan;hideStatus();}
-function renderSearchResults(q){const box=$("searchResultsList");box.innerHTML="";const game=$("monDangKy").value;const count=$("memberListBody").querySelectorAll('tr').length;const limit=GAME_LIMITS[game];if(limit&&count>=limit.max)return;employeeMatches(q).forEach(e=>box.appendChild(employeeButton(e,addMemberToTable)));if(q&&!box.children.length)box.innerHTML='<div class="detail" style="padding:8px">Không tìm thấy nhân viên phù hợp.</div>';}
-function addMemberToTable(emp={}){const id=String(emp.maNV||"").trim(),cccd=String(emp.cccd||"").trim();const existing=[...document.querySelectorAll('.member-id')].map(x=>x.value.trim());const existingCccd=[...document.querySelectorAll('.member-full-cccd')].map(x=>x.value.trim());if((id&&existing.includes(id))||(cccd&&existingCccd.includes(cccd))){showStatus('Nhân viên này đã có trong đội.','error');return;}const game=$("monDangKy").value,limit=GAME_LIMITS[game],count=$("memberListBody").querySelectorAll('tr').length;if(limit&&count>=limit.max){showStatus('Môn '+game+' đã đủ số lượng tối đa.','error');return;}const tr=document.createElement('tr');tr.dataset.fromDirectory=id||cccd?'1':'0';const manual=!id&&!cccd;tr.innerHTML='<td><input class="member-name" required value="'+escapeHtml(emp.hoTen||'')+'" '+(manual?'':'readonly')+'></td><td><input class="member-id" value="'+escapeHtml(id)+'" '+(manual?'':'readonly')+'></td><td><input class="member-cccd-last" value="'+escapeHtml(cccd?cccd.slice(-4):'')+'" maxlength="4" inputmode="numeric" '+(manual?'':'readonly')+'><input type="hidden" class="member-full-cccd" value="'+escapeHtml(cccd)+'"></td><td><input class="member-dept" required value="'+escapeHtml(emp.phongBan||'')+'" '+(manual?'':'readonly')+'></td><td><input class="member-section" required value="'+escapeHtml(emp.boPhan||'')+'" '+(manual?'':'readonly')+'></td><td><input class="member-pos" required value="'+escapeHtml(emp.chucVu||'')+'" '+(manual?'':'readonly')+'></td><td><button type="button" class="btn btn-danger remove-btn" style="padding:6px 9px">X</button></td>';tr.querySelector('.remove-btn').addEventListener('click',()=>{tr.remove();updateMemberCount();});$("memberListBody").appendChild(tr);updateMemberCount();hideStatus();$("searchStaffInput").value="";$("searchResultsList").innerHTML="";}
-function validateForm(){if(!$('registrationForm').checkValidity()){$('registrationForm').reportValidity();return false;}const group=$("typeGroup").checked,game=$("monDangKy").value;if(!group){if(!selectedIndividual){showStatus('Vui lòng dò và chọn Họ và tên người đăng ký từ DSCNV.');return false;}return game==='Chạy Marathon';}const rows=[...$("memberListBody").querySelectorAll('tr')],limit=GAME_LIMITS[game];if(!limit){showStatus('Vui lòng chọn môn thi đấu.');return false;}if(rows.length<limit.min||rows.length>limit.max){showStatus('Môn "'+game+'" yêu cầu '+(limit.min===limit.max?'đúng '+limit.min:'từ '+limit.min+' đến '+limit.max)+' người. Hiện có '+rows.length+'.');return false;}const ids=rows.map(r=>r.querySelector('.member-id').value.trim()).filter(Boolean),cccds=rows.map(r=>r.querySelector('.member-full-cccd').value.trim()).filter(Boolean);if(new Set(ids).size!==ids.length||new Set(cccds).size!==cccds.length){showStatus('Mã NV/CCCD trong đội không được trùng.');return false;}if(rows.some(r=>!r.querySelector('.member-id').value.trim()&&!r.querySelector('.member-full-cccd').value.trim())){showStatus('Mỗi thành viên phải có Mã NV hoặc CCCD để hệ thống kiểm trùng.');return false;}return true;}
-async function loadEmployees(){try{const response=await fetch(WEB_APP_URL+'?action=getEmployees',{redirect:'follow',cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);const res=await response.json();if(res.result!=='success')throw new Error(res.message||'API error');dbEmployees=Array.isArray(res.data)?res.data:[];populateDepartments();$("loadingOverlay").classList.add('hidden');}catch(err){console.error(err);$("loadingOverlay").classList.add('hidden');showStatus('Không thể tải danh sách nhân viên. Vui lòng kiểm tra Web App URL.');}}
-$("typeIndividual").addEventListener('change',setGroupMode);$("typeGroup").addEventListener('change',setGroupMode);$("phongBan").addEventListener('change',populateSections);$("individualSearch").addEventListener('input',e=>renderIndividualResults(e.target.value));$("searchStaffInput").addEventListener('input',e=>renderSearchResults(e.target.value));$("addMemberBtn").addEventListener('click',()=>addMemberToTable());
-$("monDangKy").addEventListener('change',()=>{const rule=GAME_LIMITS[$("monDangKy").value];$("ruleMessage").textContent=rule?'⚠️ '+rule.msg:'';$("ruleMessage").classList.toggle('hidden',!rule);});
-$("registrationForm").addEventListener('submit',async e=>{e.preventDefault();hideStatus();if(!validateForm())return;const btn=$("submitBtn");btn.disabled=true;btn.textContent='Đang kiểm tra & lưu...';const group=$("typeGroup").checked;let memberString='',memberKeys='';if(group){const rows=[...$("memberListBody").querySelectorAll('tr')];memberString=rows.map((tr,i)=>{const v=s=>tr.querySelector(s).value.trim();const id=v('.member-id'),cccd=v('.member-full-cccd');return (i+1)+'. '+v('.member-name')+(id?' - MNV: '+id:'')+(cccd?' - CCCD 4 số cuối: '+cccd.slice(-4):'')+' [Phòng ban: '+v('.member-dept')+' - Bộ phận: '+v('.member-section')+' - Chức vụ: '+v('.member-pos')+']';}).join(' | ');memberKeys=rows.map(tr=>tr.querySelector('.member-id').value.trim()||tr.querySelector('.member-full-cccd').value.trim()).filter(Boolean).join('|');}
-const payload={loaiDangKy:document.querySelector('input[name="loaiDangKy"]:checked').value,congTy:$("congTy").value,phongBan:$("phongBan").value,boPhan:$("boPhan").value,tenFormTenDoi:group?$("tenFormTenDoi").value.trim():selectedIndividual.hoTen,monDangKy:$("monDangKy").value,danhSachThanhVien:memberString,memberKeys:group?memberKeys:'',maNVDangKy:group?'':selectedIndividual.maNV,cccdDangKy:group?'':selectedIndividual.cccd};try{const response=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),redirect:'follow'});const res=await response.json();if(res.result!=='success')throw new Error(res.message||'Không thể lưu đăng ký.');$('registrationForm').reset();setGroupMode();showStatus('Đăng ký thành công! Dữ liệu đã được lưu.','ok');window.scrollTo({top:0,behavior:'smooth'});}catch(err){console.error(err);showStatus(err.message||'Lỗi kết nối. Vui lòng thử lại.');}finally{btn.disabled=false;btn.textContent='GỬI ĐĂNG KÝ / SUBMIT';}});
-setGroupMode();loadEmployees();
-</script></body></html>
+function formatDate(ms){if(!ms)return "";return new Intl.DateTimeFormat("vi-VN",{dateStyle:"full",timeStyle:"short"}).format(new Date(Number(ms)));}
+
+function applyRegistrationStatus(status){
+  registrationOpen=!!status.open;
+  const box=$("deadlineBox");
+  if(status.deadlineMs){
+    box.textContent=status.open
+      ?"⏰ Hạn đăng ký: "+formatDate(status.deadlineMs)
+      :"🔒 Đã hết hạn đăng ký: "+formatDate(status.deadlineMs);
+    box.classList.remove("hidden");
+  }else box.classList.add("hidden");
+  $("registrationForm").querySelectorAll("input,select,button").forEach(el=>{
+    if(el.id==="adminLink")return;
+    el.disabled=!registrationOpen;
+  });
+  if(!registrationOpen)showStatus("Thời hạn đăng ký đã kết thúc. Vui lòng liên hệ Ban tổ chức.","error");
+}
+
+async function loadRegistrationStatus(){
+  try{
+    const r=await fetch(WEB_APP_URL+"?action=getRegistrationStatus",{cache:"no-store"});
+    const res=await r.json();
+    if(res.result==="success")applyRegistrationStatus(res.data);
+  }catch(e){console.warn("Không tải được trạng thái hạn đăng ký",e);}
+}
+
+function setGameOptions(){
+  const group=$("typeGroup").checked,s=$("monDangKy"),old=s.value;
+  const options=group?Object.keys(GAME_LIMITS):["Chạy Marathon"];
+  s.innerHTML='<option value="">-- Chọn môn thi đấu --</option>';
+  options.forEach(v=>s.insertAdjacentHTML("beforeend",'<option value="'+escapeHtml(v)+'">'+escapeHtml(v)+(v==="Nhảy bao jumbo"?" 1 tấn (Sack Race)":v==="Trò chơi liên hoàn"?" (Multi-stage Game)":v==="Kéo co"?" (Tug of War)":v==="Chạy Marathon"?" Nam/Nữ (Cá nhân)":"")+'</option>'));
+  if(options.includes(old))s.value=old;else s.value="";
+  updateRule();
+}
+function updateRule(){const rule=GAME_LIMITS[$("monDangKy").value];$("ruleMessage").textContent=rule?"⚠️ "+rule.msg:"";$("ruleMessage").classList.toggle("hidden",!rule);}
+function setGroupMode(){
+  const group=$("typeGroup").checked;
+  $("groupSection").classList.toggle("hidden",!group);$("individualSearchSection").classList.toggle("hidden",group);
+  $("groupNameSection").classList.toggle("hidden",!group);$("tenFormTenDoi").required=group;$("individualSearch").required=!group;
+  setGameOptions();$("memberListBody").innerHTML="";$("searchStaffInput").value="";$("searchResultsList").innerHTML="";
+  selectedIndividual=null;$("selectedIndividual").classList.add("hidden");$("individualSearch").value="";updateMemberCount();hideStatus();
+  if(!registrationOpen)applyRegistrationStatus({open:false,deadlineMs:$("deadlineBox").dataset.deadline||null});
+}
+
+function employeeMatches(keyword,extraFilter){
+  const q=String(keyword||"").trim().toLowerCase(),qNoMark=removeMarks(q);
+  if(!q)return [];
+  return dbEmployees.filter(emp=>(!extraFilter||extraFilter(emp))&&(
+    String(emp.hoTen||"").toLowerCase().includes(q) ||
+    removeMarks(emp.hoTen||"").includes(qNoMark) ||
+    String(emp.maNV||"").toLowerCase().includes(q) ||
+    String(emp.cccd||"").includes(q)
+  )).slice(0,12);
+}
+
+function employeeButton(emp,onSelect){
+  const b=document.createElement("button");b.type="button";b.className="result";
+  const masked=emp.cccd?"****"+emp.cccd.slice(-4):"Chưa có";
+  b.innerHTML='<div class="result-main">'+escapeHtml(emp.hoTen)+" ("+escapeHtml(emp.maNV)+')</div><div class="detail">CCCD: '+escapeHtml(masked)+" | "+escapeHtml(emp.phongBan)+" - "+escapeHtml(emp.boPhan)+" | "+escapeHtml(emp.chucVu)+"</div>";
+  b.addEventListener("click",()=>onSelect(emp));return b;
+}
+function renderIndividualResults(q){
+  const box=$("individualResults");box.innerHTML="";
+  employeeMatches(q).forEach(e=>box.appendChild(employeeButton(e,selectIndividual)));
+  if(q&&!box.children.length)box.innerHTML='<div class="detail" style="padding:8px">Không tìm thấy nhân viên phù hợp.</div>';
+}
+function selectIndividual(emp){
+  selectedIndividual=emp;$("individualSearch").value=emp.hoTen;$("individualResults").innerHTML="";
+  const e=$("selectedIndividual");
+  e.innerHTML="<strong>✓ "+escapeHtml(emp.hoTen)+"</strong> — Mã NV: "+escapeHtml(emp.maNV)+" — CCCD: "+escapeHtml(emp.cccd)+"<br><span class=\"detail\">Phòng ban: "+escapeHtml(emp.phongBan)+" | Bộ phận: "+escapeHtml(emp.boPhan)+" | Chức vụ: "+escapeHtml(emp.chucVu)+"</span>";
+  e.classList.remove("hidden");hideStatus();
+}
+function renderSearchResults(q){
+  const box=$("searchResultsList");box.innerHTML="";
+  const game=$("monDangKy").value,count=$("memberListBody").querySelectorAll("tr").length,limit=GAME_LIMITS[game];
+  if(limit&&count>=limit.max)return;
+  employeeMatches(q).forEach(e=>box.appendChild(employeeButton(e,addMemberToTable)));
+  if(q&&!box.children.length)box.innerHTML='<div class="detail" style="padding:8px">Không tìm thấy nhân viên phù hợp.</div>';
+}
+function addMemberToTable(emp={}){
+  const id=String(emp.maNV||"").trim(),cccd=String(emp.cccd||"").trim();
+  const existing=[...document.querySelectorAll(".member-id")].map(x=>x.value.trim());
+  const existingCccd=[...document.querySelectorAll(".member-full-cccd")].map(x=>x.value.trim());
+  if((id&&existing.includes(id))||(cccd&&existingCccd.includes(cccd))){showStatus("Nhân viên này đã có trong đội.","error");return;}
+  const game=$("monDangKy").value,limit=GAME_LIMITS[game],count=$("memberListBody").querySelectorAll("tr").length;
+  if(limit&&count>=limit.max){showStatus("Môn "+game+" đã đủ số lượng tối đa.","error");return;}
+  const tr=document.createElement("tr");const manual=!id&&!cccd;
+  tr.innerHTML='<td><input class="member-name" required value="'+escapeHtml(emp.hoTen||'')+'" '+(manual?"":"readonly")+'></td>'+
+    '<td><input class="member-id" value="'+escapeHtml(id)+'" '+(manual?"":"readonly")+'></td>'+
+    '<td><input class="member-cccd-last" value="'+escapeHtml(cccd?cccd.slice(-4):"")+'" maxlength="4" inputmode="numeric" '+(manual?"":"readonly")+'><input type="hidden" class="member-full-cccd" value="'+escapeHtml(cccd)+'"></td>'+
+    '<td><input class="member-dept" value="'+escapeHtml(emp.phongBan||'')+'" '+(manual?"":"readonly")+'></td>'+
+    '<td><input class="member-section" value="'+escapeHtml(emp.boPhan||'')+'" '+(manual?"":"readonly")+'></td>'+
+    '<td><input class="member-pos" value="'+escapeHtml(emp.chucVu||'')+'" '+(manual?"":"readonly")+'></td>'+
+    '<td><button type="button" class="btn btn-danger remove-btn" style="padding:6px 9px">X</button></td>';
+  tr.querySelector(".remove-btn").addEventListener("click",()=>{tr.remove();updateMemberCount();});
+  $("memberListBody").appendChild(tr);updateMemberCount();hideStatus();$("searchStaffInput").value="";$("searchResultsList").innerHTML="";
+}
+function validateForm(){
+  if(!registrationOpen){showStatus("Thời hạn đăng ký đã kết thúc.");return false;}
+  if(!$("registrationForm").checkValidity()){$("registrationForm").reportValidity();return false;}
+  const group=$("typeGroup").checked,game=$("monDangKy").value;
+  if(!group){
+    if(!selectedIndividual){showStatus("Vui lòng dò và chọn Họ và tên người đăng ký từ DSCNV.");return false;}
+    return game==="Chạy Marathon";
+  }
+  const rows=[...$("memberListBody").querySelectorAll("tr")],limit=GAME_LIMITS[game];
+  if(!limit){showStatus("Vui lòng chọn môn thi đấu.");return false;}
+  if(rows.length<limit.min||rows.length>limit.max){showStatus('Môn "'+game+'" yêu cầu '+(limit.min===limit.max?"đúng "+limit.min:"từ "+limit.min)+" người. Hiện có "+rows.length+".");return false;}
+  const ids=rows.map(r=>r.querySelector(".member-id").value.trim()).filter(Boolean),cccds=rows.map(r=>r.querySelector(".member-full-cccd").value.trim()).filter(Boolean);
+  if(new Set(ids).size!==ids.length||new Set(cccds).size!==cccds.length){showStatus("Mã NV/CCCD trong đội không được trùng.");return false;}
+  if(rows.some(r=>!r.querySelector(".member-id").value.trim()&&!r.querySelector(".member-full-cccd").value.trim())){showStatus("Mỗi thành viên phải có Mã NV hoặc CCCD để hệ thống kiểm trùng.");return false;}
+  return true;
+}
+async function loadEmployees(){
+  try{
+    const response=await fetch(WEB_APP_URL+"?action=getEmployees",{redirect:"follow",cache:"no-store"});
+    if(!response.ok)throw new Error("HTTP "+response.status);
+    const res=await response.json();if(res.result!=="success")throw new Error(res.message||"API error");
+    dbEmployees=Array.isArray(res.data)?res.data:[];
+  }catch(err){console.error(err);showStatus("Không thể tải danh sách nhân viên. Vui lòng kiểm tra Web App URL.");}
+  finally{$("loadingOverlay").classList.add("hidden");}
+}
+
+function buildConfirmationDetail(d){
+  const members=d.danhSachThanhVien
+    ?d.danhSachThanhVien.split(" | ").map(escapeHtml).join("<br>")
+    :"Đăng ký cá nhân";
+  return "<strong>"+escapeHtml(d.tenFormTenDoi)+"</strong><br>Môn: "+escapeHtml(d.monDangKy)+
+    "<br>Hình thức: "+escapeHtml(d.loaiDangKy)+
+    (d.phongBan?"<br>Phòng ban: "+escapeHtml(d.phongBan):"")+
+    (d.boPhan?"<br>Bộ phận: "+escapeHtml(d.boPhan):"")+
+    "<hr style=\"border:0;border-top:1px solid #ddd\">"+members;
+}
+
+function openConfirmation(res){
+  lastQrCode=res.confirmationCode;
+  const verifyUrl=WEB_APP_URL+"?action=verify&code="+encodeURIComponent(lastQrCode);
+  lastQrPayload=verifyUrl;
+  $("confirmCode").textContent=lastQrCode;$("confirmDetail").innerHTML=buildConfirmationDetail(res.data);
+  $("qrcode").innerHTML="";
+  new QRCode($("qrcode"),{text:verifyUrl,width:190,height:190,colorDark:"#172033",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
+  $("confirmOverlay").classList.remove("hidden");
+}
+function downloadQr(){
+  const canvas=$("qrcode").querySelector("canvas"),img=$("qrcode").querySelector("img");
+  const src=canvas?canvas.toDataURL("image/png"):(img?img.src:"");
+  if(!src)return;
+  const a=document.createElement("a");a.href=src;a.download="Xac_Nhan_Hoi_Thao_"+lastQrCode+".png";document.body.appendChild(a);a.click();a.remove();
+}
+function closeConfirmation(){$("confirmOverlay").classList.add("hidden");}
+
+async function submitRegistration(e){
+  e.preventDefault();hideStatus();if(!validateForm())return;
+  const btn=$("submitBtn");btn.disabled=true;btn.textContent="Đang kiểm tra & lưu...";
+  const group=$("typeGroup").checked;let memberString="",memberKeys="";
+  if(group){
+    const rows=[...$("memberListBody").querySelectorAll("tr")];
+    memberString=rows.map((tr,i)=>{const v=s=>tr.querySelector(s).value.trim(),id=v(".member-id"),cccd=v(".member-full-cccd");
+      return (i+1)+". "+v(".member-name")+(id?" - MNV: "+id:"")+(cccd?" - CCCD 4 số cuối: "+cccd.slice(-4):"")+" [Phòng ban: "+v(".member-dept")+" - Bộ phận: "+v(".member-section")+" - Chức vụ: "+v(".member-pos")+"]";
+    }).join(" | ");
+    memberKeys=rows.map(tr=>tr.querySelector(".member-id").value.trim()||tr.querySelector(".member-full-cccd").value.trim()).filter(Boolean).join("|");
+  }
+  const payload={
+    loaiDangKy:document.querySelector('input[name="loaiDangKy"]:checked').value,
+    tenFormTenDoi:group?$("tenFormTenDoi").value.trim():selectedIndividual.hoTen,
+    monDangKy:$("monDangKy").value,danhSachThanhVien:memberString,memberKeys:group?memberKeys:"",
+    maNVDangKy:group?"":selectedIndividual.maNV,cccdDangKy:group?"":selectedIndividual.cccd,
+    phongBan:group?"":selectedIndividual.phongBan,boPhan:group?"":selectedIndividual.boPhan
+  };
+  try{
+    const response=await fetch(WEB_APP_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
+    const res=await response.json();if(res.result!=="success")throw new Error(res.message||"Không thể lưu đăng ký.");
+    $("registrationForm").reset();setGroupMode();await loadRegistrationStatus();openConfirmation(res);
+  }catch(err){console.error(err);showStatus(err.message||"Lỗi kết nối. Vui lòng thử lại.");}
+  finally{btn.disabled=!registrationOpen;btn.textContent="GỬI ĐĂNG KÝ / SUBMIT";}
+}
+
+function buildPublicConfirmationDetail(d){
+  const members=d.danhSachThanhVien
+    ?d.danhSachThanhVien.split(" | ").map(x=>x.replace(/\\s*-\\s*MNV:\\s*[^\\s\\[]+/i,"").replace(/\\s*-\\s*CCCD 4 số cuối:\\s*\\d{4}/i,"").replace(/\\s*\\[.*?\\]$/,"").trim()).map(escapeHtml).join("<br>")
+    :"Đăng ký cá nhân";
+  return "<strong>"+escapeHtml(d.tenFormTenDoi)+"</strong><br>Môn: "+escapeHtml(d.monDangKy)+
+    "<br>Hình thức: "+escapeHtml(d.loaiDangKy)+
+    (d.phongBan?"<br>Phòng ban: "+escapeHtml(d.phongBan):"")+
+    (d.boPhan?"<br>Bộ phận: "+escapeHtml(d.boPhan):"")+
+    "<hr style=\"border:0;border-top:1px solid #ddd\">"+members;
+}
+
+function showVerification(){
+  const params=new URLSearchParams(location.search),code=params.get("code");
+  if(!code)return false;
+  $("registrationPage").innerHTML='<section class="verify-page"><div class="verify-card"><h1>🔎 XÁC NHẬN ĐĂNG KÝ</h1><div id="verifyStatus" class="status info">Đang kiểm tra mã...</div><div id="verifyData"></div><a href="index.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;margin-top:15px">← Về trang đăng ký</a></div></section>';
+  fetch(WEB_APP_URL+"?action=verify&code="+encodeURIComponent(code),{cache:"no-store"}).then(r=>r.json()).then(res=>{
+    if(res.result!=="success")throw new Error(res.message||"Không tìm thấy mã.");
+    $("verifyStatus").textContent="Mã xác nhận hợp lệ.";
+    $("verifyStatus").className="status ok";
+    $("verifyData").innerHTML='<div class="confirm-detail">'+buildPublicConfirmationDetail(res.data)+'<br><strong>Mã xác nhận: '+escapeHtml(res.data.confirmationCode)+'</strong></div>';
+  }).catch(e=>{$("verifyStatus").textContent=e.message;$("verifyStatus").className="status error";});
+  $("loadingOverlay").classList.add("hidden");return true;
+}
+
+$("typeIndividual").addEventListener("change",setGroupMode);
+$("typeGroup").addEventListener("change",setGroupMode);
+$("individualSearch").addEventListener("input",e=>{if(selectedIndividual&&e.target.value.trim()!==selectedIndividual.hoTen){selectedIndividual=null;$("selectedIndividual").classList.add("hidden");}renderIndividualResults(e.target.value);});
+$("searchStaffInput").addEventListener("input",e=>renderSearchResults(e.target.value));
+$("addMemberBtn").addEventListener("click",()=>addMemberToTable());
+$("monDangKy").addEventListener("change",updateRule);
+$("registrationForm").addEventListener("submit",submitRegistration);
+$("downloadQrBtn").addEventListener("click",downloadQr);
+$("closeConfirmBtn").addEventListener("click",closeConfirmation);
+$("closeConfirmBtn2").addEventListener("click",closeConfirmation);
+
+if(!showVerification()){
+  setGroupMode();
+  Promise.all([loadEmployees(),loadRegistrationStatus()]);
+}
+</script>
+</body>
+</html>
