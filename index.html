@@ -40,7 +40,7 @@ input:focus,select:focus{outline:0;border-color:#86b7fe;box-shadow:0 0 0 3px rgb
 </style>
 </head>
 <body>
-<div id="loadingOverlay" class="loading-overlay"><div><div class="spinner"></div><strong>Đang tải danh sách nhân viên...</strong><br><span class="small">Please wait...</span></div></div>
+<div id="loadingOverlay" class="loading-overlay"><div><div class="spinner"></div><strong>Đang tải danh sách nhân viên...</strong><br><span class="small">Lần đầu có thể mất vài giây. Nếu lâu, hãy bấm Tải lại.</span><br><button type="button" class="btn btn-light" style="margin-top:10px" onclick="reloadEmployeeData()">↻ Tải lại dữ liệu</button></div></div>
 
 <main id="registrationPage" class="container">
 <section class="card form-card">
@@ -128,6 +128,15 @@ const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSb
 const GAME_LIMITS={"Kéo co":{min:6,max:10,msg:"Yêu cầu từ 6 đến 10 người"},"Nhảy bao jumbo":{min:10,max:10,msg:"Yêu cầu đúng 10 người"},"Trò chơi liên hoàn":{min:4,max:4,msg:"Yêu cầu đúng 4 người"}};
 const $=id=>document.getElementById(id);
 let dbEmployees=[],selectedIndividual=null,registrationOpen=true,lastQrPayload="",lastQrCode="";
+const EMPLOYEE_CLIENT_CACHE_KEY="HOITHAO_EMPLOYEES_V3";
+const EMPLOYEE_CLIENT_CACHE_MS=10*60*1000;
+
+function unwrapApiResponse(res){
+  // Tương thích cả backend V2 và một số deployment cũ.
+  const data=(res&&res.data&&typeof res.data==="object")?res.data:(res&&res.registration&&typeof res.registration==="object"?res.registration:null);
+  const confirmationCode=(res&&res.confirmationCode)||(res&&res.code)||(data&&data.confirmationCode)||(data&&data.maXacNhan)||(data&&data.confirmationCode)||"";
+  return {res:res||{},data:data||{},confirmationCode:confirmationCode};
+}
 
 function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
 function removeMarks(v){return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/Đ/g,"D").toLowerCase();}
@@ -248,36 +257,78 @@ function validateForm(){
   return true;
 }
 async function loadEmployees(){
+  let cachedLoaded=false;
+  try{
+    const raw=localStorage.getItem(EMPLOYEE_CLIENT_CACHE_KEY);
+    if(raw){
+      const cached=JSON.parse(raw);
+      if(Array.isArray(cached.data)&&cached.savedAt&&(Date.now()-cached.savedAt)<EMPLOYEE_CLIENT_CACHE_MS){
+        dbEmployees=cached.data;
+        cachedLoaded=true;
+        $("loadingOverlay").classList.add("hidden");
+      }
+    }
+  }catch(e){console.warn("Không đọc được cache nhân viên",e);}
+
   try{
     const response=await fetch(WEB_APP_URL+"?action=getEmployees",{redirect:"follow",cache:"no-store"});
     if(!response.ok)throw new Error("HTTP "+response.status);
-    const res=await response.json();if(res.result!=="success")throw new Error(res.message||"API error");
+    const res=await response.json();
+    if(res.result!=="success")throw new Error(res.message||"API error");
     dbEmployees=Array.isArray(res.data)?res.data:[];
-  }catch(err){console.error(err);showStatus("Không thể tải danh sách nhân viên. Vui lòng kiểm tra Web App URL.");}
-  finally{$("loadingOverlay").classList.add("hidden");}
+    try{localStorage.setItem(EMPLOYEE_CLIENT_CACHE_KEY,JSON.stringify({savedAt:Date.now(),data:dbEmployees}));}catch(e){console.warn("Không lưu được cache nhân viên",e);}
+  }catch(err){
+    console.error(err);
+    if(!cachedLoaded){
+      showStatus("Không thể tải danh sách nhân viên. Vui lòng tải lại trang hoặc kiểm tra Web App URL.");
+    }
+  }finally{
+    $("loadingOverlay").classList.add("hidden");
+  }
+}
+
+function reloadEmployeeData(){
+  try{localStorage.removeItem(EMPLOYEE_CLIENT_CACHE_KEY);}catch(e){}
+  $("loadingOverlay").classList.remove("hidden");
+  loadEmployees();
 }
 
 function buildConfirmationDetail(d){
-  const members=d.danhSachThanhVien
-    ?d.danhSachThanhVien.split(" | ").map(escapeHtml).join("<br>")
-    :"Đăng ký cá nhân";
-  return "<strong>"+escapeHtml(d.tenFormTenDoi)+"</strong><br>Môn: "+escapeHtml(d.monDangKy)+
-    "<br>Hình thức: "+escapeHtml(d.loaiDangKy)+
-    (d.phongBan?"<br>Phòng ban: "+escapeHtml(d.phongBan):"")+
-    (d.boPhan?"<br>Bộ phận: "+escapeHtml(d.boPhan):"")+
-    "<hr style=\"border:0;border-top:1px solid #ddd\">"+members;
+  d=d||{};
+  const members=d.danhSachThanhVien||d.members||d.memberList||"";
+  const name=d.tenFormTenDoi||d.ten||d.hoTen||"Đăng ký";
+  const mon=d.monDangKy||d.mon||d.event||"Chưa có dữ liệu";
+  const loai=d.loaiDangKy||d.hinhThuc||d.type||"";
+  const phongBan=d.phongBan||d.department||"";
+  const boPhan=d.boPhan||d.section||"";
+  const memberHtml=members?String(members).split(" | ").map(escapeHtml).join("<br>"):"Đăng ký cá nhân";
+  return "<strong>"+escapeHtml(name)+"</strong><br>Môn: "+escapeHtml(mon)+
+    "<br>Hình thức: "+escapeHtml(loai)+
+    (phongBan?"<br>Phòng ban: "+escapeHtml(phongBan):"")+
+    (boPhan?"<br>Bộ phận: "+escapeHtml(boPhan):"")+
+    "<hr style=\"border:0;border-top:1px solid #ddd\">"+memberHtml;
 }
 
 function openConfirmation(res){
-  lastQrCode=res.confirmationCode;
-  const baseUrl=(location.protocol==="http:"||location.protocol==="https:") ? (location.origin+location.pathname.replace(/\/[^/]*$/,"/")) : WEB_APP_URL;
+  const normalized=unwrapApiResponse(res);
+  const d=normalized.data;
+  lastQrCode=normalized.confirmationCode;
+  if(!lastQrCode){
+    console.warn("Response đăng ký không có confirmationCode",res);
+    showStatus("Đã lưu đăng ký nhưng chưa nhận được mã xác nhận. Vui lòng mở Dashboard/Admin để kiểm tra dữ liệu.","error");
+    return;
+  }
+  // Dùng đúng URL hiện tại của Web App, giữ lại /exec.
+  const baseUrl=(location.protocol==="http:"||location.protocol==="https:") ? location.href.split("?")[0] : WEB_APP_URL;
   const verifyUrl=baseUrl+"?code="+encodeURIComponent(lastQrCode);
   lastQrPayload=verifyUrl;
-  $("confirmCode").textContent=lastQrCode;$("confirmDetail").innerHTML=buildConfirmationDetail(res.data);
+  $("confirmCode").textContent=lastQrCode;
+  $("confirmDetail").innerHTML=buildConfirmationDetail(d);
   $("qrcode").innerHTML="";
   new QRCode($("qrcode"),{text:verifyUrl,width:190,height:190,colorDark:"#172033",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
   $("confirmOverlay").classList.remove("hidden");
 }
+
 function downloadQr(){
   const canvas=$("qrcode").querySelector("canvas"),img=$("qrcode").querySelector("img");
   const src=canvas?canvas.toDataURL("image/png"):(img?img.src:"");
@@ -308,20 +359,27 @@ async function submitRegistration(e){
   try{
     const response=await fetch(WEB_APP_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
     const res=await response.json();if(res.result!=="success")throw new Error(res.message||"Không thể lưu đăng ký.");
-    $("registrationForm").reset();setGroupMode();await loadRegistrationStatus();openConfirmation(res);
+    // Hiện xác nhận ngay, không chờ thêm API status để người dùng không thấy chậm.
+    $("registrationForm").reset();setGroupMode();openConfirmation(res);
+    loadRegistrationStatus().catch(()=>{});
   }catch(err){console.error(err);showStatus(err.message||"Lỗi kết nối. Vui lòng thử lại.");}
   finally{btn.disabled=!registrationOpen;btn.textContent="GỬI ĐĂNG KÝ / SUBMIT";}
 }
 
 function buildPublicConfirmationDetail(d){
-  const members=d.danhSachThanhVien
-    ?d.danhSachThanhVien.split(" | ").map(x=>x.replace(/\\s*-\\s*MNV:\\s*[^\\s\\[]+/i,"").replace(/\\s*-\\s*CCCD 4 số cuối:\\s*\\d{4}/i,"").replace(/\\s*\\[.*?\\]$/,"").trim()).map(escapeHtml).join("<br>")
-    :"Đăng ký cá nhân";
-  return "<strong>"+escapeHtml(d.tenFormTenDoi)+"</strong><br>Môn: "+escapeHtml(d.monDangKy)+
-    "<br>Hình thức: "+escapeHtml(d.loaiDangKy)+
-    (d.phongBan?"<br>Phòng ban: "+escapeHtml(d.phongBan):"")+
-    (d.boPhan?"<br>Bộ phận: "+escapeHtml(d.boPhan):"")+
-    "<hr style=\"border:0;border-top:1px solid #ddd\">"+members;
+  d=d||{};
+  const members=d.danhSachThanhVien||d.members||"";
+  const name=d.tenFormTenDoi||d.ten||d.hoTen||"Đăng ký";
+  const mon=d.monDangKy||d.mon||"Chưa có dữ liệu";
+  const loai=d.loaiDangKy||d.hinhThuc||"";
+  const phongBan=d.phongBan||"";
+  const boPhan=d.boPhan||"";
+  const memberHtml=members?String(members).split(" | ").map(x=>x.replace(/\s*-\s*MNV:\s*[^\s\[]+/i,"").replace(/\s*-\s*CCCD 4 số cuối:\s*\d{4}/i,"").replace(/\s*\[.*?\]$/,"" ).trim()).map(escapeHtml).join("<br>"):"Đăng ký cá nhân";
+  return "<strong>"+escapeHtml(name)+"</strong><br>Môn: "+escapeHtml(mon)+
+    "<br>Hình thức: "+escapeHtml(loai)+
+    (phongBan?"<br>Phòng ban: "+escapeHtml(phongBan):"")+
+    (boPhan?"<br>Bộ phận: "+escapeHtml(boPhan):"")+
+    "<hr style=\"border:0;border-top:1px solid #ddd\">"+memberHtml;
 }
 
 function showVerification(){
@@ -330,9 +388,10 @@ function showVerification(){
   $("registrationPage").innerHTML='<section class="verify-page"><div class="verify-card"><h1>🔎 XÁC NHẬN ĐĂNG KÝ</h1><div id="verifyStatus" class="status info">Đang kiểm tra mã...</div><div id="verifyData"></div><a href="index.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;margin-top:15px">← Về trang đăng ký</a></div></section>';
   fetch(WEB_APP_URL+"?action=verify&code="+encodeURIComponent(code),{cache:"no-store"}).then(r=>r.json()).then(res=>{
     if(res.result!=="success")throw new Error(res.message||"Không tìm thấy mã.");
+    const normalized=unwrapApiResponse(res),d=normalized.data;
     $("verifyStatus").textContent="Mã xác nhận hợp lệ.";
     $("verifyStatus").className="status ok";
-    $("verifyData").innerHTML='<div class="confirm-detail">'+buildPublicConfirmationDetail(res.data)+'<br><strong>Mã xác nhận: '+escapeHtml(res.data.confirmationCode)+'</strong></div>';
+    $("verifyData").innerHTML='<div class="confirm-detail">'+buildPublicConfirmationDetail(d)+'<br><strong>Mã xác nhận: '+escapeHtml(normalized.confirmationCode||code)+'</strong></div>';
   }).catch(e=>{$("verifyStatus").textContent=e.message;$("verifyStatus").className="status error";});
   $("loadingOverlay").classList.add("hidden");return true;
 }
