@@ -1,230 +1,37 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dashboard Admin - Hội Thao Liwayway 2026</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#f4f7f6;font-family:"Segoe UI",Arial,sans-serif;color:#172033}.hidden{display:none!important}
-.login-overlay{position:fixed;inset:0;background:#172033;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
-.login-box{background:#fff;width:min(420px,100%);padding:34px;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.25);text-align:center}
-input{width:100%;padding:12px;border:1px solid #ced4da;border-radius:8px;margin:8px 0 12px}button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}button:disabled{opacity:.6}
-.btn-primary{background:#0d6efd;color:#fff}.btn-success{background:#198754;color:#fff}.btn-danger{background:#dc3545;color:#fff}.btn-light{background:#eef2f6;color:#172033}.btn-warning{background:#ffc107;color:#172033}
-.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}.sidebar{background:#172033;color:#fff;padding:22px;display:flex;flex-direction:column;gap:14px}.sidebar h2{color:#ffc107;text-align:center;font-size:19px}
-.main{padding:24px;overflow:auto}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}.stat{padding:18px;border-radius:12px;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06)}.stat small{font-weight:700;opacity:.85}.stat strong{display:block;font-size:30px;margin-top:6px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{background:#fff;padding:18px;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.05);margin-bottom:18px}.chart-box{height:340px}
-.table-wrap{max-height:520px;overflow:auto}.table{width:100%;border-collapse:collapse;font-size:13px}.table th,.table td{padding:9px;border-bottom:1px solid #e4e7ec;text-align:left;vertical-align:top}.table th{background:#172033;color:#fff;position:sticky;top:0}.members-text{max-width:480px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.error{color:#b42318;background:#fff0f0;padding:9px;border-radius:8px}.ok{color:#027a48;background:#ecfdf3;padding:9px;border-radius:8px}.info{color:#175cd3;background:#eef6ff;padding:9px;border-radius:8px}
-.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.setting-box{border:1px solid #e4e7ec;padding:15px;border-radius:10px}.setting-box h4{margin:0 0 8px}
-.modal{position:fixed;inset:0;background:rgba(23,32,51,.65);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;width:min(480px,100%);padding:24px;border-radius:15px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
-@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{min-height:auto}.cards{grid-template-columns:repeat(2,1fr)}.grid2,.settings-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.main{padding:12px}.cards{grid-template-columns:1fr}.chart-box{height:300px}}
-</style>
-</head>
-<body>
-<div id="loginOverlay" class="login-overlay">
-<div class="login-box">
-<h2 style="color:#0d6efd;margin:0 0 8px">LIWAYWAY SPORTS 2026</h2>
-<p style="color:#667085">Đăng nhập khu vực Ban tổ chức</p>
-<input id="passwordInput" type="password" autocomplete="current-password" placeholder="Mật khẩu Admin">
-<div id="loginError" class="error hidden"></div>
-<button id="loginBtn" class="btn-primary" style="width:100%">ĐĂNG NHẬP</button>
-<p style="font-size:12px;color:#667085;margin:14px 0 0">Nếu chưa thiết lập Admin, chạy <b>setupAdmin()</b> trong Apps Script.</p>
-</div>
-</div>
-
-<div id="app" class="app hidden">
-<aside class="sidebar">
-<h2>LWW SPORTS 2026</h2>
-<div style="font-weight:700">📊 Báo cáo tổng quan</div>
-<button id="logoutBtn" class="btn-danger" style="margin-top:auto">🔒 Đăng xuất</button>
-<small style="color:#98a2b3;text-align:center">Dữ liệu từ Google Sheets</small>
-</aside>
-
-<main class="main">
-<div class="toolbar">
-<h1 style="margin:0;font-size:24px">QUẢN LÝ & BÁO CÁO HỘI THAO</h1>
-<div class="toolbar-actions">
-<button id="refreshBtn" class="btn-primary">🔄 Làm mới</button>
-<button id="exportBtn" class="btn-success">📥 Xuất Excel</button>
-</div>
-</div>
-<div id="status" class="hidden" style="margin-top:12px"></div>
-
-<section class="cards">
-<div class="stat" style="background:#0d6efd"><small>TỔNG LƯỢT ĐĂNG KÝ</small><strong id="statTotalSubmits">0</strong></div>
-<div class="stat" style="background:#198754"><small>ĐĂNG KÝ CÁ NHÂN</small><strong id="statIndividual">0</strong></div>
-<div class="stat" style="background:#ffc107;color:#172033"><small>TỔNG SỐ ĐỘI</small><strong id="statTeams">0</strong></div>
-<div class="stat" style="background:#0dcaf0;color:#172033"><small>TỔNG VĐV</small><strong id="statAthletes">0</strong></div>
-</section>
-
-<section class="panel">
-<h3 style="margin-top:0">⚙️ Cài đặt hệ thống</h3>
-<div class="settings-grid">
-<div class="setting-box">
-<h4>Thời hạn đăng ký</h4>
-<div id="deadlineStatus" class="info" style="margin-bottom:10px">Đang tải...</div>
-<input id="deadlineInput" type="datetime-local">
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button id="saveDeadlineBtn" class="btn-primary">💾 Lưu thời hạn</button>
-<button id="clearDeadlineBtn" class="btn-light">♾️ Không giới hạn</button>
-</div>
-<p style="font-size:12px;color:#667085;margin-bottom:0">Thời hạn được kiểm tra ở backend, không thể bypass bằng trình duyệt.</p>
-</div>
-<div class="setting-box">
-<h4>Đổi mật khẩu Admin</h4>
-<p style="font-size:13px;color:#667085">Mật khẩu được lưu dưới dạng SHA-256 trong Script Properties. Sau khi đổi, phiên đăng nhập hiện tại sẽ hết hiệu lực.</p>
-<button id="changePasswordBtn" class="btn-warning">🔑 Thay đổi mật khẩu</button>
-</div>
-</div>
-</section>
-
-<div class="grid2">
-<section class="panel"><h3>Môn thi đấu</h3><div class="chart-box"><canvas id="chartGames"></canvas></div></section>
-<section class="panel"><h3>Phân bố Phòng ban</h3><div class="chart-box"><canvas id="chartDepartments"></canvas></div></section>
-</div>
-<section class="panel"><h3>VĐV theo Chức vụ</h3><div class="chart-box"><canvas id="chartPositions"></canvas></div></section>
-
-<section class="panel">
-<h3>Chi tiết danh sách đăng ký</h3>
-<div class="table-wrap">
-<table class="table">
-<thead><tr><th>Thời gian</th><th>Hình thức</th><th>Phòng ban</th><th>Bộ phận</th><th>Tên đội / VĐV</th><th>Môn</th><th>Thành viên</th><th>Mã xác nhận</th></tr></thead>
-<tbody id="reportTableBody"></tbody>
-</table>
-</div>
-</section>
-</main>
-</div>
-
-<div id="passwordModal" class="modal hidden">
-<div class="modal-card">
-<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🔑 Thay đổi mật khẩu</h3><button id="closePasswordModal" class="btn-light">✕</button></div>
-<input id="oldPassword" type="password" placeholder="Mật khẩu hiện tại" autocomplete="current-password">
-<input id="newPassword" type="password" placeholder="Mật khẩu mới (ít nhất 8 ký tự)" autocomplete="new-password">
-<input id="newPassword2" type="password" placeholder="Nhập lại mật khẩu mới" autocomplete="new-password">
-<div id="passwordError" class="error hidden"></div>
-<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-<button id="cancelPassword" class="btn-light">Hủy</button><button id="savePassword" class="btn-primary">Lưu mật khẩu</button>
-</div>
-</div>
-</div>
-
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin - Hội thao Liwayway 2026 V4</title><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script><style>
+:root{--p:#0d6efd;--dark:#172033;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:var(--dark)}.hidden{display:none!important}.login{position:fixed;inset:0;background:linear-gradient(135deg,#172033,#0d6efd);display:flex;align-items:center;justify-content:center;padding:15px}.login-card{background:#fff;width:min(400px,100%);padding:28px;border-radius:16px;box-shadow:0 20px 60px #0004}input,select{width:100%;border:1px solid #ced4da;border-radius:8px;padding:10px;font-size:14px}button{border:0;border-radius:8px;padding:9px 13px;font-weight:700;cursor:pointer}.primary{background:var(--p);color:#fff}.light{background:#eef2f6;color:var(--dark)}.danger{background:#dc3545;color:#fff}.ok{background:#198754;color:#fff}.app{min-height:100vh}.top{background:#172033;color:#fff;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:5}.nav{background:#fff;border-bottom:1px solid var(--line);padding:8px 16px;display:flex;gap:6px;overflow:auto;position:sticky;top:54px;z-index:4}.nav button{white-space:nowrap;background:#f1f3f5}.nav button.active{background:#0d6efd;color:#fff}.main{max-width:1450px;margin:auto;padding:18px}.status{padding:10px;border-radius:8px;margin-bottom:12px;font-weight:600}.status.error{background:#fff0f0;color:#b42318}.status.ok{background:#ecfdf3;color:#027a48}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;padding:16px;border-radius:12px;box-shadow:0 4px 16px #1018280d}.stat b{font-size:26px}.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 4px 16px #1018280d;margin-top:14px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.table th{background:#f8f9fa;position:sticky;top:0}.modal{position:fixed;inset:0;background:#172033aa;z-index:20;display:flex;align-items:center;justify-content:center;padding:15px}.modal-card{background:#fff;width:min(720px,100%);max-height:92vh;overflow:auto;border-radius:14px;padding:20px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.charts{display:grid;grid-template-columns:1fr 1fr;gap:15px}.chartbox{height:300px}.pill{display:inline-block;padding:3px 8px;border-radius:99px;background:#eef2f6;font-size:12px}.small{font-size:12px;color:var(--muted)}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}@media(max-width:600px){.grid,.formgrid{grid-template-columns:1fr}.main{padding:8px}.top{padding:10px}.nav{top:50px}}
+</style></head><body>
+<div id="login" class="login"><div class="login-card"><h2 style="margin-top:0">🔐 Hội thao Admin V4</h2><p class="small">Đăng nhập để quản lý môn, đội, VĐV và bảng thi đấu.</p><input id="password" type="password" placeholder="Mật khẩu Admin"><button id="loginBtn" class="primary" style="width:100%;margin-top:10px">ĐĂNG NHẬP</button><div id="loginErr" class="status error hidden" style="margin-top:10px"></div></div></div>
+<div id="app" class="app hidden"><header class="top"><b>🏆 LIWAYWAY SPORTS FESTIVAL 2026 — ADMIN V4</b><div><button id="refresh" class="light">🔄 Làm mới</button> <button id="passwordBtn" class="light">🔑 Đổi mật khẩu</button> <button id="logout" class="danger">Đăng xuất</button></div></header><nav class="nav"><button data-tab="dashboard" class="active">📊 Tổng quan</button><button data-tab="games">⚙️ Môn thi đấu</button><button data-tab="teams">👥 Đội thi đấu</button><button data-tab="athletes">🏃 VĐV</button><button data-tab="tournament">🎯 Bảng đấu</button><button data-tab="results">🏆 Kết quả</button><button data-tab="settings">⚙️ Cài đặt</button></nav><main class="main"><div id="status" class="status hidden"></div>
+<section id="tab-dashboard"><div class="grid"><div class="stat">Đăng ký<br><b id="sReg">0</b></div><div class="stat">Cá nhân<br><b id="sInd">0</b></div><div class="stat">Đội<br><b id="sTeam">0</b></div><div class="stat">VĐV<br><b id="sAth">0</b></div></div><div class="card"><div class="toolbar"><h3>Đăng ký gần nhất</h3><button class="ok" onclick="syncData()">🔄 Đồng bộ đội/VĐV</button></div><div class="table-wrap"><table class="table"><thead><tr><th>Thời gian</th><th>Hình thức</th><th>Tên đội/VĐV</th><th>Môn</th><th>Thành viên</th><th>Mã xác nhận</th></tr></thead><tbody id="reportBody"></tbody></table></div></div><div class="card charts"><div class="chartbox"><canvas id="gameChart"></canvas></div><div class="chartbox"><canvas id="typeChart"></canvas></div></div></section>
+<section id="tab-games" class="hidden"><div class="toolbar"><h2>⚙️ Quản lý môn thi đấu</h2><button class="primary" onclick="openGame()">+ Thêm môn</button></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Mã</th><th>Môn</th><th>Hình thức</th><th>Giới hạn</th><th>Thể thức</th><th>Trạng thái</th><th></th></tr></thead><tbody id="gamesBody"></tbody></table></div></div></section>
+<section id="tab-teams" class="hidden"><div class="toolbar"><h2>👥 Danh sách đội</h2><select id="teamGame" onchange="loadTeams()" style="max-width:300px"></select></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Mã đội</th><th>Môn</th><th>Tên đội</th><th>Số TV</th><th>Trạng thái</th><th>Mã đăng ký</th></tr></thead><tbody id="teamsBody"></tbody></table></div></div></section>
+<section id="tab-athletes" class="hidden"><div class="toolbar"><h2>🏃 Danh sách VĐV</h2><select id="athGame" onchange="loadAthletes()" style="max-width:300px"></select></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Mã VĐV</th><th>Mã đội</th><th>Họ tên</th><th>Mã NV</th><th>Giới tính</th><th>Phòng ban</th><th>Bộ phận</th><th>Môn</th></tr></thead><tbody id="athBody"></tbody></table></div></div></section>
+<section id="tab-tournament" class="hidden"><div class="toolbar"><h2>🎯 Bảng thi đấu</h2><div><select id="tourGame" style="width:280px"></select> <button class="primary" onclick="generateTournament()">🎯 Tạo lại bảng</button></div></div><div class="card"><div id="tourHint" class="small"></div><div class="table-wrap"><table class="table"><thead><tr><th>Trận</th><th>Vòng</th><th>Đội A</th><th>Đội B</th><th>Điểm A</th><th>Điểm B</th><th>Thắng</th><th>Trạng thái</th><th></th></tr></thead><tbody id="matchesBody"></tbody></table></div></div></section>
+<section id="tab-results" class="hidden"><div class="toolbar"><h2>🏆 Kết quả cá nhân</h2><div><select id="resultGame" style="width:280px"></select> <button class="primary" onclick="loadResults()">Tải</button> <button class="ok" onclick="saveResults()">💾 Lưu</button></div></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Mã KQ</th><th>Mã VĐV</th><th>Mã NV</th><th>Họ tên</th><th>Điểm</th><th>Thành tích</th><th>Xếp hạng</th><th>Ghi chú</th></tr></thead><tbody id="resultsBody"></tbody></table></div></div></section>
+<section id="tab-settings" class="hidden"><div class="card"><h2>⚙️ Cài đặt đăng ký</h2><label>Hạn đăng ký</label><input id="deadline" type="datetime-local" style="max-width:350px"><div style="margin-top:10px"><button class="primary" onclick="saveDeadline()">Lưu hạn</button> <button class="light" onclick="clearDeadline()">Không giới hạn</button> <span id="deadlineText" class="small"></span></div><hr><button class="ok" onclick="syncData()">🔄 Đồng bộ DSDK → Đội/VĐV</button> <button class="light" onclick="setupSystem()">🛠 Kiểm tra/tạo Sheet hệ thống</button></div></section>
+</main></div>
+<div id="gameModal" class="modal hidden"><div class="modal-card"><h2 id="gameModalTitle">Thêm môn</h2><input type="hidden" id="oldCode"><div class="formgrid"><div><label>Mã môn *</label><input id="gCode"></div><div><label>Tên môn *</label><input id="gName"></div><div><label>Hình thức</label><select id="gType"><option>Đội nhóm</option><option>Cá nhân</option></select></div><div><label>Trạng thái</label><select id="gStatus"><option>Mở</option><option>Tạm khóa</option><option>Khóa</option></select></div><div><label>Min người</label><input id="gMin" type="number" min="1"></div><div><label>Max người</label><input id="gMax" type="number" min="1"></div><div><label>Số bảng</label><input id="gGroups" type="number" min="1" value="1"></div><div><label>Đội/bảng</label><input id="gTeamsPerGroup" type="number" min="0" value="0"></div><div><label>Vào vòng sau</label><input id="gAdvance" type="number" min="0" value="0"></div><div><label>Thứ tự</label><input id="gOrder" type="number" value="99"></div><div class="full"><label>Thể thức</label><input id="gFormat" placeholder="VD: Vòng bảng → bán kết → chung kết"></div><div class="full"><label>Nội dung / mô tả</label><textarea id="gDesc" style="width:100%;min-height:90px;border:1px solid #ced4da;border-radius:8px;padding:10px"></textarea></div></div><div style="margin-top:15px;text-align:right"><button class="light" onclick="closeGame()">Hủy</button> <button class="primary" onclick="saveGame()">Lưu</button></div></div></div>
+<div id="passModal" class="modal hidden"><div class="modal-card" style="max-width:450px"><h2>Đổi mật khẩu</h2><input id="oldPass" type="password" placeholder="Mật khẩu hiện tại"><br><br><input id="newPass" type="password" placeholder="Mật khẩu mới (≥8 ký tự)"><br><br><input id="newPass2" type="password" placeholder="Nhập lại"><div style="margin-top:15px;text-align:right"><button class="light" onclick="closePass()">Hủy</button> <button class="primary" onclick="changePass()">Lưu</button></div></div></div>
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";
-let sessionToken=sessionStorage.getItem("sportsAdminToken")||"",globalReportData=[],charts={games:null,departments:null,positions:null};
-const $=id=>document.getElementById(id);
-
-function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
-function setStatus(msg,type="error"){const e=$("status");e.textContent=msg;e.className=type;}
-function clearStatus(){$("status").className="hidden";}
-function formatDate(ms){if(!ms)return "";return new Intl.DateTimeFormat("vi-VN",{dateStyle:"full",timeStyle:"short"}).format(new Date(Number(ms)));}
-function toLocalInputValue(ms){if(!ms)return "";const d=new Date(Number(ms)),p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes());}
-
-async function apiPost(payload){
-  const r=await fetch(WEB_APP_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
-  return r.json();
-}
-async function login(){
-  const btn=$("loginBtn"),err=$("loginError");err.className="hidden";btn.disabled=true;btn.textContent="Đang xác thực...";
-  try{
-    const res=await apiPost({action:"adminLogin",password:$("passwordInput").value});
-    if(res.result!=="success")throw new Error(res.message||"Đăng nhập thất bại.");
-    sessionToken=res.token;sessionStorage.setItem("sportsAdminToken",sessionToken);
-    $("loginOverlay").classList.add("hidden");$("app").classList.remove("hidden");await loadDashboard();await loadSettings();
-  }catch(e){err.textContent=e.message;err.className="error";}finally{btn.disabled=false;btn.textContent="ĐĂNG NHẬP";}
-}
-async function loadDashboard(){
-  const btn=$("refreshBtn");btn.disabled=true;btn.textContent="🔄 Đang tải...";
-  try{
-    const r=await fetch(WEB_APP_URL+"?action=getReport&token="+encodeURIComponent(sessionToken),{cache:"no-store",redirect:"follow"}),res=await r.json();
-    if(res.result==="unauthorized"){logout(false);throw new Error("Phiên Admin đã hết hạn. Vui lòng đăng nhập lại.");}
-    if(res.result!=="success")throw new Error(res.message||"Không tải được báo cáo.");
-    globalReportData=Array.isArray(res.data)?res.data:[];renderDashboard(globalReportData);clearStatus();
-  }catch(e){console.error(e);setStatus(e.message);}
-  finally{btn.disabled=false;btn.textContent="🔄 Làm mới";}
-}
-async function loadSettings(){
-  try{
-    const r=await fetch(WEB_APP_URL+"?action=getAdminSettings&token="+encodeURIComponent(sessionToken),{cache:"no-store"}),res=await r.json();
-    if(res.result==="unauthorized"){logout(false);throw new Error("Phiên Admin đã hết hạn.");}
-    if(res.result!=="success")throw new Error(res.message||"Không tải được cài đặt.");
-    renderSettings(res.data);
-  }catch(e){setStatus(e.message);}
-}
-function renderSettings(data){
-  if(data.deadlineMs){
-    $("deadlineInput").value=toLocalInputValue(data.deadlineMs);
-    $("deadlineStatus").textContent=data.registrationOpen?"🟢 Đang mở đến "+formatDate(data.deadlineMs):"🔴 Đã hết hạn: "+formatDate(data.deadlineMs);
-  }else{
-    $("deadlineInput").value="";$("deadlineStatus").textContent="♾️ Không đặt hạn đăng ký";
-  }
-}
-async function saveDeadline(ms){
-  try{
-    const res=await apiPost({action:"adminSetDeadline",token:sessionToken,deadlineMs:ms});
-    if(res.result==="unauthorized"){logout(false);throw new Error("Phiên Admin đã hết hạn.");}
-    if(res.result!=="success")throw new Error(res.message||"Không lưu được thời hạn.");
-    renderSettings(res.data);setStatus(res.message,"ok");
-  }catch(e){setStatus(e.message);}
-}
-function parseMembers(text){if(!text)return [];return text.split(" | ").map(s=>s.trim()).filter(Boolean);}
-function extractPosition(member){const m=member.match(/Chức vụ:\s*([^\]]+)/i);return m?m[1].trim():"Công nhân / Khác";}
-function renderDashboard(data){
-  const games={"Chạy Marathon":0,"Kéo co":0,"Nhảy bao jumbo":0,"Trò chơi liên hoàn":0},departments={},positions={};
-  let individuals=0,teams=0,athletes=0;const body=$("reportTableBody");body.innerHTML="";
-  if(!data.length)body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:25px">Chưa có dữ liệu đăng ký.</td></tr>';
-  data.forEach(row=>{
-    const group=row.loaiDangKy==="Đội nhóm";
-    if(group){teams++;const members=parseMembers(row.danhSachThanhVien);athletes+=members.length;members.forEach(m=>{const p=extractPosition(m);positions[p]=(positions[p]||0)+1;const d=(m.match(/Phòng ban:\s*([^\-\]]+)/i)||[])[1]?.trim()||"Khác";departments[d]=(departments[d]||0)+1;});}
-    else{individuals++;athletes++;const p=row.boPhan||"Chưa phân loại";positions[p]=(positions[p]||0)+1;const d=row.phongBan||"Chưa phân loại";departments[d]=(departments[d]||0)+1;}
-    if(games[row.monDangKy]!==undefined)games[row.monDangKy]++;
-    const tr=document.createElement("tr");
-    tr.innerHTML="<td>"+escapeHtml(row.timestamp)+"</td><td>"+escapeHtml(row.loaiDangKy)+"</td><td>"+escapeHtml(row.phongBan)+"</td><td>"+escapeHtml(row.boPhan)+"</td><td>"+escapeHtml(row.tenFormTenDoi)+"</td><td>"+escapeHtml(row.monDangKy)+"</td>"+
-      '<td><div class="members-text" title="'+escapeHtml(row.danhSachThanhVien||"Đăng ký cá nhân")+'">'+escapeHtml(row.danhSachThanhVien||"Đăng ký cá nhân")+"</div></td><td><b>"+escapeHtml(row.confirmationCode||"")+"</b></td>";
-    body.appendChild(tr);
-  });
-  $("statTotalSubmits").textContent=data.length;$("statIndividual").textContent=individuals;$("statTeams").textContent=teams;$("statAthletes").textContent=athletes;
-  if(charts.games)charts.games.destroy();charts.games=new Chart($("chartGames"),{type:"doughnut",data:{labels:Object.keys(games),datasets:[{data:Object.values(games)}]},options:{responsive:true,maintainAspectRatio:false}});
-  if(charts.departments)charts.departments.destroy();const dep=Object.entries(departments).sort((a,b)=>b[1]-a[1]).slice(0,15);
-  charts.departments=new Chart($("chartDepartments"),{type:"bar",data:{labels:dep.map(x=>x[0]),datasets:[{label:"Số VĐV",data:dep.map(x=>x[1])}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
-  if(charts.positions)charts.positions.destroy();const sorted=Object.entries(positions).sort((a,b)=>b[1]-a[1]);
-  charts.positions=new Chart($("chartPositions"),{type:"bar",data:{labels:sorted.map(x=>x[0]),datasets:[{label:"Số lượng VĐV",data:sorted.map(x=>x[1])}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,scales:{x:{beginAtZero:true,ticks:{precision:0}}}}});
-}
-function exportToExcel(){
-  if(!globalReportData.length){setStatus("Không có dữ liệu để xuất Excel.");return;}
-  const rows=[["THỜI GIAN","HÌNH THỨC","PHÒNG BAN","BỘ PHẬN","TÊN ĐỘI / VĐV","MÔN THI","THÀNH VIÊN","MÃ XÁC NHẬN"]];
-  globalReportData.forEach(r=>rows.push([r.timestamp,r.loaiDangKy,r.phongBan||"",r.boPhan||"",r.tenFormTenDoi,r.monDangKy,r.danhSachThanhVien||"Đăng ký cá nhân",r.confirmationCode||""]));
-  const ws=XLSX.utils.aoa_to_sheet(rows);ws["!cols"]=rows[0].map((_,i)=>({wch:Math.min(60,Math.max(12,...rows.map(r=>String(r[i]||"").length))+2)}));
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DanhSachHoiThao");XLSX.writeFile(wb,"Bao_Cao_Hoi_Thao_Liwayway_"+new Date().toISOString().slice(0,10)+".xlsx");
-}
-function logout(reload=true){
-  sessionStorage.removeItem("sportsAdminToken");sessionToken="";globalReportData=[];$("app").classList.add("hidden");$("loginOverlay").classList.remove("hidden");$("passwordInput").value="";
-  if(reload)clearStatus();
-}
-function openPasswordModal(){$("passwordModal").classList.remove("hidden");$("passwordError").className="error hidden";}
-function closePasswordModal(){$("passwordModal").classList.add("hidden");["oldPassword","newPassword","newPassword2"].forEach(id=>$(id).value="");}
-async function changePassword(){
-  const oldPassword=$("oldPassword").value,newPassword=$("newPassword").value,newPassword2=$("newPassword2").value,err=$("passwordError");
-  err.className="hidden";
-  if(newPassword.length<8){err.textContent="Mật khẩu mới phải có ít nhất 8 ký tự.";err.className="error";return;}
-  if(newPassword!==newPassword2){err.textContent="Mật khẩu nhập lại không khớp.";err.className="error";return;}
-  try{
-    const res=await apiPost({action:"adminChangePassword",token:sessionToken,oldPassword,newPassword});
-    if(res.result!=="success")throw new Error(res.message||"Không đổi được mật khẩu.");
-    closePasswordModal();alert("Đổi mật khẩu thành công. Vui lòng đăng nhập lại bằng mật khẩu mới.");logout(false);
-  }catch(e){err.textContent=e.message;err.className="error";}
-}
-
-$("loginBtn").addEventListener("click",login);$("passwordInput").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
-$("refreshBtn").addEventListener("click",async()=>{await loadDashboard();await loadSettings();});$("exportBtn").addEventListener("click",exportToExcel);$("logoutBtn").addEventListener("click",()=>logout());
-$("changePasswordBtn").addEventListener("click",openPasswordModal);$("closePasswordModal").addEventListener("click",closePasswordModal);$("cancelPassword").addEventListener("click",closePasswordModal);$("savePassword").addEventListener("click",changePassword);
-$("saveDeadlineBtn").addEventListener("click",()=>{const v=$("deadlineInput").value;if(!v){setStatus("Hãy chọn ngày giờ hoặc bấm Không giới hạn.");return;}saveDeadline(new Date(v).getTime());});
-$("clearDeadlineBtn").addEventListener("click",()=>saveDeadline(null));
-
-if(sessionToken){$("loginOverlay").classList.add("hidden");$("app").classList.remove("hidden");loadDashboard().then(loadSettings);}
-</script>
-</body>
-</html>
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";let token=sessionStorage.getItem('sportsAdminToken')||'',games=[],report=[],charts={};const $=id=>document.getElementById(id);function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}function stat(m,t='error'){const e=$('status');e.textContent=m;e.className='status '+t;}async function apiGet(action,extra=''){const r=await fetch(WEB_APP_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+extra+'&v=4',{cache:'no-store'});const x=await r.json();if(x.result==='unauthorized'){logout();throw Error('Phiên Admin đã hết hạn.');}if(x.result!=='success')throw Error(x.message||'API lỗi');return x.data;}async function apiPost(p){const r=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(p),redirect:'follow'});const x=await r.json();if(x.result==='unauthorized'){logout();throw Error('Phiên Admin đã hết hạn.');}if(x.result!=='success')throw Error(x.message||'API lỗi');return x;}
+async function login(){try{const r=await apiPost({action:'adminLogin',password:$('password').value});token=r.token;sessionStorage.setItem('sportsAdminToken',token);showApp();await loadAll();}catch(e){$('loginErr').textContent=e.message;$('loginErr').className='status error';}}function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden');}function logout(){sessionStorage.removeItem('sportsAdminToken');token='';$('app').classList.add('hidden');$('login').classList.remove('hidden');}
+async function loadAll(){try{games=await apiGet('getGamesAdmin');report=await apiGet('getReport');renderDashboard();renderGames();fillGameSelects();await loadTeams();await loadAthletes();await loadMatches();await loadResults();await loadSettings();}catch(e){stat(e.message);}}
+function renderDashboard(){const ind=report.filter(x=>x.loaiDangKy==='Cá nhân').length;const teams=report.filter(x=>x.loaiDangKy==='Đội nhóm').length;$('sReg').textContent=report.length;$('sInd').textContent=ind;$('sTeam').textContent=teams;$('sAth').textContent=report.reduce((n,x)=>n+(x.loaiDangKy==='Đội nhóm'?(x.danhSachThanhVien?x.danhSachThanhVien.split(' | ').length:0):1),0);$('reportBody').innerHTML=report.slice().reverse().map(r=>'<tr><td>'+esc(r.timestamp)+'</td><td>'+esc(r.loaiDangKy)+'</td><td>'+esc(r.tenFormTenDoi)+'</td><td>'+esc(r.monDangKy)+'</td><td>'+esc(r.danhSachThanhVien||'Cá nhân')+'</td><td><b>'+esc(r.confirmationCode)+'</b></td></tr>').join('')||'<tr><td colspan="6">Chưa có dữ liệu.</td></tr>';const counts=games.map(g=>report.filter(r=>r.monDangKy===g.name).length);if(charts.g)charts.g.destroy();charts.g=new Chart($('gameChart'),{type:'bar',data:{labels:games.map(g=>g.name),datasets:[{label:'Đăng ký',data:counts}]},options:{responsive:true,maintainAspectRatio:false}});if(charts.t)charts.t.destroy();charts.t=new Chart($('typeChart'),{type:'doughnut',data:{labels:['Cá nhân','Đội nhóm'],datasets:[{data:[ind,teams]}]},options:{responsive:true,maintainAspectRatio:false}});}
+function renderGames(){$('gamesBody').innerHTML=games.map(g=>'<tr><td><b>'+esc(g.code)+'</b></td><td>'+esc(g.name)+'</td><td>'+esc(g.type)+'</td><td>'+g.min+(g.min===g.max?'':' – '+g.max)+'</td><td>'+esc(g.format)+'</td><td><span class="pill">'+esc(g.status)+'</span></td><td><button class="light" onclick="openGame(\''+esc(g.code)+'\')">✏️</button> <button class="danger" onclick="deleteGame(\''+esc(g.code)+'\')">🗑️</button></td></tr>').join('');}
+function openGame(code){const g=games.find(x=>x.code===code);$('gameModalTitle').textContent=g?'Sửa môn':'Thêm môn';$('oldCode').value=g?.code||'';$('gCode').value=g?.code||'';$('gName').value=g?.name||'';$('gType').value=g?.type||'Đội nhóm';$('gStatus').value=g?.status||'Mở';$('gMin').value=g?.min||1;$('gMax').value=g?.max||1;$('gGroups').value=g?.groups||1;$('gTeamsPerGroup').value=g?.teamsPerGroup||0;$('gAdvance').value=g?.advance||0;$('gOrder').value=g?.order||99;$('gFormat').value=g?.format||'';$('gDesc').value=g?.description||'';$('gameModal').classList.remove('hidden');}function closeGame(){$('gameModal').classList.add('hidden');}async function saveGame(){try{const r=await apiPost({action:'saveGame',token,oldCode:$('oldCode').value,code:$('gCode').value,name:$('gName').value,type:$('gType').value,status:$('gStatus').value,min:$('gMin').value,max:$('gMax').value,groups:$('gGroups').value,teamsPerGroup:$('gTeamsPerGroup').value,advance:$('gAdvance').value,order:$('gOrder').value,format:$('gFormat').value,description:$('gDesc').value});games=await apiGet('getGamesAdmin');renderGames();fillGameSelects();closeGame();stat(r.message||'Đã lưu môn.','ok');}catch(e){stat(e.message);}}async function deleteGame(code){if(!confirm('Xóa/khóa môn này? Nếu đã có đăng ký, hệ thống chỉ khóa để bảo toàn dữ liệu.'))return;try{const r=await apiPost({action:'deleteGame',token,code});games=await apiGet('getGamesAdmin');renderGames();fillGameSelects();stat(r.data.message,'ok');}catch(e){stat(e.message);}}
+function fillGameSelects(){const team=games.filter(g=>g.type==='Đội nhóm'),all=games;[['teamGame',team],['athGame',all],['tourGame',team],['resultGame',games.filter(g=>g.type==='Cá nhân')]].forEach(([id,arr])=>$(id).innerHTML='<option value="">-- Chọn môn --</option>'+arr.map(g=>'<option value="'+esc(g.code)+'">'+esc(g.name)+'</option>').join(''));}
+async function loadTeams(){const code=$('teamGame').value;const data=await apiGet('getTeams',code?'&game='+encodeURIComponent(code):'');$('teamsBody').innerHTML=data.map(x=>'<tr><td>'+esc(x.maDoi)+'</td><td>'+esc(x.maMon)+'</td><td>'+esc(x.tenDoi)+'</td><td>'+x.soThanhVien+'</td><td>'+esc(x.trangThai)+'</td><td>'+esc(x.maDangKy)+'</td></tr>').join('')||'<tr><td colspan="6">Chưa có đội.</td></tr>';}
+async function loadAthletes(){const code=$('athGame').value;const data=await apiGet('getAthletes',code?'&game='+encodeURIComponent(code):'');$('athBody').innerHTML=data.map(x=>'<tr><td>'+esc(x.maVDV)+'</td><td>'+esc(x.maDoi)+'</td><td>'+esc(x.hoTen)+'</td><td>'+esc(x.maNV)+'</td><td>'+esc(x.gioiTinh)+'</td><td>'+esc(x.phongBan)+'</td><td>'+esc(x.boPhan)+'</td><td>'+esc(x.maMon)+'</td></tr>').join('')||'<tr><td colspan="8">Chưa có VĐV.</td></tr>';}
+async function syncData(){try{const r=await apiPost({action:'syncData',token});stat(r.message,'ok');await loadAll();}catch(e){stat(e.message);}}
+async function generateTournament(){const code=$('tourGame').value;if(!code)return stat('Chọn môn đội nhóm.');if(!confirm('Tạo lại bảng đấu sẽ xóa các trận cũ của môn này. Tiếp tục?'))return;try{const r=await apiPost({action:'generateTournament',token,game:code});stat(r.message,'ok');await loadMatches();}catch(e){stat(e.message);}}
+async function loadMatches(){const code=$('tourGame').value;if(!code){$('matchesBody').innerHTML='<tr><td colspan="9">Chọn môn để xem bảng đấu.</td></tr>';return;}const data=await apiGet('getMatches','&game='+encodeURIComponent(code));$('matchesBody').innerHTML=data.map(x=>'<tr><td>'+esc(x.maTran)+'</td><td>'+esc(x.vong)+'</td><td>'+esc(x.doiA)+'</td><td>'+esc(x.doiB)+'</td><td><input id="a_'+esc(x.maTran)+'" value="'+esc(x.diemA)+'" style="width:70px"></td><td><input id="b_'+esc(x.maTran)+'" value="'+esc(x.diemB)+'" style="width:70px"></td><td>'+esc(x.doiThang)+'</td><td>'+esc(x.trangThai)+'</td><td><button class="primary" onclick="saveMatch(\''+esc(x.maTran)+'\')">Lưu</button></td></tr>').join('')||'<tr><td colspan="9">Chưa có bảng đấu. Bấm Tạo lại bảng.</td></tr>';}
+async function saveMatch(code){try{await apiPost({action:'saveMatchResult',token,maTran:code,diemA:$('a_'+code).value,diemB:$('b_'+code).value});stat('Đã lưu kết quả trận.','ok');await loadMatches();}catch(e){stat(e.message);}}
+async function loadResults(){const code=$('resultGame').value;if(!code){$('resultsBody').innerHTML='<tr><td colspan="8">Chọn môn cá nhân.</td></tr>';return;}const [res,ath]=await Promise.all([apiGet('getResults','&game='+encodeURIComponent(code)),apiGet('getAthletes','&game='+encodeURIComponent(code))]);const by={};ath.forEach(a=>by[a.maVDV]=a);$('resultsBody').innerHTML=res.map(x=>{const a=by[x.maVDV]||{};return '<tr><td>'+esc(x.maKetQua)+'</td><td>'+esc(x.maVDV)+'</td><td>'+esc(a.maNV)+'</td><td>'+esc(a.hoTen)+'</td><td><input data-f="diem" value="'+esc(x.diem)+'"></td><td><input data-f="thanhTich" value="'+esc(x.thanhTich)+'"></td><td><input data-f="xepHang" value="'+esc(x.xepHang)+'"></td><td><input data-f="ghiChu" value="'+esc(x.ghiChu)+'"></td></tr>';}).join('')||'<tr><td colspan="8">Chưa có danh sách. Hãy bấm Đồng bộ rồi tạo danh sách cá nhân bằng chức năng tạo bảng.</td></tr>';}
+async function saveResults(){const code=$('resultGame').value;if(!code)return;const data=await apiGet('getResults','&game='+encodeURIComponent(code));const trs=[...$('resultsBody').querySelectorAll('tr')];const items=data.map((x,i)=>{const inputs=trs[i]?.querySelectorAll('input')||[];return {maKetQua:x.maKetQua,diem:inputs[0]?.value||'',thanhTich:inputs[1]?.value||'',xepHang:inputs[2]?.value||'',ghiChu:inputs[3]?.value||''};});try{const r=await apiPost({action:'saveIndividualResults',token,maMon:code,items});stat(r.message,'ok');}catch(e){stat(e.message);}}
+async function loadSettings(){const d=await apiGet('getAdminSettings');if(d.deadlineMs){const x=new Date(Number(d.deadlineMs)),p=n=>String(n).padStart(2,'0');$('deadline').value=x.getFullYear()+'-'+p(x.getMonth()+1)+'-'+p(x.getDate())+'T'+p(x.getHours())+':'+p(x.getMinutes());$('deadlineText').textContent=d.registrationOpen?'🟢 Đang mở':'🔴 Đã hết hạn';}else{$('deadline').value='';$('deadlineText').textContent='♾️ Không giới hạn';}}
+async function saveDeadline(){const v=$('deadline').value;if(!v)return stat('Chọn ngày giờ hoặc bấm Không giới hạn.');try{const r=await apiPost({action:'adminSetDeadline',token,deadlineMs:new Date(v).getTime()});$('deadlineText').textContent=r.data.registrationOpen?'🟢 Đang mở':'🔴 Đã hết hạn';stat(r.message,'ok');}catch(e){stat(e.message);}}async function clearDeadline(){try{const r=await apiPost({action:'adminSetDeadline',token,deadlineMs:null});$('deadline').value='';$('deadlineText').textContent='♾️ Không giới hạn';stat(r.message,'ok');}catch(e){stat(e.message);}}async function setupSystem(){try{const r=await apiPost({action:'setupSystem',token});stat(r.message,'ok');await loadAll();}catch(e){stat(e.message);}}
+function closePass(){$('passModal').classList.add('hidden');}async function changePass(){if($('newPass').value.length<8||$('newPass').value!==$('newPass2').value)return stat('Mật khẩu mới phải ≥8 ký tự và nhập lại phải khớp.');try{const r=await apiPost({action:'adminChangePassword',token,oldPassword:$('oldPass').value,newPassword:$('newPass').value});alert(r.message);closePass();logout();}catch(e){stat(e.message);}}
+$('loginBtn').onclick=login;$('password').onkeydown=e=>{if(e.key==='Enter')login();};$('refresh').onclick=loadAll;$('logout').onclick=logout;$('passwordBtn').onclick=()=>$('passModal').classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$('tab-'+b.dataset.tab).classList.remove('hidden');if(b.dataset.tab==='teams')loadTeams();if(b.dataset.tab==='athletes')loadAthletes();if(b.dataset.tab==='tournament')loadMatches();if(b.dataset.tab==='results')loadResults();});$('tourGame').onchange=loadMatches;$('resultGame').onchange=loadResults;
+if(token){showApp();loadAll();}
+</script></body></html>
