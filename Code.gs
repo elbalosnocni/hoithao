@@ -367,7 +367,8 @@ function getAdminSettings_() {
 
 function doGet(e) {
   try {
-    const action = normalize_(e && e.parameter && e.parameter.action);
+    const params = (e && e.parameter) ? e.parameter : {};
+    const action = normalize_(params.action);
 
     if (action === 'health') {
       return json_({ result: 'success', message: 'API is running.' });
@@ -378,7 +379,7 @@ function doGet(e) {
     }
 
     if (action === 'verify') {
-      const code = normalize_(e.parameter.code);
+      const code = normalize_(params.code);
       if (!code) return json_({ result: 'error', message: 'Thiếu mã xác nhận.' });
       const row = findRegistrationByCode_(code);
       if (!row) return json_({ result: 'not_found', message: 'Không tìm thấy mã xác nhận.' });
@@ -390,14 +391,14 @@ function doGet(e) {
     }
 
     if (action === 'getAdminSettings') {
-      if (!isValidSession_(e.parameter.token)) {
+      if (!isValidSession_(params.token)) {
         return json_({ result: 'unauthorized', message: 'Phiên Admin không hợp lệ hoặc đã hết hạn.' });
       }
       return json_({ result: 'success', data: getAdminSettings_() });
     }
 
     if (action === 'getReport') {
-      if (!isValidSession_(e.parameter.token)) {
+      if (!isValidSession_(params.token)) {
         return json_({ result: 'unauthorized', message: 'Phiên Admin không hợp lệ hoặc đã hết hạn.' });
       }
       const sheet = getRegistrationSheet_();
@@ -422,12 +423,28 @@ function doGet(e) {
 }
 
 function doPost(e) {
+  if (!e || !e.postData || typeof e.postData.contents !== 'string') {
+    return json_({
+      result: 'error',
+      message: 'doPost() chỉ được gọi qua HTTP POST của Web App. Không chạy trực tiếp hàm này bằng nút Run trong Apps Script.'
+    });
+  }
+
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
 
   try {
-    const p = JSON.parse((e.postData && e.postData.contents) || '{}');
+    let p;
+    try {
+      p = JSON.parse(e.postData.contents || '{}');
+    } catch (parseError) {
+      return json_({ result: 'error', message: 'Dữ liệu POST không phải JSON hợp lệ.' });
+    }
     const action = normalize_(p.action);
+
+    if (action === 'health') {
+      return json_({ result: 'success', message: 'POST API is running.' });
+    }
 
     if (action === 'adminLogin') {
       const password = normalize_(p.password);
@@ -475,6 +492,10 @@ function doPost(e) {
       return json_({ result:'success' });
     }
 
+    if (action && action !== 'register') {
+      return json_({ result: 'error', message: 'Action POST không hợp lệ: ' + action });
+    }
+
     // Không cho đăng ký sau deadline, kiểm tra lại ở backend để không thể bypass bằng DevTools.
     assertRegistrationOpen_();
     validateRegistration_(p);
@@ -520,6 +541,27 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * Kiểm tra routing cơ bản ngay trong Apps Script mà không cần gọi Web App.
+ * Chạy testRouting() thay vì chạy trực tiếp doPost().
+ */
+function testRouting() {
+  const getHealth = JSON.parse(doGet({ parameter: { action: 'health' } }).getContent());
+  const postHealth = JSON.parse(doPost({ postData: { contents: JSON.stringify({ action: 'health' }) } }).getContent());
+  const directPost = JSON.parse(doPost(undefined).getContent());
+
+  const result = {
+    doGetHealth: getHealth,
+    doPostHealth: postHealth,
+    directDoPostGuard: directPost,
+    ok: getHealth.result === 'success' &&
+        postHealth.result === 'success' &&
+        directPost.result === 'error'
+  };
+  console.log(JSON.stringify(result, null, 2));
+  return result;
 }
 
 function doOptions() {

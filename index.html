@@ -270,7 +270,8 @@ function buildConfirmationDetail(d){
 
 function openConfirmation(res){
   lastQrCode=res.confirmationCode;
-  const verifyUrl=WEB_APP_URL+"?action=verify&code="+encodeURIComponent(lastQrCode);
+  const baseUrl=(location.protocol==="http:"||location.protocol==="https:") ? (location.origin+location.pathname.replace(/\/[^/]*$/,"/")) : WEB_APP_URL;
+  const verifyUrl=baseUrl+"?code="+encodeURIComponent(lastQrCode);
   lastQrPayload=verifyUrl;
   $("confirmCode").textContent=lastQrCode;$("confirmDetail").innerHTML=buildConfirmationDetail(res.data);
   $("qrcode").innerHTML="";
@@ -297,6 +298,7 @@ async function submitRegistration(e){
     memberKeys=rows.map(tr=>tr.querySelector(".member-id").value.trim()||tr.querySelector(".member-full-cccd").value.trim()).filter(Boolean).join("|");
   }
   const payload={
+    action:'register',
     loaiDangKy:document.querySelector('input[name="loaiDangKy"]:checked').value,
     tenFormTenDoi:group?$("tenFormTenDoi").value.trim():selectedIndividual.hoTen,
     monDangKy:$("monDangKy").value,danhSachThanhVien:memberString,memberKeys:group?memberKeys:"",
