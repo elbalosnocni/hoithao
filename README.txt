@@ -37,9 +37,10 @@ BỔ SUNG GIAO DIỆN BỐC THĂM + EXCEL MẪU:
 - Xóa các dòng ví dụ trong Excel trước khi nhập dữ liệu thật. Nên thử ít dòng trước.
 
 
-NÂNG CẤP THEO YÊU CẦU:
-- Admin hiển thị overlay loading có vòng xoay khi đang gọi API/tải dữ liệu hoặc đọc Excel; có nhãn thao tác và tự ẩn khi hoàn tất.
-- Nút “Tải Excel mẫu đăng ký” tải trực tiếp file Mau_Import_Dang_Ky_Hoi_Thao.xlsx đi kèm bộ triển khai. Đặt file này cùng thư mục với admin.html trên GitHub Pages.
-- Mẫu Excel mới: mỗi dòng là một thành viên. Các thành viên của cùng đội phải lặp lại cùng Hình thức đăng ký, Tên Đội và Môn thi đấu. Khi xem trước, hệ thống tự gộp các dòng thành viên cùng đội/môn thành một đăng ký, tạo danh sách thành viên và danh sách mã NV/CCCD.
-- Với cá nhân, mỗi dòng vẫn là một đăng ký cá nhân.
-- Đã kiểm tra cú pháp JavaScript admin.html bằng Node.js. Trước khi triển khai chính thức, hãy thử nhập 1 đội mẫu để kiểm tra dữ liệu đồng bộ sang bảng Đội/VĐV.
+BAN NANG CAP CHINH SUA THUC TE:
+1. Admin co lop loading phu toan man hinh, spinner va noi dung trang thai trong moi request API; tu tat khi request ket thuc.
+2. Nut tai Excel tai file Mau_Import_Dang_Ky_Hoi_Thao.xlsx co san trong cung thu muc, khong tao lai workbook bang JavaScript.
+3. Mau Excel moi co cot Ho ten thanh vien va Ma NV/CCCD thanh vien rieng. Moi thanh vien mot dong.
+4. Khi xem truoc, cac dong cung Ten doi + Mon thi dau duoc gop thanh mot dang ky doi; moi dong ca nhan van la mot dang ky ca nhan.
+5. Trien khai GitHub Pages: giu admin.html va file XLSX trong cung thu muc; cap nhat admin.html va file XLSX moi.
+6. Code.gs khong thay doi vi action importRegistrations hien tai da nhan danh sach dang ky sau khi giao dien gom dong thanh vien.
