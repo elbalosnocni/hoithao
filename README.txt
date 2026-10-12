@@ -30,3 +30,8 @@ CẬP NHẬT TRIỂN KHAI:
 - Deploy lại Apps Script Web App (Execute as: Me; Who has access: Anyone) và cập nhật URL /exec ở cả index.html và admin.html nếu URL deployment thay đổi.
 - Chạy setupAdmin() chỉ khi cần tạo lại mật khẩu Admin; mật khẩu được ghi trong Execution log. Nếu hệ thống đã có mật khẩu Admin, không chạy lại trừ khi muốn đổi/reset.
 - Lưu ý: chức năng nhập Excel nhập các dòng hợp lệ vào DSDK; cần đối chiếu tiêu đề/cột thực tế của file Excel trước khi nhập chính thức.
+
+BỔ SUNG GIAO DIỆN BỐC THĂM + EXCEL MẪU:
+- Admin > Bảng thi đấu: chọn môn Đội nhóm rồi bấm nút "BỐC THĂM NGẪU NHIÊN". Hệ thống sẽ xáo trộn danh sách đội và tạo lịch theo cấu hình môn. Bốc thăm lại sẽ thay thế lịch cũ của môn đó.
+- Admin > Cài đặt: bấm "Tải Excel mẫu đăng ký" để tải file mẫu trực tiếp; trong ZIP cũng kèm file Mau_Import_Dang_Ky_Hoi_Thao.xlsx.
+- Xóa các dòng ví dụ trong Excel trước khi nhập dữ liệu thật. Nên thử ít dòng trước.
