@@ -35,3 +35,11 @@ BỔ SUNG GIAO DIỆN BỐC THĂM + EXCEL MẪU:
 - Admin > Bảng thi đấu: chọn môn Đội nhóm rồi bấm nút "BỐC THĂM NGẪU NHIÊN". Hệ thống sẽ xáo trộn danh sách đội và tạo lịch theo cấu hình môn. Bốc thăm lại sẽ thay thế lịch cũ của môn đó.
 - Admin > Cài đặt: bấm "Tải Excel mẫu đăng ký" để tải file mẫu trực tiếp; trong ZIP cũng kèm file Mau_Import_Dang_Ky_Hoi_Thao.xlsx.
 - Xóa các dòng ví dụ trong Excel trước khi nhập dữ liệu thật. Nên thử ít dòng trước.
+
+
+NÂNG CẤP THEO YÊU CẦU:
+- Admin hiển thị overlay loading có vòng xoay khi đang gọi API/tải dữ liệu hoặc đọc Excel; có nhãn thao tác và tự ẩn khi hoàn tất.
+- Nút “Tải Excel mẫu đăng ký” tải trực tiếp file Mau_Import_Dang_Ky_Hoi_Thao.xlsx đi kèm bộ triển khai. Đặt file này cùng thư mục với admin.html trên GitHub Pages.
+- Mẫu Excel mới: mỗi dòng là một thành viên. Các thành viên của cùng đội phải lặp lại cùng Hình thức đăng ký, Tên Đội và Môn thi đấu. Khi xem trước, hệ thống tự gộp các dòng thành viên cùng đội/môn thành một đăng ký, tạo danh sách thành viên và danh sách mã NV/CCCD.
+- Với cá nhân, mỗi dòng vẫn là một đăng ký cá nhân.
+- Đã kiểm tra cú pháp JavaScript admin.html bằng Node.js. Trước khi triển khai chính thức, hãy thử nhập 1 đội mẫu để kiểm tra dữ liệu đồng bộ sang bảng Đội/VĐV.
