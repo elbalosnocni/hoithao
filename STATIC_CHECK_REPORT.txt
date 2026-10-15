@@ -1,35 +1,9 @@
-STATIC CHECK REPORT - FINAL V6
+STATIC CHECK REPORT — FINAL V6 HOTFIX
+Date: 2026-10-15
 
-Total checks: 27
-Passed: 27
-Failed: 0
-
-NOTE: These are local static/syntax checks. Actual Google Apps Script/Sheets runtime tests must be run with createTestCopy() and runSandboxSelfTests() before production.
-
-PASS | Code.gs syntax
-PASS | admin.html inline JS syntax
-PASS | Backend contains function importTournamentPlan_(p)
-PASS | Backend contains function createTestCopy()
-PASS | Backend contains function runSandboxSelfTests()
-PASS | Backend contains function saveFinishOrder_(p)
-PASS | Backend contains function checkAdvanceConflict_
-PASS | Backend contains function listPrizes_
-PASS | Official KECO bracket advancement mapping
-PASS | Correct H:N result write
-PASS | Old match clear is not called by generation
-PASS | Admin UI contains importTournamentPlan()
-PASS | Admin UI contains printRefereeSheet()
-PASS | Admin UI contains exportTournament()
-PASS | Admin UI contains saveFinishOrder
-PASS | Admin UI contains data-f="xepHang"
-PASS | Admin UI contains planExcel
-PASS | Workbook sheet MON_THI_DAU
-PASS | Workbook sheet GIAI_THUONG
-PASS | Workbook sheet DOI_THI_DAU
-PASS | Workbook sheet VAN_DONG_VIEN
-PASS | Workbook sheet TRAN_DAU
-PASS | Workbook sheet KET_QUA
-PASS | Workbook sheet HUONG_DAN
-PASS | Workbook sheet Kiem_tra_truoc_import
-PASS | TRAN_DAU header mappings
-PASS | Prize unknown amounts not invented
+PASS: Code.gs syntax checked with Node.js parser after temporary .js extension.
+PASS: Inline JavaScript in admin.html syntax checked.
+PASS: importTournamentPlan reads MON_THI_DAU from client and can add only missing game codes.
+PASS: importTournamentPlan supports statuses used by the workbook and maps DoiA_MaDoi / DoiB_MaDoi / Bang_Luot.
+PASS: existing game codes are not overwritten by this hotfix.
+LIMITATION: This is static validation only. No live Google Apps Script / production Google Sheets execution was performed. Deploy to a test copy and verify returned imported / skipped / prizeErrors before production.
