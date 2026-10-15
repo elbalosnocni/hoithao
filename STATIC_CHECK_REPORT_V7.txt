@@ -1,0 +1,15 @@
+STATIC CHECK REPORT — LIWAYWAY GROUP EVENTS V7
+
+PASS: Code.gs syntax check using Node.js parser (temporary .js copy).
+PASS: Admin inline JavaScript syntax check using Node.js parser.
+PASS: Group-event UI switches to a multi-team table for JUMBO and LHG.
+PASS: KECO continues to use two-team match score UI and existing saveMatchResult API.
+PASS: Group-event UI loads existing KET_QUA rows and only calls prepareResultEntries when there are no rows for the selected game.
+PASS: Batch submission uses saveFinishOrder and displays per-row errors.
+PASS: Backend auto-ranking no longer requires every team in the submitted batch to have a time; unfinished rows do not block ranking of completed rows.
+PASS: Ranking groups use the supplied group/lượt field; ties are returned as errors for manual referee confirmation.
+PASS: No code path added that deletes match rows or clears existing results.
+
+Workbook from HOTFIX2 was retained without overwriting source data.
+
+LIMITATION: These are static checks and local logic checks only. Apps Script and the company's Google Sheets were not executable from this packaging environment. Must run createTestCopy() and test end-to-end on the TEST spreadsheet before production deployment.
