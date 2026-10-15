@@ -1,45 +1,38 @@
-HOI THAO LIWAYWAY 2026 - V5 UPGRADE
+HOI THAO LIWAYWAY 2026 - FINAL V6
+=================================
 
-Bo nay lay backend/quan tri day du cua V4 (coban) lam nen va nang cap:
-- Khong dong bo doi/VDV nang ngay trong request dang ky cong nhan.
-- Frontend co timeout, retry, xu ly response khong phai JSON va thong bao Failed to fetch ro rang.
-- Loading overlay va loading theo tung nut admin.
-- Admin tai du lieu ban dau theo batch, khong goi hang loat request tuan tu.
-- Tu dong xu ly session Admin het han.
-- Cache nhan vien V4 va nut lam moi du lieu.
-- Backend giu nguyen cac chuc nang quan ly mon, doi, VDV, bang dau, ket qua, deadline, mat khau.
-- Them doGet action health va doOptions de chan loi kho hieu khi kiem tra API.
+THANH PHAN
+- Code.gs: backend Google Apps Script
+- admin.html: giao dien quan tri; import ke hoach, ket qua theo lo, in phieu trong tai, xuat Excel tong ket
+- index.html: cong dang ky (giu giao dien/chuc nang co san)
+- Mau_Import_Dang_Ky_Hoi_Thao.xlsx: mau nhap dang ky hien co
+- Ke_hoach_thi_dau_Liwayway_2026_FINAL.xlsx: workbook du lieu ke hoach, tran dau, VDV va giai thuong
 
-LUU Y:
-1. Thay Code.gs, index.html, admin.html trong Apps Script/GitHub theo dung bo nay.
-2. Deploy lai Web App -> Execute as Me -> Who has access: Anyone.
-3. Lay URL /exec moi neu deployment tao URL moi va cap nhat trong ca index.html/admin.html.
-4. Chay setupAdmin() va setupSystem() mot lan trong Apps Script neu day la deployment moi.
-5. Sau khi dang ky, du lieu dang ky duoc luu ngay. Viec dong bo doi/VDV duoc lam tu Admin bang nut "Dong bo du lieu".
+CAC SUA DOI CHINH
+1. Sua ghi ket qua tran: ghi dung H:N; giu CreatedAt cot M va cap nhat UpdatedAt cot N.
+2. Chan tao lai bang neu da ton tai tran; khong xoa tran cu. Chan sua ket qua da chot de tranh sai nhanh.
+3. API importTournamentPlan: validate MaMon, MaTran, DoiA/DoiB, vong, trang thai; chi them tran moi. Tran trung ma/lich khac/ma doi khong hop le se bao loi theo dong. Giai thuong duoc nhap them qua sheet GIAI_THUONG, khong ghi de ma giai cu.
+4. KECO: diem hiep chi hop le 2-0 hoac 2-1, khong chap nhan hoa. Neu MaTran theo ma ke hoach KECO-M01...M16, he thong chuyen doi vao nhanh tiep theo va dua doi thua ban ket vao tran tranh ba neu cac tran dich ton tai.
+5. MARATHON: neu nhap thanh tich dang so giay/phut:giay va de trong xep hang, he thong tu xep theo thoi gian tang dan tach theo gioi tinh. Neu hai thanh tich bang nhau, he thong bao loi de trong tai xac nhan thu hang; neu nhap xep hang thu cong, kiem tra trung hang theo gioi tinh.
+6. JUMBO/LHG: neu nhap thanh tich so va de trong xep hang, he thong xep tang dan theo nhom/luot. Nhap ten nhom/luot vao GhiChu de tinh rieng tung nhom; neu khong co nhom thi xep chung. Khong cho luu ty so doi khang cho hai mon nay; dung tab Ket qua de nhap thanh tich.
+7. Tao dong ket qua con thieu khong xoa dong/kq cu; luu theo lo tra loi tung dong loi.
+8. In phieu trong tai tren trinh duyet; xuat XLSX gom Tong_quan, Tran_dau, Ket_qua, Giai_thuong.
+9. Co co che kiem thu ban sao Google Sheets: createTestCopy(), getSpreadsheetMode(), runSandboxSelfTests(), useProductionSpreadsheet().
 
+QUY TRINH BAT BUOC KIEM THU TREN BAN SAO
+---------------------------------------
+A. Sao luu file Google Sheets hien tai thu cong truoc khi thay code.
+B. Cap nhat Code.gs trong Apps Script va admin.html tren GitHub Pages. Dung deployment test Web App rieng neu co the.
+C. Trong Apps Script, chay createTestCopy() mot lan va cap quyen. Ham nay tao ban sao cua file dang ky, chuyen SPORTS_TEST_MODE=true; cac API doc/ghi cua he thong se su dung ban sao nay. Ham tra ve URL ban sao.
+D. Chay runSandboxSelfTests() trong Apps Script. Ket qua mong doi: allPassed=true; kiem tra header, ma tran/ket qua trung, trang thai va ghi ket qua dung cot H:N. Neu false, khong trien khai san xuat; doc checks[].detail de sua.
+E. Mo Admin, dang nhap va xac nhan banner CHẾ ĐỘ KIỂM THỬ. Thu cac thao tac: tai danh sach, import 1-2 tran co ma doi dung, thu dong ma tran trung, thu ma doi sai, luu ket qua keo co 2-0 va 2-1, thu ty so hoa, thu xep hang Marathon, xuat Excel, in phieu trong tai. Kiem tra ban sao Google Sheets.
+F. Khi test dat, chay useProductionSpreadsheet() de chuyen lai file goc; goi getSpreadsheetMode() de xac nhan mode=PRODUCTION va dung spreadsheetId. Sau do moi deploy/doi Web App san xuat va cap nhat URL /exec neu URL thay doi.
+G. Khong chay setupAdmin() neu khong can reset mat khau; ham nay tao mat khau moi.
 
-NÂNG CẤP BỔ SUNG (bản chỉnh sửa):
-1. Cổng đăng ký yêu cầu xác minh CCCD/CMND khớp cột CCCD ở cột F (index 5) của tab DSCNV. Mã truy cập được lưu trong sessionStorage và cache Apps Script trong 4 giờ.
-2. CCCD trong kết quả tìm kiếm/giao diện chỉ hiển thị dạng che thông tin và 3 số cuối. API getEmployees không trả danh sách nếu chưa có access token.
-3. Admin > Cài đặt có chức năng đọc Excel .xlsx/.xls/.csv, xem trước rồi nhập danh sách đăng ký. File cần có các tiêu đề cột được mô tả trong giao diện. Nên thử file nhỏ trước.
-4. Tạo bảng thi đấu có bốc thăm ngẫu nhiên Fisher–Yates. Nếu thể thức có “bảng/vòng bảng” hoặc cấu hình nhiều bảng/đội mỗi bảng, hệ thống lập lịch vòng tròn trong từng bảng; nếu không, dùng nhánh loại trực tiếp.
+QUAN TRONG VE MA DOI
+--------------------
+API khong tu dong tao doi gia. Ma DoiA_MaDoi/DoiB_MaDoi trong TRAN_DAU phai trung chinh xac voi MaDoi trong DOI_THI_DAU tren Google Sheets. O tran cho doi thang tu vong truoc, duoc de trong ca DoiA va DoiB; khong duoc chi de trong mot ben. Cac ma ke hoach nhu KECO-01 trong workbook co the khac ma he thong sinh tu DSDK. Truoc khi import, dong bo doi/VDV, lay MaDoi thuc te va thay ma trong TRAN_DAU. API se tu choi dong neu ma doi khong ton tai/khong thuoc dung MaMon.
 
-CẬP NHẬT TRIỂN KHAI:
-- Sao lưu Google Sheet trước khi chạy bản mới.
-- Thay nội dung Code.gs và 2 file HTML tương ứng trong Apps Script/GitHub Pages.
-- Deploy lại Apps Script Web App (Execute as: Me; Who has access: Anyone) và cập nhật URL /exec ở cả index.html và admin.html nếu URL deployment thay đổi.
-- Chạy setupAdmin() chỉ khi cần tạo lại mật khẩu Admin; mật khẩu được ghi trong Execution log. Nếu hệ thống đã có mật khẩu Admin, không chạy lại trừ khi muốn đổi/reset.
-- Lưu ý: chức năng nhập Excel nhập các dòng hợp lệ vào DSDK; cần đối chiếu tiêu đề/cột thực tế của file Excel trước khi nhập chính thức.
-
-BỔ SUNG GIAO DIỆN BỐC THĂM + EXCEL MẪU:
-- Admin > Bảng thi đấu: chọn môn Đội nhóm rồi bấm nút "BỐC THĂM NGẪU NHIÊN". Hệ thống sẽ xáo trộn danh sách đội và tạo lịch theo cấu hình môn. Bốc thăm lại sẽ thay thế lịch cũ của môn đó.
-- Admin > Cài đặt: bấm "Tải Excel mẫu đăng ký" để tải file mẫu trực tiếp; trong ZIP cũng kèm file Mau_Import_Dang_Ky_Hoi_Thao.xlsx.
-- Xóa các dòng ví dụ trong Excel trước khi nhập dữ liệu thật. Nên thử ít dòng trước.
-
-
-NÂNG CẤP THEO YÊU CẦU:
-- Admin hiển thị overlay loading có vòng xoay khi đang gọi API/tải dữ liệu hoặc đọc Excel; có nhãn thao tác và tự ẩn khi hoàn tất.
-- Nút “Tải Excel mẫu đăng ký” tải trực tiếp file Mau_Import_Dang_Ky_Hoi_Thao.xlsx đi kèm bộ triển khai. Đặt file này cùng thư mục với admin.html trên GitHub Pages.
-- Mẫu Excel mới: mỗi dòng là một thành viên. Các thành viên của cùng đội phải lặp lại cùng Hình thức đăng ký, Tên Đội và Môn thi đấu. Khi xem trước, hệ thống tự gộp các dòng thành viên cùng đội/môn thành một đăng ký, tạo danh sách thành viên và danh sách mã NV/CCCD.
-- Với cá nhân, mỗi dòng vẫn là một đăng ký cá nhân.
-- Đã kiểm tra cú pháp JavaScript admin.html bằng Node.js. Trước khi triển khai chính thức, hãy thử nhập 1 đội mẫu để kiểm tra dữ liệu đồng bộ sang bảng Đội/VĐV.
+GIOI HAN KIEM THU
+-----------------
+Da kiem tra cu phap JavaScript bang Node.js cho Code.gs va script trong admin.html. Khong the truy cap/chay Apps Script va Google Sheets cua cong ty tu moi truong dong goi nay; vi vay runSandboxSelfTests() va checklist tren la buoc kiem thu thuc te bat buoc truoc khi chuyen sang san xuat. Khong coi ban nay da duoc kiem thu truc tiep tren Google Sheets that.
