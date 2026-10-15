@@ -1,0 +1,9 @@
+HOTFIX V7.1 — Static check
+- Code.gs JavaScript syntax: PASS
+- admin.html embedded JavaScript syntax: PASS
+- RESULT_HEADERS length: 10
+- generateIndividualEntries_ new result row length: 10
+- prepareResultEntries_ individual row length: 10
+- prepareResultEntries_ team row length: 10
+- Existing rows are not deleted by this patch: PASS (patch changes only arrays for newly created rows)
+- Google Sheets end-to-end integration: NOT RUN; must test on a copy.
