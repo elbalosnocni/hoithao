@@ -1,9 +1,14 @@
-STATIC CHECK REPORT — FINAL V6 HOTFIX
-Date: 2026-10-15
+STATIC CHECK REPORT - HOTFIX 2
 
-PASS: Code.gs syntax checked with Node.js parser after temporary .js extension.
-PASS: Inline JavaScript in admin.html syntax checked.
-PASS: importTournamentPlan reads MON_THI_DAU from client and can add only missing game codes.
-PASS: importTournamentPlan supports statuses used by the workbook and maps DoiA_MaDoi / DoiB_MaDoi / Bang_Luot.
-PASS: existing game codes are not overwritten by this hotfix.
-LIMITATION: This is static validation only. No live Google Apps Script / production Google Sheets execution was performed. Deploy to a test copy and verify returned imported / skipped / prizeErrors before production.
+PASS: Backend JavaScript syntax check (node --check after temporary .js copy).
+PASS: Admin inline JavaScript syntax check.
+PASS: Workbook validation simulation against import rules.
+- Games in MON_THI_DAU: 4
+- Teams in DOI_THI_DAU: 48
+- Match plan rows in TRAN_DAU: 48
+- Valid rows: 48
+- Validation errors: 0
+- Prize rows: 18
+- Prize rows with unknown game code: 0
+
+Important: these checks do not execute Apps Script APIs or connect to the company's Google Sheets. Integration testing is still required on a copied spreadsheet.
