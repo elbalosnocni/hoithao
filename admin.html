@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin - Hội thao Liwayway 2026 V4</title><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><style>
-:root{--p:#0d6efd;--dark:#172033;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:var(--dark)}.hidden{display:none!important}.login{position:fixed;inset:0;background:linear-gradient(135deg,#172033,#0d6efd);display:flex;align-items:center;justify-content:center;padding:15px}.login-card{background:#fff;width:min(400px,100%);padding:28px;border-radius:16px;box-shadow:0 20px 60px #0004}input,select{width:100%;border:1px solid #ced4da;border-radius:8px;padding:10px;font-size:14px}button{border:0;border-radius:8px;padding:9px 13px;font-weight:700;cursor:pointer}.primary{background:var(--p);color:#fff}.light{background:#eef2f6;color:var(--dark)}.danger{background:#dc3545;color:#fff}.ok{background:#198754;color:#fff}.app{min-height:100vh}.top{background:#172033;color:#fff;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:5}.nav{background:#fff;border-bottom:1px solid var(--line);padding:8px 16px;display:flex;gap:6px;overflow:auto;position:sticky;top:54px;z-index:4}.nav button{white-space:nowrap;background:#f1f3f5}.nav button.active{background:#0d6efd;color:#fff}.main{max-width:1450px;margin:auto;padding:18px}.status{padding:10px;border-radius:8px;margin-bottom:12px;font-weight:600}.status.error{background:#fff0f0;color:#b42318}.status.ok{background:#ecfdf3;color:#027a48}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;padding:16px;border-radius:12px;box-shadow:0 4px 16px #1018280d}.stat b{font-size:26px}.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 4px 16px #1018280d;margin-top:14px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.table th{background:#f8f9fa;position:sticky;top:0}.busy-overlay{position:fixed;inset:0;background:rgba(15,23,42,.48);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}.busy-card{background:#fff;border-radius:16px;padding:24px 30px;min-width:250px;text-align:center;box-shadow:0 18px 60px #0004}.busy-spinner{width:42px;height:42px;border:4px solid #dbeafe;border-top-color:#0d6efd;border-radius:50%;animation:busyspin .75s linear infinite;margin:0 auto 14px}@keyframes busyspin{to{transform:rotate(360deg)}}.busy-sub{font-size:12px;color:#667085;margin-top:7px}.modal{position:fixed;inset:0;background:#172033aa;z-index:20;display:flex;align-items:center;justify-content:center;padding:15px}.modal-card{background:#fff;width:min(720px,100%);max-height:92vh;overflow:auto;border-radius:14px;padding:20px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.charts{display:grid;grid-template-columns:1fr 1fr;gap:15px}.chartbox{height:300px}.pill{display:inline-block;padding:3px 8px;border-radius:99px;background:#eef2f6;font-size:12px}.small{font-size:12px;color:var(--muted)}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}@media(max-width:600px){.grid,.formgrid{grid-template-columns:1fr}.main{padding:8px}.top{padding:10px}.nav{top:50px}}
+:root{--p:#0d6efd;--dark:#172033;--muted:#667085;--line:#e4e7ec;--bg:#f4f6f9}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:var(--dark)}.hidden{display:none!important}.login{position:fixed;inset:0;background:linear-gradient(135deg,#172033,#0d6efd);display:flex;align-items:center;justify-content:center;padding:15px}.login-card{background:#fff;width:min(400px,100%);padding:28px;border-radius:16px;box-shadow:0 20px 60px #0004}input,select{width:100%;border:1px solid #ced4da;border-radius:8px;padding:10px;font-size:14px}button{border:0;border-radius:8px;padding:9px 13px;font-weight:700;cursor:pointer}.primary{background:var(--p);color:#fff}.light{background:#eef2f6;color:var(--dark)}.danger{background:#dc3545;color:#fff}.ok{background:#198754;color:#fff}.app{min-height:100vh}.top{background:#172033;color:#fff;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:5}.nav{background:#fff;border-bottom:1px solid var(--line);padding:8px 16px;display:flex;gap:6px;overflow:auto;position:sticky;top:54px;z-index:4}.nav button{white-space:nowrap;background:#f1f3f5}.nav button.active{background:#0d6efd;color:#fff}.main{max-width:1450px;margin:auto;padding:18px}.status{padding:10px;border-radius:8px;margin-bottom:12px;font-weight:600}.status.error{background:#fff0f0;color:#b42318}.status.ok{background:#ecfdf3;color:#027a48}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;padding:16px;border-radius:12px;box-shadow:0 4px 16px #1018280d}.stat b{font-size:26px}.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 4px 16px #1018280d;margin-top:14px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.table th{background:#f8f9fa;position:sticky;top:0}.busy-overlay{position:fixed;inset:0;background:#17203366;z-index:999;display:flex;align-items:center;justify-content:center;padding:16px}.busy-card{background:#fff;padding:22px 28px;border-radius:14px;box-shadow:0 12px 40px #0003;text-align:center;min-width:220px}.busy-spinner{width:36px;height:36px;border:4px solid #d0d5dd;border-top-color:var(--p);border-radius:50%;animation:busyspin .75s linear infinite;margin:0 auto 12px}@keyframes busyspin{to{transform:rotate(360deg)}}.modal{position:fixed;inset:0;background:#172033aa;z-index:20;display:flex;align-items:center;justify-content:center;padding:15px}.modal-card{background:#fff;width:min(720px,100%);max-height:92vh;overflow:auto;border-radius:14px;padding:20px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.charts{display:grid;grid-template-columns:1fr 1fr;gap:15px}.chartbox{height:300px}.pill{display:inline-block;padding:3px 8px;border-radius:99px;background:#eef2f6;font-size:12px}.small{font-size:12px;color:var(--muted)}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}@media(max-width:600px){.grid,.formgrid{grid-template-columns:1fr}.main{padding:8px}.top{padding:10px}.nav{top:50px}}
 </style></head><body>
-<div id="busyOverlay" class="busy-overlay hidden" aria-live="polite" aria-busy="true"><div class="busy-card"><div class="busy-spinner"></div><b id="busyText">Đang tải dữ liệu...</b><div class="busy-sub">Vui lòng chờ, thao tác có thể mất vài giây.</div></div></div><div id="login" class="login"><div class="login-card"><h2 style="margin-top:0">🔐 Hội thao Admin V4</h2><p class="small">Đăng nhập để quản lý môn, đội, VĐV và bảng thi đấu.</p><input id="password" type="password" placeholder="Mật khẩu Admin"><button id="loginBtn" class="primary" style="width:100%;margin-top:10px">ĐĂNG NHẬP</button><div id="loginErr" class="status error hidden" style="margin-top:10px"></div></div></div>
+<div id="busyOverlay" class="busy-overlay hidden" aria-live="polite"><div class="busy-card"><div class="busy-spinner"></div><b id="busyText">Đang tải dữ liệu...</b><div class="small" style="margin-top:6px">Vui lòng chờ, không đóng trang.</div></div></div><div id="login" class="login"><div class="login-card"><h2 style="margin-top:0">🔐 Hội thao Admin V4</h2><p class="small">Đăng nhập để quản lý môn, đội, VĐV và bảng thi đấu.</p><input id="password" type="password" placeholder="Mật khẩu Admin"><button id="loginBtn" class="primary" style="width:100%;margin-top:10px">ĐĂNG NHẬP</button><div id="loginErr" class="status error hidden" style="margin-top:10px"></div></div></div>
 <div id="app" class="app hidden"><header class="top"><b>🏆 LIWAYWAY SPORTS FESTIVAL 2026 — ADMIN V4</b><div><button id="refresh" class="light">🔄 Làm mới</button> <button id="passwordBtn" class="light">🔑 Đổi mật khẩu</button> <button id="logout" class="danger">Đăng xuất</button></div></header><nav class="nav"><button data-tab="dashboard" class="active">📊 Tổng quan</button><button data-tab="games">⚙️ Môn thi đấu</button><button data-tab="teams">👥 Đội thi đấu</button><button data-tab="athletes">🏃 VĐV</button><button data-tab="tournament">🎯 Bảng đấu</button><button data-tab="results">🏆 Kết quả</button><button data-tab="settings">⚙️ Cài đặt</button></nav><main class="main"><div id="status" class="status hidden"></div>
 <section id="tab-dashboard"><div class="grid"><div class="stat">Đăng ký<br><b id="sReg">0</b></div><div class="stat">Cá nhân<br><b id="sInd">0</b></div><div class="stat">Đội<br><b id="sTeam">0</b></div><div class="stat">VĐV<br><b id="sAth">0</b></div></div><div class="card"><div class="toolbar"><h3>Đăng ký gần nhất</h3><button class="ok" onclick="syncData()">🔄 Đồng bộ đội/VĐV</button></div><div class="table-wrap"><table class="table"><thead><tr><th>Thời gian</th><th>Hình thức</th><th>Tên đội/VĐV</th><th>Môn</th><th>Thành viên</th><th>Mã xác nhận</th></tr></thead><tbody id="reportBody"></tbody></table></div></div><div class="card charts"><div class="chartbox"><canvas id="gameChart"></canvas></div><div class="chartbox"><canvas id="typeChart"></canvas></div></div></section>
 <section id="tab-games" class="hidden"><div class="toolbar"><h2>⚙️ Quản lý môn thi đấu</h2><button class="primary" onclick="openGame()">+ Thêm môn</button></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Mã</th><th>Môn</th><th>Hình thức</th><th>Giới hạn</th><th>Thể thức</th><th>Trạng thái</th><th></th></tr></thead><tbody id="gamesBody"></tbody></table></div></div></section>
@@ -14,28 +14,26 @@
 <div id="gameModal" class="modal hidden"><div class="modal-card"><h2 id="gameModalTitle">Thêm môn</h2><input type="hidden" id="oldCode"><div class="formgrid"><div><label>Mã môn *</label><input id="gCode"></div><div><label>Tên môn *</label><input id="gName"></div><div><label>Hình thức</label><select id="gType"><option>Đội nhóm</option><option>Cá nhân</option></select></div><div><label>Trạng thái</label><select id="gStatus"><option>Mở</option><option>Tạm khóa</option><option>Khóa</option></select></div><div><label>Min người</label><input id="gMin" type="number" min="1"></div><div><label>Max người</label><input id="gMax" type="number" min="1"></div><div><label>Số bảng</label><input id="gGroups" type="number" min="1" value="1"></div><div><label>Đội/bảng</label><input id="gTeamsPerGroup" type="number" min="0" value="0"></div><div><label>Vào vòng sau</label><input id="gAdvance" type="number" min="0" value="0"></div><div><label>Thứ tự</label><input id="gOrder" type="number" value="99"></div><div class="full"><label>Thể thức</label><input id="gFormat" placeholder="VD: Vòng bảng → bán kết → chung kết"></div><div class="full"><label>Nội dung / mô tả</label><textarea id="gDesc" style="width:100%;min-height:90px;border:1px solid #ced4da;border-radius:8px;padding:10px"></textarea></div></div><div style="margin-top:15px;text-align:right"><button class="light" onclick="closeGame()">Hủy</button> <button class="primary" onclick="saveGame()">Lưu</button></div></div></div>
 <div id="passModal" class="modal hidden"><div class="modal-card" style="max-width:450px"><h2>Đổi mật khẩu</h2><input id="oldPass" type="password" placeholder="Mật khẩu hiện tại"><br><br><input id="newPass" type="password" placeholder="Mật khẩu mới (≥8 ký tự)"><br><br><input id="newPass2" type="password" placeholder="Nhập lại"><div style="margin-top:15px;text-align:right"><button class="light" onclick="closePass()">Hủy</button> <button class="primary" onclick="changePass()">Lưu</button></div></div></div>
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";let token=sessionStorage.getItem('sportsAdminToken')||'',games=[],report=[],charts={};const $=id=>document.getElementById(id);function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}function stat(m,t='error'){const e=$('status');e.textContent=m;e.className='status '+t;}let busyCount=0;
-function showBusy(label='Đang tải dữ liệu...'){busyCount++;$('busyText').textContent=label;$('busyOverlay').classList.remove('hidden');}
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzSF32zHezk8gMhpiQrSbwSwWIbeLd4hzDhMjeW3Gch9wL9ZvMo2m6HYILSWrwVFJlL/exec";let token=sessionStorage.getItem('sportsAdminToken')||'',games=[],report=[],charts={};const $=id=>document.getElementById(id);function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}function stat(m,t='error'){const e=$('status');e.textContent=m;e.className='status '+t;}let busyCount=0,busyDelay=null;
+function showBusy(label){busyCount++;$('busyText').textContent=label||'Đang tải dữ liệu...';$('busyOverlay').classList.remove('hidden');}
 function hideBusy(){busyCount=Math.max(0,busyCount-1);if(!busyCount)$('busyOverlay').classList.add('hidden');}
-async function apiRequest(url,opts={},label='Đang kết nối máy chủ'){
-  const maxTry=3, timeoutMs=20000; let lastErr;showBusy(label);
-  try{
-    for(let attempt=1;attempt<=maxTry;attempt++){
-      const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeoutMs);
-      try{
-        const r=await fetch(url,{...opts,signal:ctl.signal,cache:opts.cache||'no-store',redirect:'follow'});
-        const body=await r.text();
-        if(!r.ok)throw new Error('Máy chủ trả về HTTP '+r.status+'.');
-        let x;try{x=JSON.parse(body);}catch(e){throw new Error('API không trả về JSON hợp lệ. Hãy kiểm tra deployment Web App.');}
-        return x;
-      }catch(e){
-        lastErr=e.name==='AbortError'?new Error(label+' quá thời gian chờ.'):e;
-        if(attempt<maxTry)await new Promise(r=>setTimeout(r,700*attempt));
-      }finally{clearTimeout(timer);}
-    }
-    if(lastErr && /fetch/i.test(lastErr.message))throw new Error('Không kết nối được Web App. Kiểm tra URL /exec, quyền truy cập và mạng Internet.');
-    throw lastErr||new Error('Không thể kết nối máy chủ.');
-  }finally{hideBusy();}
+async function apiRequest(url,opts={},label='Kết nối máy chủ'){
+  showBusy(label);const maxTry=3, timeoutMs=20000; let lastErr;
+  for(let attempt=1;attempt<=maxTry;attempt++){
+    const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeoutMs);
+    try{
+      const r=await fetch(url,{...opts,signal:ctl.signal,cache:opts.cache||'no-store',redirect:'follow'});
+      const text=await r.text();
+      if(!r.ok)throw new Error('Máy chủ trả về HTTP '+r.status+'.');
+      let x;try{x=JSON.parse(text);}catch(e){throw new Error('API không trả về JSON hợp lệ. Hãy kiểm tra deployment Web App.');}
+      hideBusy();return x;
+    }catch(e){
+      lastErr=e.name==='AbortError'?new Error(label+' quá thời gian chờ.'):e;
+      if(attempt<maxTry)await new Promise(r=>setTimeout(r,700*attempt));
+    }finally{clearTimeout(timer);}
+  }
+  if(lastErr && /fetch/i.test(lastErr.message)){hideBusy();throw new Error('Failed to fetch: không kết nối được Web App. Kiểm tra URL /exec, quyền Anyone và mạng Internet.');}
+  hideBusy();throw lastErr||new Error('Không thể kết nối máy chủ.');
 }
 async function apiGet(action,extra=''){
   const x=await apiRequest(WEB_APP_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+extra+'&v=5',{},'Tải '+action);
@@ -89,19 +87,19 @@ async function loadResults(){const code=$('resultGame').value;if(!code){$('resul
 async function saveResults(){const code=$('resultGame').value;if(!code)return;const data=await apiGet('getResults','&game='+encodeURIComponent(code));const trs=[...$('resultsBody').querySelectorAll('tr')];const items=data.map((x,i)=>{const inputs=trs[i]?.querySelectorAll('input')||[];return {maKetQua:x.maKetQua,diem:inputs[0]?.value||'',thanhTich:inputs[1]?.value||'',xepHang:inputs[2]?.value||'',ghiChu:inputs[3]?.value||''};});try{const r=await apiPost({action:'saveIndividualResults',token,maMon:code,items});stat(r.message,'ok');}catch(e){stat(e.message);}}
 async function loadSettings(){const d=await apiGet('getAdminSettings');if(d.deadlineMs){const x=new Date(Number(d.deadlineMs)),p=n=>String(n).padStart(2,'0');$('deadline').value=x.getFullYear()+'-'+p(x.getMonth()+1)+'-'+p(x.getDate())+'T'+p(x.getHours())+':'+p(x.getMinutes());$('deadlineText').textContent=d.registrationOpen?'🟢 Đang mở':'🔴 Đã hết hạn';}else{$('deadline').value='';$('deadlineText').textContent='♾️ Không giới hạn';}}
 function downloadRegistrationTemplate(){
-  // File mẫu thật được đóng gói cùng admin.html; không sinh file khác trên trình duyệt.
+  // Tải file XLSX mẫu đi kèm GitHub Pages, không tạo file giả lập trên trình duyệt.
   const a=document.createElement('a');
   a.href='./Mau_Import_Dang_Ky_Hoi_Thao.xlsx';
   a.download='Mau_Import_Dang_Ky_Hoi_Thao.xlsx';
-  a.rel='noopener';
   document.body.appendChild(a);a.click();a.remove();
 }
+
 let excelImportRows=[];
-function normHeader(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/đ/g,'d').replace(/[^a-z0-9]/g,'');}
+function normHeader(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/[^a-z0-9]/g,'');}
 function previewRegistrationExcel(){
   try{
-    const f=$('registrationExcel').files[0];if(!f)throw Error('Bạn chưa chọn file Excel.');
-    showBusy('Đang đọc và kiểm tra danh sách Excel...');
+    const f=$('registrationExcel').files[0];if(!f)throw Error('Chọn file Excel trước.');
+    showBusy('Đang đọc và kiểm tra Excel...');
     const reader=new FileReader();
     reader.onload=e=>{
       try{
@@ -110,41 +108,31 @@ function previewRegistrationExcel(){
         const parsed=raw.map((r,i)=>{
           const o={};Object.keys(r).forEach(k=>o[normHeader(k)]=r[k]);
           const get=(...keys)=>{for(const k of keys){const v=o[normHeader(k)];if(v!==undefined&&String(v).trim()!=='')return String(v).trim();}return '';};
-          return {rowNo:i+2,type:get('Hình thức đăng ký','Hình thức','Loại đăng ký','Type'),team:get('Tên đội','Tên Đội / Cá nhân đăng ký','Tên đội / cá nhân đăng ký','Tên đăng ký','Ten dang ky'),game:get('Môn thi đấu','Môn','Mon thi dau'),memberName:get('Họ tên thành viên','Tên thành viên','Họ tên VĐV','Họ tên','Ho ten thanh vien'),memberKey:get('Mã NV / CCCD thành viên','Mã NV / CCCD đăng ký','Mã NV','CCCD','Ma NV'),department:get('Phòng ban','Phong ban'),section:get('Bộ phận','Bo phan'),company:get('Công ty / Khối lớn','Công ty','Khối lớn','Cong ty')};
-        }).filter(x=>x.type||x.team||x.game||x.memberName||x.memberKey);
-        const grouped=new Map(),singles=[];
-        const isTeam=x=>normHeader(x.type).includes('doi')||normHeader(x.type).includes('team');
-        for(const x of parsed){
-          if(isTeam(x)){
-            if(!x.team||!x.game){throw Error('Dòng '+x.rowNo+': đăng ký đội phải có Tên đội và Môn thi đấu.');}
-            if(!x.memberName&&!x.memberKey)throw Error('Dòng '+x.rowNo+': đội cần có Họ tên thành viên hoặc Mã NV/CCCD.');
-            const key=[normHeader(x.team),normHeader(x.game)].join('|');
-            if(!grouped.has(key))grouped.set(key,{loaiDangKy:'Đội nhóm',tenFormTenDoi:x.team,monDangKy:x.game,danhSachThanhVien:[],memberKeys:[],phongBan:x.department,boPhan:x.section,congTy:x.company,rowNo:x.rowNo});
-            const g=grouped.get(key);
-            if(x.memberName){let name=x.memberName;if(x.memberKey)name+=' - MNV: '+x.memberKey;if(x.department)name+=' - Phòng ban: '+x.department;if(x.section)name+=' - Bộ phận: '+x.section;g.danhSachThanhVien.push(name);}
-            if(x.memberKey)g.memberKeys.push(x.memberKey);
+          return {rowNo:i+2,loaiDangKy:get('Hình thức đăng ký','Hình thức','Loai dang ky','Type'),tenFormTenDoi:get('Tên Đội / Cá nhân đăng ký','Tên đội','Tên cá nhân','Họ tên đội','Ten dang ky'),monDangKy:get('Môn thi đấu','Môn','Mon thi dau'),memberName:get('Họ tên thành viên','Tên thành viên','Họ tên VĐV','Ho ten thanh vien'),memberKey:get('Mã NV / CCCD thành viên','Mã NV / CCCD đăng ký','Mã NV','CCCD','Ma NV'),phongBan:get('Phòng ban','Phong ban'),boPhan:get('Bộ phận','Bo phan'),congTy:get('Công ty / Khối lớn','Công ty','Khối lớn','Cong ty')};
+        }).filter(x=>x.loaiDangKy||x.tenFormTenDoi||x.monDangKy||x.memberName||x.memberKey);
+        // Mỗi dòng Excel là một thành viên; gộp thành một đăng ký đội theo tên đội + môn.
+        const grouped=new Map(), singles=[];
+        parsed.forEach(x=>{
+          if(normHeader(x.loaiDangKy)==='do nhom'||normHeader(x.loaiDangKy)==='do nhom'.replace(/ /g,'' )||x.loaiDangKy.toLowerCase().includes('đội')){
+            const k=[normHeader(x.loaiDangKy),normHeader(x.tenFormTenDoi),normHeader(x.monDangKy)].join('|');
+            if(!grouped.has(k))grouped.set(k,{loaiDangKy:'Đội nhóm',tenFormTenDoi:x.tenFormTenDoi,monDangKy:x.monDangKy,congTy:x.congTy,phongBan:x.phongBan,boPhan:x.boPhan,members:[],keys:[],rowNo:x.rowNo});
+            const g=grouped.get(k);
+            if(x.memberName){let d=x.memberName;if(x.memberKey)d+=' - MNV: '+x.memberKey;if(x.phongBan)d+=' - Phòng ban: '+x.phongBan;if(x.boPhan)d+=' - Bộ phận: '+x.boPhan;g.members.push(d);}
+            if(x.memberKey)g.keys.push(x.memberKey);
           }else{
-            const person=x.memberName||x.team;
-            if(!person||!x.game)throw Error('Dòng '+x.rowNo+': cá nhân cần có Họ tên và Môn thi đấu.');
-            singles.push({loaiDangKy:'Cá nhân',tenFormTenDoi:person,monDangKy:x.game,danhSachThanhVien:'',memberKeys:x.memberKey,phongBan:x.department,boPhan:x.section,congTy:x.company,rowNo:x.rowNo});
+            singles.push({loaiDangKy:x.loaiDangKy||'Cá nhân',tenFormTenDoi:x.tenFormTenDoi||x.memberName,monDangKy:x.monDangKy,danhSachThanhVien:'',memberKeys:x.memberKey,phongBan:x.phongBan,boPhan:x.boPhan,congTy:x.congTy,rowNo:x.rowNo});
           }
-        }
-        excelImportRows=[...grouped.values()].map(g=>({...g,danhSachThanhVien:g.danhSachThanhVien.join(' | '),memberKeys:[...new Set(g.memberKeys)].join(';')})).concat(singles);
-        const memberCount=[...grouped.values()].reduce((n,g)=>n+g.danhSachThanhVien.length,0);
-        $('excelPreview').innerHTML='<b>Đã đọc '+parsed.length+' dòng Excel.</b><br>• '+grouped.size+' đội sau khi gộp theo Tên đội + Môn thi đấu<br>• '+memberCount+' thành viên đội<br>• '+singles.length+' đăng ký cá nhân<br>• Tổng cộng '+excelImportRows.length+' đăng ký sẽ được nhập.<br><br><span class="small">Các dòng cùng đội phải ghi giống hệt Tên đội và Môn thi đấu. Hãy kiểm tra trước khi bấm Nhập danh sách.</span>';
-      }catch(err){excelImportRows=[];$('excelPreview').textContent='Lỗi: '+err.message;stat(err.message);}
+        });
+        excelImportRows=[...grouped.values()].map(g=>({loaiDangKy:g.loaiDangKy,tenFormTenDoi:g.tenFormTenDoi,monDangKy:g.monDangKy,danhSachThanhVien:g.members.join(' | '),memberKeys:[...new Set(g.keys)].join('|'),phongBan:g.phongBan,boPhan:g.boPhan,congTy:g.congTy,rowNo:g.rowNo})).concat(singles);
+        $('excelPreview').textContent='Đã đọc '+parsed.length+' dòng thành viên, sẽ nhập '+excelImportRows.length+' đăng ký (đội được gộp theo tên đội + môn). Kiểm tra đúng tên đội/môn trước khi nhập.';
+      }catch(err){stat(err.message);$('excelPreview').textContent='';}
       finally{hideBusy();}
     };
     reader.onerror=()=>{hideBusy();stat('Không đọc được file Excel.');};
     reader.readAsArrayBuffer(f);
   }catch(e){hideBusy();stat(e.message);}
 }
-async function importRegistrationExcel(){
-  if(!excelImportRows.length)return stat('Hãy chọn file và bấm Xem trước file trước.');
-  if(!confirm('Nhập '+excelImportRows.length+' đăng ký? Các dòng thành viên cùng đội/môn đã được gộp thành một đăng ký đội.'))return;
-  try{const r=await apiPost({action:'importRegistrations',token,items:excelImportRows},'Đang nhập đăng ký từ Excel...');stat((r.data.message||'Đã nhập xong.')+' '+(r.data.errors||[]).slice(0,5).join(' | '),'ok');excelImportRows=[];$('registrationExcel').value='';$('excelPreview').textContent='';await loadAll();}
-  catch(e){stat(e.message);}
-}
+async function importRegistrationExcel(){if(!excelImportRows.length)return stat('Hãy chọn file và bấm Xem trước file trước.');if(!confirm('Nhập '+excelImportRows.length+' đăng ký vào danh sách? Các dòng thành viên của cùng đội/môn đã được gộp. Dữ liệu đã nhập sẽ không tự xóa.'))return;try{const r=await apiPost({action:'importRegistrations',token,items:excelImportRows},'Nhập Excel');stat(r.data.message+' '+(r.data.errors||[]).slice(0,5).join(' | '),'ok');excelImportRows=[];$('registrationExcel').value='';$('excelPreview').textContent='';await loadAll();}catch(e){stat(e.message);}}
 async function saveDeadline(){const v=$('deadline').value;if(!v)return stat('Chọn ngày giờ hoặc bấm Không giới hạn.');try{const r=await apiPost({action:'adminSetDeadline',token,deadlineMs:new Date(v).getTime()});$('deadlineText').textContent=r.data.registrationOpen?'🟢 Đang mở':'🔴 Đã hết hạn';stat(r.message,'ok');}catch(e){stat(e.message);}}async function clearDeadline(){try{const r=await apiPost({action:'adminSetDeadline',token,deadlineMs:null});$('deadline').value='';$('deadlineText').textContent='♾️ Không giới hạn';stat(r.message,'ok');}catch(e){stat(e.message);}}async function setupSystem(){try{const r=await apiPost({action:'setupSystem',token});stat(r.message,'ok');await loadAll();}catch(e){stat(e.message);}}
 function closePass(){$('passModal').classList.add('hidden');}async function changePass(){if($('newPass').value.length<8||$('newPass').value!==$('newPass2').value)return stat('Mật khẩu mới phải ≥8 ký tự và nhập lại phải khớp.');try{const r=await apiPost({action:'adminChangePassword',token,oldPassword:$('oldPass').value,newPassword:$('newPass').value});alert(r.message);closePass();logout();}catch(e){stat(e.message);}}
 $('loginBtn').onclick=login;$('password').onkeydown=e=>{if(e.key==='Enter')login();};$('refresh').onclick=loadAll;$('logout').onclick=logout;$('passwordBtn').onclick=()=>$('passModal').classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$('tab-'+b.dataset.tab).classList.remove('hidden');if(b.dataset.tab==='teams')loadTeams();if(b.dataset.tab==='athletes')loadAthletes();if(b.dataset.tab==='tournament')loadMatches();if(b.dataset.tab==='results')loadResults();});$('tourGame').onchange=loadMatches;$('resultGame').onchange=loadResults;
